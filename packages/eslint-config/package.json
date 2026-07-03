@@ -1,0 +1,23 @@
+{
+  "name": "@portfolio/eslint-config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared ESLint configurations for Portfolio OS",
+  "exports": {
+    "./base": "./base.js",
+    "./node": "./node.js",
+    "./react": "./react.js",
+    "./nestjs": "./nestjs.js"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "globals": "^15.14.0",
+    "typescript-eslint": "^8.18.1"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0"
+  }
+}

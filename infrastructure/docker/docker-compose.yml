@@ -1,0 +1,206 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: portfolio-redis
+    networks:
+      - data
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-auth:
+    image: postgres:16-alpine
+    container_name: portfolio-postgres-auth
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: auth_db
+    networks:
+      - data
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U portfolio -d auth_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-notification:
+    image: postgres:16-alpine
+    container_name: portfolio-postgres-notification
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: notification_db
+    networks:
+      - data
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_notification_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U portfolio -d notification_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: portfolio-mailpit
+    networks:
+      - backend
+    ports:
+      - '8025:8025'
+      - '1025:1025'
+
+  auth-service:
+    build:
+      context: ../..
+      dockerfile: services/auth-service/Dockerfile
+    container_name: portfolio-auth-service
+    env_file:
+      - ../../services/auth-service/.env.example
+    environment:
+      SERVICE_NAME: auth-service
+      PORT: 3001
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://portfolio:portfolio@postgres-auth:5432/auth_db
+    networks:
+      - backend
+      - data
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres-auth:
+        condition: service_healthy
+
+  notification-service:
+    build:
+      context: ../..
+      dockerfile: services/notification-service/Dockerfile
+    container_name: portfolio-notification-service
+    env_file:
+      - ../../services/notification-service/.env.example
+    environment:
+      SERVICE_NAME: notification-service
+      PORT: 3002
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://portfolio:portfolio@postgres-notification:5432/notification_db
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+    networks:
+      - backend
+      - data
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres-notification:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  gateway:
+    build:
+      context: ../..
+      dockerfile: services/gateway/Dockerfile
+    container_name: portfolio-gateway
+    environment:
+      SERVICE_NAME: gateway
+      PORT: 3000
+      REDIS_URL: redis://redis:6379
+    networks:
+      - backend
+      - frontend
+      - data
+    depends_on:
+      - auth-service
+      - notification-service
+
+  helpdesk-saas:
+    build:
+      context: ../..
+      dockerfile: apps/helpdesk-saas/Dockerfile
+    container_name: portfolio-helpdesk
+    environment:
+      PORT: 3010
+    networks:
+      - frontend
+
+  analytics-dashboard:
+    build:
+      context: ../..
+      dockerfile: apps/analytics-dashboard/Dockerfile
+    container_name: portfolio-analytics
+    environment:
+      PORT: 3011
+    networks:
+      - frontend
+
+  admin-panel:
+    build:
+      context: ../..
+      dockerfile: apps/admin-panel/Dockerfile
+    container_name: portfolio-admin
+    environment:
+      PORT: 3012
+    networks:
+      - frontend
+
+  realtime-chat:
+    build:
+      context: ../..
+      dockerfile: apps/realtime-chat/Dockerfile
+    container_name: portfolio-chat-app
+    environment:
+      PORT: 3014
+    networks:
+      - frontend
+
+  website:
+    build:
+      context: ../..
+      dockerfile: website/Dockerfile
+    container_name: portfolio-website
+    environment:
+      PORT: 3013
+    networks:
+      - frontend
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: portfolio-nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx/conf.d:/etc/nginx/conf.d:ro
+    networks:
+      - frontend
+    depends_on:
+      - gateway
+      - helpdesk-saas
+      - analytics-dashboard
+      - admin-panel
+      - realtime-chat
+      - website
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+  data:
+    driver: bridge
+
+volumes:
+  redis_data:
+  postgres_auth_data:
+  postgres_notification_data:
