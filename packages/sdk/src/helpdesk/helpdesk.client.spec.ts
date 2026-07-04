@@ -1,9 +1,9 @@
-import { PortfolioClient } from '../client';
+import { NovaDeskClient } from '../client';
 import { HelpdeskClient } from './helpdesk.client';
 
 describe('HelpdeskClient', () => {
   it('calls list workspaces endpoint', async () => {
-    const client = new PortfolioClient({
+    const client = new NovaDeskClient({
       baseUrl: 'https://api.example.com',
       fetchFn: jest.fn().mockResolvedValue(
         new Response(

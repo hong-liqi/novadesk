@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: '/helpdesk',
-  transpilePackages: ['@portfolio/ui', '@portfolio/auth', '@portfolio/sdk'],
+  transpilePackages: ['@novadesk/ui', '@novadesk/auth', '@novadesk/sdk'],
   output: 'standalone',
 };
 

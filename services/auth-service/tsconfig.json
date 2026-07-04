@@ -1,5 +1,5 @@
 {
-  "extends": "@portfolio/tsconfig/nestjs.json",
+  "extends": "@novadesk/tsconfig/nestjs.json",
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist",

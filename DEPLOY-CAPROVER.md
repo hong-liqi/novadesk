@@ -1,4 +1,4 @@
-# Deploy no CapRover — Portfolio OS
+# Deploy no CapRover — NovaDesk
 
 Guia passo a passo para publicar o monorepo inteiro no CapRover usando **deploy via Git webhook** (Método 3).
 
@@ -6,7 +6,7 @@ Guia passo a passo para publicar o monorepo inteiro no CapRover usando **deploy 
 
 | Tipo                | Quantidade  | Apps                                                               |
 | ------------------- | ----------- | ------------------------------------------------------------------ |
-| Infraestrutura      | 2           | `portfolio-postgres`, `portfolio-redis`                            |
+| Infraestrutura      | 2           | `novadesk-postgres`, `novadesk-redis`                              |
 | Backends (NestJS)   | 6           | gateway, auth, notification, helpdesk-api, analytics-api, chat-api |
 | Frontends (Next.js) | 5           | helpdesk, analytics, admin, website, chat                          |
 | **Total**           | **13 apps** |                                                                    |
@@ -20,7 +20,7 @@ Guia passo a passo para publicar o monorepo inteiro no CapRover usando **deploy 
 ## Pré-requisitos
 
 1. CapRover instalado com HTTPS (ex.: `captain.broom.magicsoft.site`)
-2. Repositório no GitHub: `git@github.com:hong-liqi/portifolio.git`
+2. Repositório no GitHub: `git@github.com:hong-liqi/novadesk.git`
 3. DNS configurado para os subdomínios que você vai usar (ou use `*.seu-dominio.com` wildcard)
 4. SMTP para e-mails em produção (SendGrid, SES, Mailgun, etc.)
 
@@ -31,10 +31,10 @@ Guia passo a passo para publicar o monorepo inteiro no CapRover usando **deploy 
 No seu computador, na raiz do projeto:
 
 ```bash
-./infrastructure/scripts/generate-jwt-keys.sh /tmp/portfolio-jwt
+./infrastructure/scripts/generate-jwt-keys.sh /tmp/novadesk-jwt
 ```
 
-Guarde `jwt-private.pem` e `jwt-public.pem`. Você vai colar o conteúdo nas variáveis `JWT_PRIVATE_KEY` e `JWT_PUBLIC_KEY` do app `portfolio-auth`.
+Guarde `jwt-private.pem` e `jwt-public.pem`. Você vai colar o conteúdo nas variáveis `JWT_PRIVATE_KEY` e `JWT_PUBLIC_KEY` do app `novadesk-auth`.
 
 > **Importante:** use o formato de uma linha com `\n` entre as linhas do PEM (o script já imprime nesse formato).
 
@@ -46,31 +46,31 @@ Em **Apps → Create New App**, crie cada app abaixo. Use exatamente estes nomes
 
 ### Infraestrutura (não expor publicamente)
 
-| App                  | Captain Definition Path                               |
-| -------------------- | ----------------------------------------------------- |
-| `portfolio-postgres` | `infrastructure/caprover/postgres/captain-definition` |
-| `portfolio-redis`    | `infrastructure/caprover/redis/captain-definition`    |
+| App                 | Captain Definition Path                               |
+| ------------------- | ----------------------------------------------------- |
+| `novadesk-postgres` | `infrastructure/caprover/postgres/captain-definition` |
+| `novadesk-redis`    | `infrastructure/caprover/redis/captain-definition`    |
 
 ### Backends (não expor publicamente)
 
-| App                       | Captain Definition Path                            |
-| ------------------------- | -------------------------------------------------- |
-| `portfolio-gateway`       | `services/gateway/captain-definition`              |
-| `portfolio-auth`          | `services/auth-service/captain-definition`         |
-| `portfolio-notification`  | `services/notification-service/captain-definition` |
-| `portfolio-helpdesk-api`  | `services/helpdesk-api/captain-definition`         |
-| `portfolio-analytics-api` | `services/analytics-api/captain-definition`        |
-| `portfolio-chat-api`      | `services/realtime-chat/captain-definition`        |
+| App                      | Captain Definition Path                            |
+| ------------------------ | -------------------------------------------------- |
+| `novadesk-gateway`       | `services/gateway/captain-definition`              |
+| `novadesk-auth`          | `services/auth-service/captain-definition`         |
+| `novadesk-notification`  | `services/notification-service/captain-definition` |
+| `novadesk-helpdesk-api`  | `services/helpdesk-api/captain-definition`         |
+| `novadesk-analytics-api` | `services/analytics-api/captain-definition`        |
+| `novadesk-chat-api`      | `services/realtime-chat/captain-definition`        |
 
 ### Frontends (expor com domínio)
 
-| App                   | Captain Definition Path                       | Porta container |
-| --------------------- | --------------------------------------------- | --------------- |
-| `portfolio-helpdesk`  | `apps/helpdesk-saas/captain-definition`       | 3010            |
-| `portfolio-analytics` | `apps/analytics-dashboard/captain-definition` | 3011            |
-| `portfolio-admin`     | `apps/admin-panel/captain-definition`         | 3012            |
-| `portfolio-website`   | `website/captain-definition`                  | 3013            |
-| `portfolio-chat`      | `apps/realtime-chat/captain-definition`       | 3014            |
+| App                  | Captain Definition Path                       | Porta container |
+| -------------------- | --------------------------------------------- | --------------- |
+| `novadesk-helpdesk`  | `apps/helpdesk-saas/captain-definition`       | 3010            |
+| `novadesk-analytics` | `apps/analytics-dashboard/captain-definition` | 3011            |
+| `novadesk-admin`     | `apps/admin-panel/captain-definition`         | 3012            |
+| `novadesk-website`   | `website/captain-definition`                  | 3013            |
+| `novadesk-chat`      | `apps/realtime-chat/captain-definition`       | 3014            |
 
 ---
 
@@ -81,7 +81,7 @@ Para **cada uma das 13 apps**, repita:
 1. Abra a app → aba **Implantação** (Deployment)
 2. Role até **Método 3: Implantar do Github/Bitbucket/Gitlab**
 3. Preencha:
-   - **Repository:** `git@github.com:hong-liqi/portifolio.git` (ou HTTPS)
+   - **Repository:** `git@github.com:hong-liqi/novadesk.git` (ou HTTPS)
    - **Branch:** `main`
    - **Chave SSH:** cole a deploy key do CapRover (ou usuário/senha)
 4. Em **Captain Definition Path** (no final da página), informe o caminho da tabela acima
@@ -110,7 +110,7 @@ Após salvar o deploy Git em cada app, copie a **Webhook URL** e adicione no Git
 
 Sem isso, Postgres e Redis **perdem dados** a cada redeploy.
 
-### `portfolio-postgres`
+### `novadesk-postgres`
 
 1. App → **Configs do App** (App Configs)
 2. Marque **Não expor como app web** (Do not expose as web-app)
@@ -123,14 +123,14 @@ Sem isso, Postgres e Redis **perdem dados** a cada redeploy.
 4. **Environment Variables:**
 
    ```env
-   POSTGRES_USER=portfolio
+   POSTGRES_USER=novadesk
    POSTGRES_PASSWORD=<SENHA_FORTE_AQUI>
    POSTGRES_DB=auth_db
    ```
 
 5. **Port Mapping:** container `5432` (não precisa mapear para host se só apps internas usam)
 
-### `portfolio-redis`
+### `novadesk-redis`
 
 1. Marque **Não expor como app web**
 2. Diretório persistente:
@@ -152,78 +152,78 @@ Substitua:
 - `<JWT_*>` pelas chaves geradas no passo 1
 - `<SMTP_*>` pelo seu provedor de e-mail
 
-### `portfolio-auth`
+### `novadesk-auth`
 
 ```env
 NODE_ENV=production
 PORT=3001
-DATABASE_URL=postgresql://portfolio:<POSTGRES_PASSWORD>@srv-captain--portfolio-postgres:5432/auth_db
-REDIS_URL=redis://srv-captain--portfolio-redis:6379
+DATABASE_URL=postgresql://novadesk:<POSTGRES_PASSWORD>@srv-captain--novadesk-postgres:5432/auth_db
+REDIS_URL=redis://srv-captain--novadesk-redis:6379
 JWT_PRIVATE_KEY=<JWT_PRIVATE_KEY>
 JWT_PUBLIC_KEY=<JWT_PUBLIC_KEY>
 JWT_KID=prod-1
-JWT_ISSUER=portfolio-os-auth
-JWT_AUDIENCE=portfolio-os
+JWT_ISSUER=novadesk-auth
+JWT_AUDIENCE=novadesk
 ACCESS_TOKEN_TTL=900
 REFRESH_TOKEN_TTL=604800
 ```
 
-### `portfolio-notification`
+### `novadesk-notification`
 
 ```env
 NODE_ENV=production
 PORT=3002
-DATABASE_URL=postgresql://portfolio:<POSTGRES_PASSWORD>@srv-captain--portfolio-postgres:5432/notification_db
-REDIS_URL=redis://srv-captain--portfolio-redis:6379
+DATABASE_URL=postgresql://novadesk:<POSTGRES_PASSWORD>@srv-captain--novadesk-postgres:5432/notification_db
+REDIS_URL=redis://srv-captain--novadesk-redis:6379
 SMTP_HOST=<SMTP_HOST>
 SMTP_PORT=587
 SMTP_FROM=noreply@<SEU_DOMINIO>
 ```
 
-### `portfolio-helpdesk-api`
+### `novadesk-helpdesk-api`
 
 ```env
 NODE_ENV=production
 PORT=3003
-DATABASE_URL=postgresql://portfolio:<POSTGRES_PASSWORD>@srv-captain--portfolio-postgres:5432/helpdesk_db
-REDIS_URL=redis://srv-captain--portfolio-redis:6379
+DATABASE_URL=postgresql://novadesk:<POSTGRES_PASSWORD>@srv-captain--novadesk-postgres:5432/helpdesk_db
+REDIS_URL=redis://srv-captain--novadesk-redis:6379
 ```
 
-### `portfolio-analytics-api`
+### `novadesk-analytics-api`
 
 ```env
 NODE_ENV=production
 PORT=3004
-DATABASE_URL=postgresql://portfolio:<POSTGRES_PASSWORD>@srv-captain--portfolio-postgres:5432/analytics_db
-REDIS_URL=redis://srv-captain--portfolio-redis:6379
+DATABASE_URL=postgresql://novadesk:<POSTGRES_PASSWORD>@srv-captain--novadesk-postgres:5432/analytics_db
+REDIS_URL=redis://srv-captain--novadesk-redis:6379
 ```
 
-### `portfolio-chat-api`
+### `novadesk-chat-api`
 
 ```env
 NODE_ENV=production
 PORT=3005
-DATABASE_URL=postgresql://portfolio:<POSTGRES_PASSWORD>@srv-captain--portfolio-postgres:5432/chat_db
-REDIS_URL=redis://srv-captain--portfolio-redis:6379
-JWT_ISSUER=portfolio-os-auth
-JWT_AUDIENCE=portfolio-os
-AUTH_JWKS_URL=http://srv-captain--portfolio-auth:3001/.well-known/jwks.json
+DATABASE_URL=postgresql://novadesk:<POSTGRES_PASSWORD>@srv-captain--novadesk-postgres:5432/chat_db
+REDIS_URL=redis://srv-captain--novadesk-redis:6379
+JWT_ISSUER=novadesk-auth
+JWT_AUDIENCE=novadesk
+AUTH_JWKS_URL=http://srv-captain--novadesk-auth:3001/.well-known/jwks.json
 ```
 
-### `portfolio-gateway`
+### `novadesk-gateway`
 
 ```env
 NODE_ENV=production
 PORT=3000
-REDIS_URL=redis://srv-captain--portfolio-redis:6379
-AUTH_SERVICE_URL=http://srv-captain--portfolio-auth:3001
-NOTIFICATION_SERVICE_URL=http://srv-captain--portfolio-notification:3002
-HELPDESK_SERVICE_URL=http://srv-captain--portfolio-helpdesk-api:3003
-ANALYTICS_SERVICE_URL=http://srv-captain--portfolio-analytics-api:3004
-REALTIME_CHAT_SERVICE_URL=http://srv-captain--portfolio-chat-api:3005
-AUTH_JWKS_URL=http://srv-captain--portfolio-auth:3001/.well-known/jwks.json
-JWT_ISSUER=portfolio-os-auth
-JWT_AUDIENCE=portfolio-os
+REDIS_URL=redis://srv-captain--novadesk-redis:6379
+AUTH_SERVICE_URL=http://srv-captain--novadesk-auth:3001
+NOTIFICATION_SERVICE_URL=http://srv-captain--novadesk-notification:3002
+HELPDESK_SERVICE_URL=http://srv-captain--novadesk-helpdesk-api:3003
+ANALYTICS_SERVICE_URL=http://srv-captain--novadesk-analytics-api:3004
+REALTIME_CHAT_SERVICE_URL=http://srv-captain--novadesk-chat-api:3005
+AUTH_JWKS_URL=http://srv-captain--novadesk-auth:3001/.well-known/jwks.json
+JWT_ISSUER=novadesk-auth
+JWT_AUDIENCE=novadesk
 THROTTLE_TTL=60000
 THROTTLE_LIMIT=100
 ```
@@ -245,13 +245,13 @@ NEXT_PUBLIC_API_URL=https://api.<SEU_DOMINIO>/api/v1
 
 Mais a porta de cada app:
 
-| App                   | PORT | Domínio sugerido          | Variáveis extras                                                                                |
-| --------------------- | ---- | ------------------------- | ----------------------------------------------------------------------------------------------- |
-| `portfolio-helpdesk`  | 3010 | `helpdesk.<SEU_DOMINIO>`  | `NEXT_PUBLIC_APP_URL=https://helpdesk.<SEU_DOMINIO>`                                            |
-| `portfolio-analytics` | 3011 | `analytics.<SEU_DOMINIO>` | `NEXT_PUBLIC_APP_URL=https://analytics.<SEU_DOMINIO>`                                           |
-| `portfolio-admin`     | 3012 | `admin.<SEU_DOMINIO>`     | `NEXT_PUBLIC_APP_URL=https://admin.<SEU_DOMINIO>`                                               |
-| `portfolio-website`   | 3013 | `<SEU_DOMINIO>`           | `NEXT_PUBLIC_SITE_URL=https://<SEU_DOMINIO>`, `NEXT_PUBLIC_CONTACT_EMAIL=contato@<SEU_DOMINIO>` |
-| `portfolio-chat`      | 3014 | `chat.<SEU_DOMINIO>`      | `NEXT_PUBLIC_APP_URL=https://chat.<SEU_DOMINIO>`                                                |
+| App                  | PORT | Domínio sugerido          | Variáveis extras                                                                                |
+| -------------------- | ---- | ------------------------- | ----------------------------------------------------------------------------------------------- |
+| `novadesk-helpdesk`  | 3010 | `helpdesk.<SEU_DOMINIO>`  | `NEXT_PUBLIC_APP_URL=https://helpdesk.<SEU_DOMINIO>`                                            |
+| `novadesk-analytics` | 3011 | `analytics.<SEU_DOMINIO>` | `NEXT_PUBLIC_APP_URL=https://analytics.<SEU_DOMINIO>`                                           |
+| `novadesk-admin`     | 3012 | `admin.<SEU_DOMINIO>`     | `NEXT_PUBLIC_APP_URL=https://admin.<SEU_DOMINIO>`                                               |
+| `novadesk-website`   | 3013 | `<SEU_DOMINIO>`           | `NEXT_PUBLIC_SITE_URL=https://<SEU_DOMINIO>`, `NEXT_PUBLIC_CONTACT_EMAIL=contato@<SEU_DOMINIO>` |
+| `novadesk-chat`      | 3014 | `chat.<SEU_DOMINIO>`      | `NEXT_PUBLIC_APP_URL=https://chat.<SEU_DOMINIO>`                                                |
 
 ---
 
@@ -260,19 +260,19 @@ Mais a porta de cada app:
 Faça o primeiro build nesta ordem (infra → backends → gateway → frontends):
 
 ```
-1. portfolio-postgres
-2. portfolio-redis
-3. portfolio-auth
-4. portfolio-notification
-5. portfolio-helpdesk-api
-6. portfolio-analytics-api
-7. portfolio-chat-api
-8. portfolio-gateway
-9. portfolio-website
-10. portfolio-helpdesk
-11. portfolio-analytics
-12. portfolio-admin
-13. portfolio-chat
+1. novadesk-postgres
+2. novadesk-redis
+3. novadesk-auth
+4. novadesk-notification
+5. novadesk-helpdesk-api
+6. novadesk-analytics-api
+7. novadesk-chat-api
+8. novadesk-gateway
+9. novadesk-website
+10. novadesk-helpdesk
+11. novadesk-analytics
+12. novadesk-admin
+13. novadesk-chat
 ```
 
 Aguarde cada app ficar **Running** antes da próxima que depende dela.
@@ -289,19 +289,19 @@ Exponha temporariamente a porta 5432 do Postgres (Port Mapping no CapRover) ou u
 
 ```bash
 # Ajuste as URLs para apontar ao Postgres de produção
-export DATABASE_URL="postgresql://portfolio:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/auth_db"
+export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/auth_db"
 cd services/auth-service && pnpm db:push
 
-export DATABASE_URL="postgresql://portfolio:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/notification_db"
+export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/notification_db"
 cd services/notification-service && pnpm db:push
 
-export DATABASE_URL="postgresql://portfolio:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/helpdesk_db"
+export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/helpdesk_db"
 cd services/helpdesk-api && pnpm db:push
 
-export DATABASE_URL="postgresql://portfolio:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/analytics_db"
+export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/analytics_db"
 cd services/analytics-api && pnpm db:push
 
-export DATABASE_URL="postgresql://portfolio:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/chat_db"
+export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/chat_db"
 cd services/realtime-chat && pnpm db:push
 ```
 
@@ -317,7 +317,7 @@ Edite temporariamente as `DATABASE_URL` no `.env` de cada serviço e rode:
 
 ```bash
 cd services/helpdesk-api
-DATABASE_URL="postgresql://portfolio:<POSTGRES_PASSWORD>@<IP>:5432/helpdesk_db" pnpm db:seed
+DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP>:5432/helpdesk_db" pnpm db:seed
 ```
 
 ---
@@ -358,7 +358,7 @@ Apps internas se comunicam pelo hostname `srv-captain--<nome-da-app>:<porta>`.
 | `database "X" does not exist` | Recrie o Postgres (só se vazio) ou crie o DB manualmente via `psql`. O init script roda só na primeira inicialização. |
 | JWT inválido                  | `JWT_ISSUER`, `JWT_AUDIENCE` e chaves devem ser iguais em auth e gateway.                                             |
 | WebSocket do chat cai         | Habilite **WebSocket Support** no gateway.                                                                            |
-| E-mail não envia              | Configure SMTP real no `portfolio-notification`.                                                                      |
+| E-mail não envia              | Configure SMTP real no `novadesk-notification`.                                                                       |
 
 ---
 

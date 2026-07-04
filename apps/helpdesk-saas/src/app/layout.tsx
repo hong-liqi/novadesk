@@ -4,7 +4,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Helpdesk SaaS',
-  description: 'Modern customer support platform — Portfolio OS flagship application',
+  description: 'Modern customer support platform — NovaDesk flagship application',
 };
 
 export default function RootLayout({

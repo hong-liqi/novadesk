@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 
-echo "==> Portfolio OS local setup"
+echo "==> NovaDesk local setup"
 
 if ! command -v pnpm &>/dev/null; then
   echo "pnpm is required. Enable via: corepack enable"

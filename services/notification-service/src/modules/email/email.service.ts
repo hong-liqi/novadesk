@@ -30,7 +30,7 @@ export class EmailService {
       });
 
       const result = await transporter.sendMail({
-        from: this.configService.get<string>('SMTP_FROM', 'noreply@portfolio-os.dev'),
+        from: this.configService.get<string>('SMTP_FROM', 'noreply@novadesk.dev'),
         to: dto.to,
         subject: dto.subject,
         text: dto.body,

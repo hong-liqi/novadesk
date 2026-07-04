@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
-import { ROLES_HEADER, TENANT_ID_HEADER, USER_ID_HEADER } from '@portfolio/shared';
-import { parseBearerToken, type AuthUser } from '@portfolio/auth';
+import { ROLES_HEADER, TENANT_ID_HEADER, USER_ID_HEADER } from '@novadesk/shared';
+import { parseBearerToken, type AuthUser } from '@novadesk/auth';
 import { isPublicRoute } from './is-public-route';
 import { JwtValidationService } from './jwt-validation.service';
 import { ProxyService } from './proxy.service';

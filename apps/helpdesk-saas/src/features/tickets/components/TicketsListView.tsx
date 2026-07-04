@@ -1,6 +1,6 @@
 'use client';
 
-import type { HelpdeskCustomer, HelpdeskTicket, PaginatedResult } from '@portfolio/sdk';
+import type { HelpdeskCustomer, HelpdeskTicket, PaginatedResult } from '@novadesk/sdk';
 import {
   Badge,
   Button,
@@ -12,8 +12,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@portfolio/ui';
-import { Modal, useDisclosure } from '@portfolio/ui/client';
+} from '@novadesk/ui';
+import { Modal, useDisclosure } from '@novadesk/ui/client';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { routes } from '@/shared/lib/routes';

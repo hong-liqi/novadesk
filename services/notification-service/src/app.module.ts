@@ -7,8 +7,8 @@ import {
   observabilityConfigSchema,
   redisConfigSchema,
   validateConfig,
-} from '@portfolio/config';
-import { LoggerModule } from '@portfolio/logger';
+} from '@novadesk/config';
+import { LoggerModule } from '@novadesk/logger';
 import { DatabaseModule } from '@infrastructure/database/database.module';
 import { ObservabilityModule } from '@infrastructure/observability/observability.module';
 import { QueueModule } from '@infrastructure/queue/queue.module';
@@ -20,7 +20,7 @@ import { MetricsModule } from '@presentation/metrics/metrics.module';
 const smtpConfigSchema = z.object({
   SMTP_HOST: z.string().min(1).default('localhost'),
   SMTP_PORT: z.coerce.number().int().positive().default(1025),
-  SMTP_FROM: z.string().email().default('noreply@portfolio-os.dev'),
+  SMTP_FROM: z.string().email().default('noreply@novadesk.dev'),
 });
 
 const configSchema = baseConfigSchema

@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators';
 import { hasRole } from '../helpers';
 import type { AuthRequest } from '../types';
-import type { Role } from '@portfolio/shared';
+import type { Role } from '@novadesk/shared';
 
 @Injectable()
 export class RolesGuard implements CanActivate {

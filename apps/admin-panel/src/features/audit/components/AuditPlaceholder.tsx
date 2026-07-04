@@ -1,4 +1,4 @@
-import { Surface, Text } from '@portfolio/ui';
+import { Surface, Text } from '@novadesk/ui';
 
 export function AuditPlaceholder() {
   return (

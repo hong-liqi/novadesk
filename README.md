@@ -1,4 +1,4 @@
-# Portfolio OS
+# NovaDesk
 
 Integrated engineering ecosystem demonstrating senior-level software architecture.
 
@@ -8,7 +8,7 @@ Integrated engineering ecosystem demonstrating senior-level software architectur
 packages/          Shared libraries (ui, sdk, auth, config, logger, shared, tsconfig, eslint-config)
 services/          NestJS microservices (gateway, auth, notification, helpdesk, analytics, chat)
 apps/              Next.js applications (helpdesk, analytics, chat, admin)
-website/           Public portfolio website
+website/           Public NovaDesk website
 infrastructure/    Docker, Nginx, CapRover, scripts
 docs/              Engineering documentation
 ```
@@ -26,7 +26,7 @@ docs/              Engineering documentation
 | Analytics (M6)            | ✅ API + dashboard                  |
 | Realtime Chat (M7)        | ✅ WebSocket service + app          |
 | Admin Portal (M8)         | ✅ Tenants + health dashboard       |
-| Portfolio Website (M9)    | ✅ Landing + case studies + contact |
+| NovaDesk Website (M9)     | ✅ Landing + case studies + contact |
 | CapRover deploy           | ✅ captain-definition per app       |
 
 ## Prerequisites

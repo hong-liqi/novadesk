@@ -1,4 +1,4 @@
-import type { Role } from '@portfolio/shared';
+import type { Role } from '@novadesk/shared';
 
 export interface UserEntity {
   id: string;

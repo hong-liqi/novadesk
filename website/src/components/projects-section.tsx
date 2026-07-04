@@ -1,6 +1,6 @@
-import { Badge, Stack, Surface, Text } from '@portfolio/ui';
+import { Badge, Stack, Surface, Text } from '@novadesk/ui';
 import Link from 'next/link';
-import { PORTFOLIO_MODULES } from '@/lib/projects';
+import { NOVADESK_MODULES } from '@/lib/projects';
 
 export function ProjectsSection() {
   return (
@@ -8,7 +8,7 @@ export function ProjectsSection() {
       <div className="mx-auto max-w-6xl">
         <Stack gap="sm" className="mb-10">
           <Text as="h2" size="xl" weight="bold" className="!text-white">
-            Portfolio OS modules
+            NovaDesk modules
           </Text>
           <Text as="p" tone="muted" className="max-w-2xl !text-slate-400">
             Eight integrated applications and services sharing auth, observability, and a unified
@@ -17,7 +17,7 @@ export function ProjectsSection() {
         </Stack>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {PORTFOLIO_MODULES.map((module) => (
+          {NOVADESK_MODULES.map((module) => (
             <Surface
               key={module.id}
               variant="outline"

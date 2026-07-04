@@ -9,14 +9,14 @@
 
 ## 1. Objetivo
 
-Definir a estrutura física completa do monorepo Portfolio OS: diretórios, pacotes, convenções de nomenclatura, boundaries, dependências permitidas e configuração de workspaces.
+Definir a estrutura física completa do monorepo NovaDesk: diretórios, pacotes, convenções de nomenclatura, boundaries, dependências permitidas e configuração de workspaces.
 
 ---
 
 ## 2. Visão geral
 
 ```
-portfolio/
+novadesk/
 ├── .github/                    # GitHub Actions, PR templates, CODEOWNERS
 ├── .husky/                     # Git hooks
 ├── 00-governance/              # Políticas, licenças, CONTRIBUTING
@@ -35,7 +35,7 @@ portfolio/
 ├── .gitignore
 ├── .prettierrc
 ├── commitlint.config.js
-└── PORTFOLIO_OS_MASTER_SPEC.md
+└── NOVADESK_MASTER_SPEC.md
 ```
 
 ---
@@ -48,17 +48,17 @@ O arquivo `pnpm-workspace.yaml` na raiz declara os globs `packages/*`, `services
 
 ### 3.2 Naming convention
 
-| Tipo    | Pattern             | Exemplo                   |
-| ------- | ------------------- | ------------------------- |
-| Package | `@portfolio/{name}` | `@portfolio/ui`           |
-| Service | `@portfolio/{name}` | `@portfolio/auth-service` |
-| App     | `@portfolio/{name}` | `@portfolio/helpdesk`     |
+| Tipo    | Pattern            | Exemplo                  |
+| ------- | ------------------ | ------------------------ |
+| Package | `@novadesk/{name}` | `@novadesk/ui`           |
+| Service | `@novadesk/{name}` | `@novadesk/auth-service` |
+| App     | `@novadesk/{name}` | `@novadesk/helpdesk`     |
 
 ---
 
 ## 4. Pacotes compartilhados (`packages/`)
 
-### 4.1 `@portfolio/typescript`
+### 4.1 `@novadesk/typescript`
 
 Configurações base de TypeScript.
 
@@ -71,7 +71,7 @@ packages/tsconfig/
 └── nestjs.json            # extends node, decorators
 ```
 
-### 4.2 `@portfolio/eslint`
+### 4.2 `@novadesk/eslint`
 
 Configuração ESLint compartilhada (flat config).
 
@@ -84,7 +84,7 @@ packages/eslint-config/
 └── nestjs.js              # NestJS-specific rules
 ```
 
-### 4.3 `@portfolio/config`
+### 4.3 `@novadesk/config`
 
 Schemas Zod para variáveis de ambiente.
 
@@ -101,7 +101,7 @@ packages/config/
 └── tsconfig.json
 ```
 
-### 4.4 `@portfolio/shared`
+### 4.4 `@novadesk/shared`
 
 Tipos, constantes, enums e utilitários puros compartilhados.
 
@@ -120,7 +120,7 @@ packages/shared/
 
 **Regra:** Nenhuma lógica de negócio. Nenhuma dependência de framework.
 
-### 4.5 `@portfolio/logger`
+### 4.5 `@novadesk/logger`
 
 Wrapper Pino com context propagation.
 
@@ -136,7 +136,7 @@ packages/logger/
 └── tsconfig.json
 ```
 
-### 4.6 `@portfolio/auth`
+### 4.6 `@novadesk/auth`
 
 Utilitários de autenticação compartilhados.
 
@@ -156,7 +156,7 @@ packages/auth/
 └── tsconfig.json
 ```
 
-### 4.7 `@portfolio/sdk`
+### 4.7 `@novadesk/sdk`
 
 Client HTTP tipado para consumo de APIs.
 
@@ -174,7 +174,7 @@ packages/sdk/
 └── tsconfig.json
 ```
 
-### 4.8 `@portfolio/ui`
+### 4.8 `@novadesk/ui`
 
 Design system e componentes visuais.
 
@@ -226,14 +226,14 @@ services/{service-name}/
 
 ### 5.2 Serviços
 
-| Diretório               | Package name                      | Porta | Banco             |
-| ----------------------- | --------------------------------- | ----- | ----------------- |
-| `auth-service/`         | `@portfolio/auth-service`         | 3001  | `auth_db`         |
-| `api-gateway/`          | `@portfolio/api-gateway`          | 3000  | —                 |
-| `notification-service/` | `@portfolio/notification-service` | 3002  | `notification_db` |
-| `helpdesk-api/`         | `@portfolio/helpdesk-api`         | 3003  | `helpdesk_db`     |
-| `analytics-api/`        | `@portfolio/analytics-api`        | 3004  | `analytics_db`    |
-| `realtime-chat/`        | `@portfolio/realtime-chat`        | 3005  | `chat_db`         |
+| Diretório               | Package name                     | Porta | Banco             |
+| ----------------------- | -------------------------------- | ----- | ----------------- |
+| `auth-service/`         | `@novadesk/auth-service`         | 3001  | `auth_db`         |
+| `api-gateway/`          | `@novadesk/api-gateway`          | 3000  | —                 |
+| `notification-service/` | `@novadesk/notification-service` | 3002  | `notification_db` |
+| `helpdesk-api/`         | `@novadesk/helpdesk-api`         | 3003  | `helpdesk_db`     |
+| `analytics-api/`        | `@novadesk/analytics-api`        | 3004  | `analytics_db`    |
+| `realtime-chat/`        | `@novadesk/realtime-chat`        | 3005  | `chat_db`         |
 
 ---
 
@@ -266,12 +266,12 @@ apps/{app-name}/
 
 ### 6.2 Apps
 
-| Diretório            | Package name                   | Porta | Rota Nginx     |
-| -------------------- | ------------------------------ | ----- | -------------- |
-| `helpdesk/`          | `@portfolio/helpdesk`          | 3010  | `/helpdesk/*`  |
-| `analytics/`         | `@portfolio/analytics`         | 3011  | `/analytics/*` |
-| `admin-portal/`      | `@portfolio/admin-portal`      | 3012  | `/admin/*`     |
-| `portfolio-website/` | `@portfolio/portfolio-website` | 3013  | `/*`           |
+| Diretório           | Package name                 | Porta | Rota Nginx     |
+| ------------------- | ---------------------------- | ----- | -------------- |
+| `helpdesk/`         | `@novadesk/helpdesk`         | 3010  | `/helpdesk/*`  |
+| `analytics/`        | `@novadesk/analytics`        | 3011  | `/analytics/*` |
+| `admin-portal/`     | `@novadesk/admin-portal`     | 3012  | `/admin/*`     |
+| `novadesk-website/` | `@novadesk/novadesk-website` | 3013  | `/*`           |
 
 ---
 

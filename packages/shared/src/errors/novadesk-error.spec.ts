@@ -4,14 +4,14 @@ import {
   ConflictError,
   ExternalServiceError,
   NotFoundError,
-  PortfolioError,
+  NovaDeskError,
   RateLimitError,
   ValidationError,
-} from './portfolio-error';
+} from './novadesk-error';
 
-describe('portfolio errors', () => {
+describe('novadesk errors', () => {
   it('serializes the base error shape', () => {
-    const error = new PortfolioError({
+    const error = new NovaDeskError({
       code: 'UNKNOWN_ERROR',
       message: 'Unexpected failure',
       status: 500,
@@ -19,7 +19,7 @@ describe('portfolio errors', () => {
     });
 
     expect(error.toJSON()).toEqual({
-      name: 'PortfolioError',
+      name: 'NovaDeskError',
       code: 'UNKNOWN_ERROR',
       message: 'Unexpected failure',
       status: 500,

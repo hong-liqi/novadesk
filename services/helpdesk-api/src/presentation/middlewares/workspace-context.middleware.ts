@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { TENANT_ID_HEADER, USER_ID_HEADER } from '@portfolio/shared';
+import { TENANT_ID_HEADER, USER_ID_HEADER } from '@novadesk/shared';
 import type { NextFunction, Response } from 'express';
 import type { HelpdeskRequest } from '../types/request-context';
 

@@ -5,7 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import { LoggerInterceptor, LoggerService, createLogger } from '@portfolio/logger';
+import { LoggerInterceptor, LoggerService, createLogger } from '@novadesk/logger';
 import { createSwaggerConfig } from '@infrastructure/swagger/swagger.config';
 import { ProxyService } from '@infrastructure/proxy/proxy.service';
 import { AppModule } from './app.module';
@@ -24,7 +24,7 @@ async function bootstrap(): Promise<void> {
 
   const document = SwaggerModule.createDocument(
     app,
-    createSwaggerConfig('API Gateway', 'Entry point and routing layer for Portfolio OS'),
+    createSwaggerConfig('API Gateway', 'Entry point and routing layer for NovaDesk'),
   );
   SwaggerModule.setup('api/docs', app, document);
 

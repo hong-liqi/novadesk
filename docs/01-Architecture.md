@@ -1,4 +1,4 @@
-# 01 — Arquitetura do Portfolio OS
+# 01 — Arquitetura do NovaDesk
 
 **Versão:** 1.0  
 **Status:** Aprovado  
@@ -9,7 +9,7 @@
 
 ## 1. Visão arquitetural
 
-O Portfolio OS adota uma arquitetura de **microsserviços orientada a domínio** com **API Gateway** como ponto de entrada único, **Auth Service** como provedor central de identidade e pacotes compartilhados para eliminar duplicação. Aplicações frontend consomem APIs exclusivamente via Gateway (exceto WebSocket do Realtime Chat, que passa pelo Gateway com upgrade de protocolo).
+O NovaDesk adota uma arquitetura de **microsserviços orientada a domínio** com **API Gateway** como ponto de entrada único, **Auth Service** como provedor central de identidade e pacotes compartilhados para eliminar duplicação. Aplicações frontend consomem APIs exclusivamente via Gateway (exceto WebSocket do Realtime Chat, que passa pelo Gateway com upgrade de protocolo).
 
 A arquitetura prioriza:
 
@@ -30,7 +30,7 @@ A arquitetura prioriza:
                     └────────────────────┬────────────────────┘
                                          │
                     ┌────────────────────▼────────────────────┐
-                    │         Portfolio Website (APP-08)       │
+                    │         NovaDesk Website (APP-08)       │
                     │              Next.js — Público             │
                     └────────────────────┬────────────────────┘
                                          │
@@ -85,7 +85,7 @@ A arquitetura prioriza:
 
 | Container           | Tecnologia                    | Responsabilidade                           |
 | ------------------- | ----------------------------- | ------------------------------------------ |
-| Portfolio Website   | Next.js 14+ App Router        | Site público, SEO, showcase                |
+| NovaDesk Website    | Next.js 14+ App Router        | Site público, SEO, showcase                |
 | Admin Portal        | Next.js 14+ App Router        | Gestão de usuários, tenants, configurações |
 | HelpDesk SaaS       | Next.js 14+ App Router        | Interface de tickets, agentes, clientes    |
 | Analytics Dashboard | Next.js 14+ App Router        | Dashboards, gráficos, exportação           |
@@ -280,7 +280,7 @@ Detalhamento completo em [07-Security.md](./07-Security.md).
 - Cache Redis para: sessões, JWKS, queries frequentes de Analytics, lista de tenants
 - Paginação cursor-based em todas listagens
 - Índices compostos incluindo `tenant_id` onde aplicável
-- CDN para assets estáticos do Portfolio Website (fase de deploy)
+- CDN para assets estáticos do NovaDesk Website (fase de deploy)
 
 ---
 
@@ -320,7 +320,7 @@ Paridade entre staging e production é obrigatória para serviços e configuraç
 ## 11. Estrutura física do monorepo
 
 ```
-portfolio/
+novadesk/
 ├── 00-governance/          # Políticas, licenças, CONTRIBUTING
 ├── 01-docs/                # Symlink ou cópia de docs/ (governança)
 ├── docs/                   # Documentação de engenharia (este diretório)
@@ -344,7 +344,7 @@ portfolio/
 │   ├── helpdesk/
 │   ├── analytics/
 │   ├── admin-portal/
-│   └── portfolio-website/
+│   └── novadesk-website/
 ├── infrastructure/         # Docker, Nginx, scripts, compose
 ├── scripts/                # CLI interna, generators, scripts de manutenção
 ├── 07-case-studies/        # Case studies (symlink para docs/case-studies)

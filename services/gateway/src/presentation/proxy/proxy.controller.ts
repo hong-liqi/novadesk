@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from '@portfolio/auth';
+import { Public } from '@novadesk/auth';
 
 @ApiTags('proxy')
 @Controller('status')

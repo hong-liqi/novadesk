@@ -9,7 +9,7 @@
 
 ## 1. Objetivo
 
-Definir critérios objetivos e verificáveis para considerar qualquer item de trabalho (backlog item, PR, milestone, release) como concluído no Portfolio OS.
+Definir critérios objetivos e verificáveis para considerar qualquer item de trabalho (backlog item, PR, milestone, release) como concluído no NovaDesk.
 
 Nenhum item é marcado como Done sem atender todos os critérios aplicáveis ao seu tipo.
 
@@ -67,7 +67,7 @@ Todo item BL-XXX do [10-Backlog.md](./10-Backlog.md) só pode ser marcado como *
 
 ### 2.7 Observabilidade
 
-- [ ] Logging estruturado via `@portfolio/logger` em novos fluxos
+- [ ] Logging estruturado via `@novadesk/logger` em novos fluxos
 - [ ] Métricas de negócio adicionadas se aplicável
 - [ ] Health checks funcionando
 - [ ] Erros capturados por Sentry (staging)
@@ -223,24 +223,24 @@ Exceções ao DoD requerem:
 
 Exceções comuns aceitáveis temporariamente:
 
-| Exceção | Prazo máximo |
-|---------|--------------|
-| Cobertura abaixo do threshold | 1 sprint |
-| E2E pendente para feature não-crítica | 1 sprint |
-| ADR pendente para decisão em andamento | 2 sprints |
-| Dashboard Grafana pendente | 1 sprint |
+| Exceção                                | Prazo máximo |
+| -------------------------------------- | ------------ |
+| Cobertura abaixo do threshold          | 1 sprint     |
+| E2E pendente para feature não-crítica  | 1 sprint     |
+| ADR pendente para decisão em andamento | 2 sprints    |
+| Dashboard Grafana pendente             | 1 sprint     |
 
 ---
 
 ## 11. Referências cruzadas
 
-| Tópico | Documento |
-|--------|-----------|
-| Git workflow | [04-Git-Workflow.md](./04-Git-Workflow.md) |
-| Testes | [05-Testing-Strategy.md](./05-Testing-Strategy.md) |
-| DevOps | [06-DevOps.md](./06-DevOps.md) |
-| Segurança | [07-Security.md](./07-Security.md) |
-| Observabilidade | [08-Observability.md](./08-Observability.md) |
-| Documentação | [19-Documentation-Standards.md](./19-Documentation-Standards.md) |
-| Backlog | [10-Backlog.md](./10-Backlog.md) |
-| Roadmap | [09-Roadmap.md](./09-Roadmap.md) |
+| Tópico          | Documento                                                        |
+| --------------- | ---------------------------------------------------------------- |
+| Git workflow    | [04-Git-Workflow.md](./04-Git-Workflow.md)                       |
+| Testes          | [05-Testing-Strategy.md](./05-Testing-Strategy.md)               |
+| DevOps          | [06-DevOps.md](./06-DevOps.md)                                   |
+| Segurança       | [07-Security.md](./07-Security.md)                               |
+| Observabilidade | [08-Observability.md](./08-Observability.md)                     |
+| Documentação    | [19-Documentation-Standards.md](./19-Documentation-Standards.md) |
+| Backlog         | [10-Backlog.md](./10-Backlog.md)                                 |
+| Roadmap         | [09-Roadmap.md](./09-Roadmap.md)                                 |

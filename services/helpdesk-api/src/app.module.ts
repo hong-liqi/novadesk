@@ -6,8 +6,8 @@ import {
   databaseEnvSchema,
   observabilityEnvSchema,
   redisEnvSchema,
-} from '@portfolio/config';
-import { LoggerModule } from '@portfolio/logger';
+} from '@novadesk/config';
+import { LoggerModule } from '@novadesk/logger';
 import { DatabaseModule } from '@infrastructure/database/database.module';
 import { ObservabilityModule } from '@infrastructure/observability/observability.module';
 import { QueueModule } from '@infrastructure/queue/queue.module';

@@ -1,6 +1,6 @@
-# @portfolio/logger
+# @novadesk/logger
 
-Structured logging foundation for Portfolio OS.
+Structured logging foundation for NovaDesk.
 
 ## Purpose
 
@@ -27,13 +27,13 @@ The logger accepts a lightweight telemetry adapter interface so traces can be at
 ## Installation
 
 ```bash
-pnpm add @portfolio/logger
+pnpm add @novadesk/logger
 ```
 
 ## Usage
 
 ```ts
-import { createLogger, runWithContext } from '@portfolio/logger';
+import { createLogger, runWithContext } from '@novadesk/logger';
 
 const logger = createLogger({ service: 'gateway' });
 
@@ -45,7 +45,7 @@ runWithContext({ requestId: 'req-123', service: 'gateway' }, () => {
 ## NestJS usage
 
 ```ts
-import { LoggerModule } from '@portfolio/logger';
+import { LoggerModule } from '@novadesk/logger';
 
 @Module({
   imports: [LoggerModule],

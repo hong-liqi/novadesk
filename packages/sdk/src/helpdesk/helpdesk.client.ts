@@ -1,5 +1,5 @@
-import type { Workspace } from '@portfolio/shared';
-import type { PortfolioClient } from '../client';
+import type { Workspace } from '@novadesk/shared';
+import type { NovaDeskClient } from '../client';
 
 export interface DashboardSummary {
   openTickets: number;
@@ -80,7 +80,7 @@ export interface UpdateCustomerInput {
 }
 
 export class HelpdeskClient {
-  constructor(private readonly client: PortfolioClient) {}
+  constructor(private readonly client: NovaDeskClient) {}
 
   listWorkspaces(): Promise<Workspace[]> {
     return this.client.get<Workspace[]>('/helpdesk/workspaces').then((response) => response.data);
@@ -171,6 +171,6 @@ export class HelpdeskClient {
   }
 }
 
-export function createHelpdeskClient(client: PortfolioClient): HelpdeskClient {
+export function createHelpdeskClient(client: NovaDeskClient): HelpdeskClient {
   return new HelpdeskClient(client);
 }

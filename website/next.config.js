@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@portfolio/ui'],
+  transpilePackages: ['@novadesk/ui'],
   output: 'standalone',
 };
 

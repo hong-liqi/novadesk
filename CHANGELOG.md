@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Analytics (M6):** `analytics-api` service, SDK client, dashboard with KPIs/trends/export
 - **Realtime Chat (M7):** WebSocket service (Socket.IO), chat app, gateway proxy + `/socket.io`
 - **Admin Portal (M8):** tenants CRUD, platform health dashboard, role-gated access
-- **Portfolio Website (M9):** hero, projects, case studies, contact form, SEO metadata
+- **NovaDesk Website (M9):** hero, projects, case studies, contact form, SEO metadata
 - **CapRover deploy:** `captain-definition` in every service/app + [infrastructure/caprover/README.md](./infrastructure/caprover/README.md)
 - **Notification Service (M4):** In-app notifications CRUD, transactional email via SMTP/Mailpit, EmailLog tracking
 - **Auth Service (M2):** Prisma schema, register/login/refresh/logout, JWT RS256, JWKS, tenant CRUD, audit log, refresh token rotation in Redis
@@ -24,17 +24,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Shared packages: tsconfig, eslint-config, config, shared, logger, auth, ui, sdk
 - NestJS services: gateway, auth-service, notification-service, helpdesk-api
 - Next.js apps: helpdesk-saas, analytics-dashboard, realtime-chat, admin-panel
-- Portfolio website
+- NovaDesk website
 - Docker Compose, Nginx, GitHub Actions CI
 - Health checks, Swagger, metrics, OpenTelemetry preparation, BullMQ queues
 
 ### Changed
 
-- Split `@portfolio/auth/client` and `@portfolio/ui/client` for Next.js compatibility
+- Split `@novadesk/auth/client` and `@novadesk/ui/client` for Next.js compatibility
 - Isolated Prisma clients per service (`src/generated/prisma`)
 - Config package legacy aliases for backward compatibility
 
 ### Fixed
 
-- TypeScript config exports for `@portfolio/tsconfig/react.json`
+- TypeScript config exports for `@novadesk/tsconfig/react.json`
 - Frontend build errors from NestJS guards in auth package barrel export

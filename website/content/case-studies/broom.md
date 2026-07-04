@@ -165,11 +165,11 @@ Suporte a npm, pip, cargo, go modules com interfaces unificadas.
 
 ---
 
-## 11. Relação com Portfolio OS
+## 11. Relação com NovaDesk
 
-Conceitos do Broom que informam o Portfolio OS:
+Conceitos do Broom que informam o NovaDesk:
 
-- Pipeline de análise assíncrona (BullMQ workers no Portfolio OS)
+- Pipeline de análise assíncrona (BullMQ workers no NovaDesk)
 - Containers isolados para execução (Docker no CI)
 - Plugin/extensible architecture (pacotes compartilhados)
 - Priorização por severidade (alertas em Observability)

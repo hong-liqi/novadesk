@@ -1,4 +1,4 @@
-import { Text } from '@portfolio/ui';
+import { Text } from '@novadesk/ui';
 import Link from 'next/link';
 
 const NAV_LINKS = [
@@ -21,7 +21,7 @@ export function SiteHeader() {
             weight="semibold"
             className="text-white group-hover:text-blue-300"
           >
-            Portfolio OS
+            NovaDesk
           </Text>
         </Link>
 

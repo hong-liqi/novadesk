@@ -19,7 +19,7 @@ export type RefreshHandler = (refreshToken: string) => Promise<{
 }>;
 
 const DEFAULT_REFRESH_BUFFER_MS = 60_000;
-const DEFAULT_STORAGE_KEY = 'portfolio.auth.tokens';
+const DEFAULT_STORAGE_KEY = 'novadesk.auth.tokens';
 
 export class TokenManager {
   private readonly options: Required<Pick<TokenManagerOptions, 'refreshBufferMs' | 'storageKey'>> &

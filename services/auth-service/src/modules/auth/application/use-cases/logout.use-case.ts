@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '@portfolio/auth';
+import type { AuthUser } from '@novadesk/auth';
 import { AuditService } from '@infrastructure/auth/audit.service';
 import { RefreshTokenService } from '@infrastructure/auth/refresh-token.service';
 import type { LogoutDto } from '../dto/auth.dto';

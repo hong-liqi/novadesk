@@ -2,7 +2,7 @@
 
 ## Our Pledge
 
-We pledge to make participation in the Portfolio OS project a harassment-free experience for everyone.
+We pledge to make participation in the NovaDesk project a harassment-free experience for everyone.
 
 ## Our Standards
 

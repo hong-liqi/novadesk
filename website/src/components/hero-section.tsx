@@ -1,4 +1,4 @@
-import { Stack, Text } from '@portfolio/ui';
+import { Stack, Text } from '@novadesk/ui';
 import Link from 'next/link';
 
 const CTA_LINKS = [
@@ -21,7 +21,7 @@ export function HeroSection() {
           weight="medium"
           className="mb-4 uppercase tracking-widest !text-blue-400"
         >
-          Portfolio OS
+          NovaDesk
         </Text>
         <Text
           as="h1"

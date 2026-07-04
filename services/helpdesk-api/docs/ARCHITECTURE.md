@@ -155,7 +155,7 @@ sequenceDiagram
   User->>Frontend: Open ticket
   Frontend->>Gateway: GET /api/v1/tickets (Bearer)
   Gateway->>HelpdeskAPI: Forward JWT
-  HelpdeskAPI->>HelpdeskAPI: Validate via portfolio auth
+  HelpdeskAPI->>HelpdeskAPI: Validate via NovaDesk auth
   HelpdeskAPI-->>Frontend: Ticket data
 ```
 

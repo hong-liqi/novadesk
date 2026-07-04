@@ -1,4 +1,4 @@
-import type { PortfolioClient } from '../client';
+import type { NovaDeskClient } from '../client';
 
 export interface AnalyticsKpis {
   workspaceId: string;
@@ -26,7 +26,7 @@ export interface GetTrendsParams {
 }
 
 export class AnalyticsClient {
-  constructor(private readonly client: PortfolioClient) {}
+  constructor(private readonly client: NovaDeskClient) {}
 
   getKpis(workspaceId: string): Promise<AnalyticsKpis> {
     return this.client
@@ -50,6 +50,6 @@ export class AnalyticsClient {
   }
 }
 
-export function createAnalyticsClient(client: PortfolioClient): AnalyticsClient {
+export function createAnalyticsClient(client: NovaDeskClient): AnalyticsClient {
   return new AnalyticsClient(client);
 }

@@ -2,18 +2,18 @@
 
 **Status:** Accepted  
 **Date:** 2026-07-03  
-**Deciders:** Portfolio OS architecture  
+**Deciders:** NovaDesk architecture  
 **Related:** [ARCHITECTURE.md](../ARCHITECTURE.md), [ROADMAP.md](../ROADMAP.md)
 
 ---
 
 ## Context
 
-Helpdesk SaaS is the flagship application of Portfolio OS — the primary project shown to recruiters. We need an architecture that:
+Helpdesk SaaS is the flagship application of NovaDesk — the primary project shown to recruiters. We need an architecture that:
 
 1. Demonstrates senior-level system design without premature implementation
 2. Differs completely from the Spell case study (vocabulary learning) while matching its technical depth
-3. Integrates with existing Portfolio OS shared packages and services
+3. Integrates with existing NovaDesk shared packages and services
 4. Supports future AI-assisted workflows without coupling to a specific provider
 5. Scales from scaffold to production incrementally via backlog items
 
@@ -30,7 +30,7 @@ Implement a **single NestJS service** (`helpdesk-api`) with **22 bounded-context
 - `infrastructure/` — Prisma repositories, messaging
 - `presentation/` — controllers, validators
 
-**Rationale:** One deployable unit simplifies the portfolio demo and local development. Module boundaries are explicit and extractable to microservices later (e.g. `analytics-api`).
+**Rationale:** One deployable unit simplifies the NovaDesk demo and local development. Module boundaries are explicit and extractable to microservices later (e.g. `analytics-api`).
 
 ### 2. Workspace-scoped multi-tenancy
 
@@ -52,7 +52,7 @@ Next.js app structured as:
 
 Single `helpdesk_db` with normalized schema. No cross-service DB access.
 
-**Rationale:** Consistent with Portfolio OS stack; schema serves as living documentation.
+**Rationale:** Consistent with NovaDesk stack; schema serves as living documentation.
 
 ### 5. AI as an isolated module with ports only
 
@@ -62,14 +62,14 @@ The `ai` module defines boundaries (`AiContext` entity, repository port) but **n
 
 ### 6. Shared packages for cross-cutting concerns
 
-| Concern                  | Package                   |
-| ------------------------ | ------------------------- |
-| Auth guards / decorators | `@portfolio/auth`         |
-| Env validation           | `@portfolio/config`       |
-| Logging                  | `@portfolio/logger`       |
-| API contracts            | `@portfolio/shared`       |
-| HTTP client              | `@portfolio/sdk` (future) |
-| UI components            | `@portfolio/ui`           |
+| Concern                  | Package                  |
+| ------------------------ | ------------------------ |
+| Auth guards / decorators | `@novadesk/auth`         |
+| Env validation           | `@novadesk/config`       |
+| Logging                  | `@novadesk/logger`       |
+| API contracts            | `@novadesk/shared`       |
+| HTTP client              | `@novadesk/sdk` (future) |
+| UI components            | `@novadesk/ui`           |
 
 **Rationale:** Demonstrates monorepo cohesion; avoids duplicating infrastructure code.
 
@@ -93,7 +93,7 @@ Controllers throw `Not implemented`; repositories return `null`; use cases deleg
 ### Negative
 
 - Large folder tree before visible features
-- Some boilerplate per module (acceptable for portfolio depth)
+- Some boilerplate per module (acceptable for NovaDesk depth)
 - Modular monolith may need extraction if scope grows significantly
 
 ### Risks and Mitigations
@@ -108,18 +108,18 @@ Controllers throw `Not implemented`; repositories return `null`; use cases deleg
 
 ## Alternatives Considered
 
-| Alternative                           | Rejected because                            |
-| ------------------------------------- | ------------------------------------------- |
-| Microservices per module from day one | Operational overhead for portfolio demo     |
-| Copy Spell architecture               | User explicitly forbade; different domain   |
-| Single src without modules            | Poor scalability demonstration              |
-| GraphQL API                           | REST aligns with Portfolio OS API standards |
+| Alternative                           | Rejected because                          |
+| ------------------------------------- | ----------------------------------------- |
+| Microservices per module from day one | Operational overhead for NovaDesk demo    |
+| Copy Spell architecture               | User explicitly forbade; different domain |
+| Single src without modules            | Poor scalability demonstration            |
+| GraphQL API                           | REST aligns with NovaDesk API standards   |
 
 ---
 
 ## Compliance
 
-- Follows `PORTFOLIO_OS_MASTER_SPEC.md`
+- Follows `NOVADESK_MASTER_SPEC.md`
 - Uses existing shared packages
 - Documented in README and ARCHITECTURE.md
 - Prisma schema follows naming conventions (snake_case, UUID ids)

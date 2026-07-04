@@ -1,9 +1,9 @@
-# 00 — Visão do Portfolio OS
+# 00 — Visão do NovaDesk
 
 **Versão:** 1.0  
 **Status:** Aprovado  
 **Última atualização:** 2026-07-03  
-**Relacionado:** [PORTFOLIO_OS_MASTER_SPEC.md](../PORTFOLIO_OS_MASTER_SPEC.md), [01-Architecture.md](./01-Architecture.md), [09-Roadmap.md](./09-Roadmap.md)
+**Relacionado:** [NOVADESK_MASTER_SPEC.md](../NOVADESK_MASTER_SPEC.md), [01-Architecture.md](./01-Architecture.md), [09-Roadmap.md](./09-Roadmap.md)
 
 ---
 
@@ -11,7 +11,7 @@
 
 Construir um ecossistema completo de engenharia de software que demonstre capacidade técnica equivalente à de um **Software Engineer Sênior**, com qualidade, organização e maturidade comparáveis à de uma **startup madura**.
 
-O Portfolio OS não é uma coleção de projetos isolados. É uma **plataforma integrada** onde serviços, aplicações e pacotes compartilhados coexistem sob governança unificada, observabilidade centralizada e pipelines de entrega consistentes.
+O NovaDesk não é uma coleção de projetos isolados. É uma **plataforma integrada** onde serviços, aplicações e pacotes compartilhados coexistem sob governança unificada, observabilidade centralizada e pipelines de entrega consistentes.
 
 ---
 
@@ -25,7 +25,7 @@ Portfólios tradicionais de desenvolvedores apresentam limitações estruturais:
 - Código tutorial sem testes, sem contratos de API e sem estratégia de deploy
 - Impossibilidade de avaliar maturidade técnica sem acesso ao código
 
-O Portfolio OS resolve isso ao funcionar como um **produto real em escala reduzida**: múltiplos domínios de negócio, microsserviços com boundaries claros, frontend moderno, infraestrutura containerizada e documentação que permite avaliação externa sem acesso ao código proprietário.
+O NovaDesk resolve isso ao funcionar como um **produto real em escala reduzida**: múltiplos domínios de negócio, microsserviços com boundaries claros, frontend moderno, infraestrutura containerizada e documentação que permite avaliação externa sem acesso ao código proprietário.
 
 ---
 
@@ -35,15 +35,15 @@ O Portfolio OS resolve isso ao funcionar como um **produto real em escala reduzi
 
 Permitir que um recrutador, tech lead ou engenheiro avaliem, exclusivamente via documentação e artefatos públicos:
 
-| Dimensão | O que deve ser demonstrável |
-|----------|----------------------------|
-| Qualidade de código | Padrões, testes, revisão, lint |
+| Dimensão                | O que deve ser demonstrável                       |
+| ----------------------- | ------------------------------------------------- |
+| Qualidade de código     | Padrões, testes, revisão, lint                    |
 | Capacidade arquitetural | Decisões documentadas, boundaries, escalabilidade |
-| Organização | Monorepo estruturado, convenções claras |
-| Documentação | ADRs, RFCs, runbooks, APIs documentadas |
-| Maturidade técnica | CI/CD, Docker, observabilidade, segurança |
-| Comunicação | Case studies, narrativa de problemas e soluções |
-| Experiência prática | Sistemas integrados em produção simulada |
+| Organização             | Monorepo estruturado, convenções claras           |
+| Documentação            | ADRs, RFCs, runbooks, APIs documentadas           |
+| Maturidade técnica      | CI/CD, Docker, observabilidade, segurança         |
+| Comunicação             | Case studies, narrativa de problemas e soluções   |
+| Experiência prática     | Sistemas integrados em produção simulada          |
 
 ### 3.2 Objetivos técnicos
 
@@ -67,16 +67,16 @@ Demonstrar domínio em:
 
 ### 4.1 Aplicações integradas
 
-| ID | Aplicação | Domínio |
-|----|-----------|---------|
-| APP-01 | Auth Service | Identidade, autenticação e autorização |
-| APP-02 | API Gateway | Roteamento, rate limiting, terminação TLS |
+| ID     | Aplicação            | Domínio                                   |
+| ------ | -------------------- | ----------------------------------------- |
+| APP-01 | Auth Service         | Identidade, autenticação e autorização    |
+| APP-02 | API Gateway          | Roteamento, rate limiting, terminação TLS |
 | APP-03 | Notification Service | E-mail, push e notificações em tempo real |
-| APP-04 | HelpDesk SaaS | Tickets, SLA, atendimento ao cliente |
-| APP-05 | Analytics Dashboard | Métricas, relatórios e visualizações |
-| APP-06 | Realtime Chat | Mensagens em tempo real |
-| APP-07 | Admin Portal | Gestão centralizada da plataforma |
-| APP-08 | Portfolio Website | Site público do portfólio |
+| APP-04 | HelpDesk SaaS        | Tickets, SLA, atendimento ao cliente      |
+| APP-05 | Analytics Dashboard  | Métricas, relatórios e visualizações      |
+| APP-06 | Realtime Chat        | Mensagens em tempo real                   |
+| APP-07 | Admin Portal         | Gestão centralizada da plataforma         |
+| APP-08 | NovaDesk Website     | Site público do portfólio                 |
 
 Detalhamento em [16-Service-Catalog.md](./16-Service-Catalog.md).
 
@@ -160,14 +160,14 @@ O próprio autor do portfólio — responsável por arquitetura, implementação
 
 ### 6.2 Personas de avaliação
 
-| Persona | Interesse | Artefatos relevantes |
-|---------|-----------|---------------------|
-| Recrutador técnico | Maturidade e organização | Vision, Roadmap, Case Studies |
-| Tech Lead | Arquitetura e decisões | Architecture, ADRs, Service Catalog |
-| Engenheiro backend | APIs e serviços | API Standards, Data Architecture |
-| Engenheiro frontend | UX e integração | Tech Stack, SDK, UI package |
-| DevOps/SRE | Infra e operação | DevOps, Observability, Runbooks |
-| Agente de IA (Cursor, etc.) | Instruções executáveis | Toda documentação + Master Spec |
+| Persona                     | Interesse                | Artefatos relevantes                |
+| --------------------------- | ------------------------ | ----------------------------------- |
+| Recrutador técnico          | Maturidade e organização | Vision, Roadmap, Case Studies       |
+| Tech Lead                   | Arquitetura e decisões   | Architecture, ADRs, Service Catalog |
+| Engenheiro backend          | APIs e serviços          | API Standards, Data Architecture    |
+| Engenheiro frontend         | UX e integração          | Tech Stack, SDK, UI package         |
+| DevOps/SRE                  | Infra e operação         | DevOps, Observability, Runbooks     |
+| Agente de IA (Cursor, etc.) | Instruções executáveis   | Toda documentação + Master Spec     |
 
 ---
 
@@ -175,25 +175,25 @@ O próprio autor do portfólio — responsável por arquitetura, implementação
 
 ### 7.1 Métricas de produto (portfólio)
 
-| Métrica | Meta v1.0 |
-|---------|-----------|
-| Serviços em produção simulada | 8/8 integrados |
-| Cobertura de testes (backend) | ≥ 80% linhas em serviços críticos |
-| Cobertura de testes (frontend) | ≥ 70% componentes críticos |
-| APIs com OpenAPI | 100% |
-| Serviços com CI verde | 100% |
-| ADRs para decisões arquiteturais | ≥ 15 |
-| Case studies completos | 3/3 |
-| Tempo para onboarding de dev | ≤ 2 dias apenas com docs |
+| Métrica                          | Meta v1.0                         |
+| -------------------------------- | --------------------------------- |
+| Serviços em produção simulada    | 8/8 integrados                    |
+| Cobertura de testes (backend)    | ≥ 80% linhas em serviços críticos |
+| Cobertura de testes (frontend)   | ≥ 70% componentes críticos        |
+| APIs com OpenAPI                 | 100%                              |
+| Serviços com CI verde            | 100%                              |
+| ADRs para decisões arquiteturais | ≥ 15                              |
+| Case studies completos           | 3/3                               |
+| Tempo para onboarding de dev     | ≤ 2 dias apenas com docs          |
 
 ### 7.2 Métricas operacionais (plataforma simulada)
 
-| Métrica | Meta |
-|---------|------|
-| Uptime em ambiente de staging | ≥ 99.5% |
-| P95 latência API Gateway | ≤ 200ms (excluindo operações pesadas) |
-| Tempo de build CI (monorepo) | ≤ 15 min |
-| Tempo de deploy | ≤ 10 min |
+| Métrica                       | Meta                                  |
+| ----------------------------- | ------------------------------------- |
+| Uptime em ambiente de staging | ≥ 99.5%                               |
+| P95 latência API Gateway      | ≤ 200ms (excluindo operações pesadas) |
+| Tempo de build CI (monorepo)  | ≤ 15 min                              |
+| Tempo de deploy               | ≤ 10 min                              |
 
 ---
 
@@ -232,14 +232,14 @@ Roadmap detalhado em [09-Roadmap.md](./09-Roadmap.md).
 
 ## 10. Relação com outros documentos
 
-| Documento | Relação |
-|-----------|---------|
-| [01-Architecture.md](./01-Architecture.md) | Como a visão se materializa tecnicamente |
-| [02-Tech-Stack.md](./02-Tech-Stack.md) | Tecnologias que habilitam a visão |
-| [09-Roadmap.md](./09-Roadmap.md) | Sequência de entrega |
-| [10-Backlog.md](./10-Backlog.md) | Trabalho granular |
-| [11-Definition-of-Done.md](./11-Definition-of-Done.md) | Critérios de conclusão |
-| [case-studies/](./case-studies/) | Narrativa de experiência prévia |
+| Documento                                              | Relação                                  |
+| ------------------------------------------------------ | ---------------------------------------- |
+| [01-Architecture.md](./01-Architecture.md)             | Como a visão se materializa tecnicamente |
+| [02-Tech-Stack.md](./02-Tech-Stack.md)                 | Tecnologias que habilitam a visão        |
+| [09-Roadmap.md](./09-Roadmap.md)                       | Sequência de entrega                     |
+| [10-Backlog.md](./10-Backlog.md)                       | Trabalho granular                        |
+| [11-Definition-of-Done.md](./11-Definition-of-Done.md) | Critérios de conclusão                   |
+| [case-studies/](./case-studies/)                       | Narrativa de experiência prévia          |
 
 ---
 

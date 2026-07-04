@@ -6,7 +6,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages ./packages
 COPY services/notification-service/package.json ./services/notification-service/
-RUN pnpm install --frozen-lockfile --filter @portfolio/notification-service...
+RUN pnpm install --frozen-lockfile --filter @novadesk/notification-service...
 
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY services/notification-service ./services/notification-service
-RUN pnpm turbo run build --filter=@portfolio/notification-service
+RUN pnpm turbo run build --filter=@novadesk/notification-service
 
 FROM node:20-alpine AS production
 WORKDIR /app

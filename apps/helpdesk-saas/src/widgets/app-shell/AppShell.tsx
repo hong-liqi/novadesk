@@ -1,6 +1,6 @@
 'use client';
 
-import { DashboardLayout } from '@portfolio/ui/client';
+import { DashboardLayout } from '@novadesk/ui/client';
 import { Header } from '../header/Header';
 import { Sidebar } from '../sidebar/Sidebar';
 

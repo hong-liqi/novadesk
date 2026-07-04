@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import { LoggerInterceptor, LoggerService, createLogger } from '@portfolio/logger';
+import { LoggerInterceptor, LoggerService, createLogger } from '@novadesk/logger';
 import { createSwaggerConfig } from '@infrastructure/swagger/swagger.config';
 import { AppModule } from './app.module';
 
@@ -22,7 +22,7 @@ async function bootstrap(): Promise<void> {
     app,
     createSwaggerConfig(
       'Analytics API',
-      'Workspace KPIs, ticket trends, and CSV exports for Portfolio OS',
+      'Workspace KPIs, ticket trends, and CSV exports for NovaDesk',
     ),
   );
   SwaggerModule.setup('api/docs', app, document);

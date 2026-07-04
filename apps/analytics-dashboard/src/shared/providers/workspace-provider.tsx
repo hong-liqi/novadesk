@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@portfolio/auth/client';
-import type { Workspace } from '@portfolio/shared';
+import { useAuth } from '@novadesk/auth/client';
+import type { Workspace } from '@novadesk/shared';
 import {
   createContext,
   useCallback,

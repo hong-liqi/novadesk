@@ -9,7 +9,7 @@
 
 ## 1. Objetivo
 
-Este documento define padrões de código obrigatórios para todo o monorepo Portfolio OS. O objetivo é garantir consistência, legibilidade, testabilidade e manutenibilidade independentemente do autor ou agente de IA que produza o código.
+Este documento define padrões de código obrigatórios para todo o monorepo NovaDesk. O objetivo é garantir consistência, legibilidade, testabilidade e manutenibilidade independentemente do autor ou agente de IA que produza o código.
 
 Violações bloqueiam merge via CI (lint, typecheck, review).
 
@@ -69,7 +69,7 @@ Ordem de imports (enforced por ESLint):
 
 1. Node.js built-ins
 2. Dependências externas
-3. Pacotes internos (`@portfolio/*`)
+3. Pacotes internos (`@novadesk/*`)
 4. Imports relativos (parent, sibling, index)
 
 Separar grupos com linha em branco. Usar path aliases definidos em cada projeto.
@@ -153,7 +153,7 @@ Exceções de domínio nunca vazam detalhes internos para o cliente.
 
 ### 4.7 Logging
 
-- Usar pacote `@portfolio/logger` exclusivamente
+- Usar pacote `@novadesk/logger` exclusivamente
 - Nunca `console.log` em código de produção
 - Log estruturado com context: `requestId`, `userId`, `tenantId`, `service`
 - Nível INFO para operações normais, WARN para degradação, ERROR para falhas

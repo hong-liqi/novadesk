@@ -8,7 +8,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
-import type { AuthUser } from '@portfolio/auth';
+import type { AuthUser } from '@novadesk/auth';
 import { JwtValidationService } from '@infrastructure/auth/jwt-validation.service';
 import type { Server, Socket } from 'socket.io';
 import { ChatRepository } from './chat.repository';

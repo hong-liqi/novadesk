@@ -7,8 +7,8 @@ import {
   observabilityConfigSchema,
   redisConfigSchema,
   validateConfig,
-} from '@portfolio/config';
-import { LoggerModule } from '@portfolio/logger';
+} from '@novadesk/config';
+import { LoggerModule } from '@novadesk/logger';
 import { DatabaseModule } from '@infrastructure/database/database.module';
 import { ObservabilityModule } from '@infrastructure/observability/observability.module';
 import { ChatModule } from '@modules/chat/chat.module';

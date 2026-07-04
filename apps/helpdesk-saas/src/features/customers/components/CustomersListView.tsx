@@ -1,6 +1,6 @@
 'use client';
 
-import type { HelpdeskCustomer } from '@portfolio/sdk';
+import type { HelpdeskCustomer } from '@novadesk/sdk';
 import {
   Button,
   Input,
@@ -11,8 +11,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@portfolio/ui';
-import { Modal, useDisclosure } from '@portfolio/ui/client';
+} from '@novadesk/ui';
+import { Modal, useDisclosure } from '@novadesk/ui/client';
 import { useCallback, useEffect, useState } from 'react';
 import { helpdeskClient } from '@/shared/services';
 import { useWorkspace } from '@/shared/hooks/use-workspace';

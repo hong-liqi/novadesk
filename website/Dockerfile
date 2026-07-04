@@ -6,7 +6,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages ./packages
 COPY website/package.json ./website/
-RUN pnpm install --frozen-lockfile --filter @portfolio/website...
+RUN pnpm install --frozen-lockfile --filter @novadesk/website...
 
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -16,7 +16,7 @@ COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY website ./website
 COPY docs/case-studies ./website/content/case-studies
-RUN pnpm turbo run build --filter=@portfolio/website
+RUN pnpm turbo run build --filter=@novadesk/website
 
 FROM node:20-alpine AS production
 WORKDIR /app

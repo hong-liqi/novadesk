@@ -9,19 +9,19 @@
 
 ## 1. Objetivo
 
-Definir o fluxo de trabalho Git, estratégia de branches, convenções de commit, processo de pull request e estratégia de releases para o monorepo Portfolio OS.
+Definir o fluxo de trabalho Git, estratégia de branches, convenções de commit, processo de pull request e estratégia de releases para o monorepo NovaDesk.
 
 ---
 
 ## 2. Repositório
 
-| Propriedade | Valor |
-|-------------|-------|
-| Plataforma | GitHub |
-| Estrutura | Monorepo único |
-| Branch padrão | `main` |
-| Branch de desenvolvimento | `develop` (opcional para features isoladas) |
-| Proteção de branch | `main` protegida — merge apenas via PR com CI verde |
+| Propriedade               | Valor                                               |
+| ------------------------- | --------------------------------------------------- |
+| Plataforma                | GitHub                                              |
+| Estrutura                 | Monorepo único                                      |
+| Branch padrão             | `main`                                              |
+| Branch de desenvolvimento | `develop` (opcional para features isoladas)         |
+| Proteção de branch        | `main` protegida — merge apenas via PR com CI verde |
 
 ---
 
@@ -31,24 +31,25 @@ Adotamos **Trunk-Based Development** com feature branches de curta duração, co
 
 ### 3.1 Tipos de branch
 
-| Prefixo | Propósito | Base | Merge em | Lifetime máximo |
-|---------|-----------|------|----------|-----------------|
-| `main` | Produção estável | — | — | Permanente |
-| `develop` | Integração contínua | `main` | `main` (release) | Permanente |
-| `feat/` | Nova funcionalidade | `develop` | `develop` | 3 dias |
-| `fix/` | Correção de bug | `develop` ou `main` | `develop` ou `main` | 1 dia |
-| `hotfix/` | Correção urgente em produção | `main` | `main` + `develop` | 4 horas |
-| `chore/` | Manutenção, deps, tooling | `develop` | `develop` | 2 dias |
-| `docs/` | Apenas documentação | `develop` | `develop` | 2 dias |
-| `refactor/` | Refatoração sem mudança de comportamento | `develop` | `develop` | 3 dias |
-| `test/` | Adição/melhoria de testes | `develop` | `develop` | 2 dias |
-| `release/` | Preparação de release | `develop` | `main` + `develop` | 1 dia |
+| Prefixo     | Propósito                                | Base                | Merge em            | Lifetime máximo |
+| ----------- | ---------------------------------------- | ------------------- | ------------------- | --------------- |
+| `main`      | Produção estável                         | —                   | —                   | Permanente      |
+| `develop`   | Integração contínua                      | `main`              | `main` (release)    | Permanente      |
+| `feat/`     | Nova funcionalidade                      | `develop`           | `develop`           | 3 dias          |
+| `fix/`      | Correção de bug                          | `develop` ou `main` | `develop` ou `main` | 1 dia           |
+| `hotfix/`   | Correção urgente em produção             | `main`              | `main` + `develop`  | 4 horas         |
+| `chore/`    | Manutenção, deps, tooling                | `develop`           | `develop`           | 2 dias          |
+| `docs/`     | Apenas documentação                      | `develop`           | `develop`           | 2 dias          |
+| `refactor/` | Refatoração sem mudança de comportamento | `develop`           | `develop`           | 3 dias          |
+| `test/`     | Adição/melhoria de testes                | `develop`           | `develop`           | 2 dias          |
+| `release/`  | Preparação de release                    | `develop`           | `main` + `develop`  | 1 dia           |
 
 ### 3.2 Nomenclatura de branches
 
 Formato: `{prefixo}/{ticket-id}-{descricao-curta}`
 
 Exemplos:
+
 - `feat/BL-042-auth-service-login-endpoint`
 - `fix/BL-189-helpdesk-ticket-pagination`
 - `hotfix/BL-201-jwt-expiration-bug`
@@ -82,19 +83,19 @@ Todo commit segue [Conventional Commits 1.0.0](https://www.conventionalcommits.o
 
 ### 4.2 Types permitidos
 
-| Type | Uso |
-|------|-----|
-| `feat` | Nova funcionalidade |
-| `fix` | Correção de bug |
-| `docs` | Apenas documentação |
-| `style` | Formatação, sem mudança de lógica |
-| `refactor` | Refatoração sem feat/fix |
-| `perf` | Melhoria de performance |
-| `test` | Adição ou correção de testes |
-| `build` | Build system, dependências |
-| `ci` | CI/CD |
-| `chore` | Manutenção geral |
-| `revert` | Revert de commit anterior |
+| Type       | Uso                               |
+| ---------- | --------------------------------- |
+| `feat`     | Nova funcionalidade               |
+| `fix`      | Correção de bug                   |
+| `docs`     | Apenas documentação               |
+| `style`    | Formatação, sem mudança de lógica |
+| `refactor` | Refatoração sem feat/fix          |
+| `perf`     | Melhoria de performance           |
+| `test`     | Adição ou correção de testes      |
+| `build`    | Build system, dependências        |
+| `ci`       | CI/CD                             |
+| `chore`    | Manutenção geral                  |
+| `revert`   | Revert de commit anterior         |
 
 ### 4.3 Scopes
 
@@ -152,14 +153,14 @@ Todo PR utiliza template em `.github/pull_request_template.md`:
 
 ### 5.3 Requisitos de merge
 
-| Requisito | Obrigatório |
-|-----------|-------------|
-| CI verde | Sim |
-| 1 aprovação | Sim (self-review documentado para solo dev) |
-| Sem conflitos | Sim |
-| Conventional commits no PR (squash) | Sim |
-| Linked backlog item | Sim |
-| DoD checklist completo | Sim |
+| Requisito                           | Obrigatório                                 |
+| ----------------------------------- | ------------------------------------------- |
+| CI verde                            | Sim                                         |
+| 1 aprovação                         | Sim (self-review documentado para solo dev) |
+| Sem conflitos                       | Sim                                         |
+| Conventional commits no PR (squash) | Sim                                         |
+| Linked backlog item                 | Sim                                         |
+| DoD checklist completo              | Sim                                         |
 
 ### 5.4 Estratégia de merge
 
@@ -169,13 +170,13 @@ Todo PR utiliza template em `.github/pull_request_template.md`:
 
 ### 5.5 Tamanho de PR
 
-| Tamanho | Linhas alteradas | Ação |
-|---------|------------------|------|
-| XS | < 50 | Ideal |
-| S | 50-200 | Bom |
-| M | 200-500 | Aceitável |
-| L | 500-1000 | Requer justificativa |
-| XL | > 1000 | Deve ser dividido |
+| Tamanho | Linhas alteradas | Ação                 |
+| ------- | ---------------- | -------------------- |
+| XS      | < 50             | Ideal                |
+| S       | 50-200           | Bom                  |
+| M       | 200-500          | Aceitável            |
+| L       | 500-1000         | Requer justificativa |
+| XL      | > 1000           | Deve ser dividido    |
 
 ---
 
@@ -189,11 +190,11 @@ O monorepo usa **Semantic Versioning 2.0.0** para releases da plataforma:
 MAJOR.MINOR.PATCH
 ```
 
-| Incremento | Quando |
-|------------|--------|
-| MAJOR | Breaking changes em APIs públicas ou SDK |
-| MINOR | Novas features backward-compatible |
-| PATCH | Bug fixes backward-compatible |
+| Incremento | Quando                                   |
+| ---------- | ---------------------------------------- |
+| MAJOR      | Breaking changes em APIs públicas ou SDK |
+| MINOR      | Novas features backward-compatible       |
+| PATCH      | Bug fixes backward-compatible            |
 
 ### 6.2 Versionamento por pacote
 
@@ -224,11 +225,11 @@ Categorias: Added, Changed, Deprecated, Removed, Fixed, Security.
 
 ## 7. Git hooks (Husky)
 
-| Hook | Ação |
-|------|------|
+| Hook         | Ação                                               |
+| ------------ | -------------------------------------------------- |
 | `pre-commit` | lint-staged (ESLint + Prettier em arquivos staged) |
-| `commit-msg` | commitlint (Conventional Commits) |
-| `pre-push` | typecheck do escopo afetado (via Turborepo) |
+| `commit-msg` | commitlint (Conventional Commits)                  |
+| `pre-push`   | typecheck do escopo afetado (via Turborepo)        |
 
 ---
 
@@ -252,14 +253,14 @@ Configuração em `turbo.json` na raiz.
 
 ## 10. Governança de mudanças arquiteturais
 
-| Tipo de mudança | Processo |
-|-----------------|----------|
-| Bug fix localizado | PR normal |
-| Nova feature em serviço existente | PR + backlog item |
-| Novo serviço ou pacote | RFC + ADR + PR |
-| Mudança de stack | ADR + RFC + atualização de docs |
-| Breaking change em API | ADR + bump MAJOR + deprecation notice |
-| Mudança de schema compartilhado | RFC + migration plan |
+| Tipo de mudança                   | Processo                              |
+| --------------------------------- | ------------------------------------- |
+| Bug fix localizado                | PR normal                             |
+| Nova feature em serviço existente | PR + backlog item                     |
+| Novo serviço ou pacote            | RFC + ADR + PR                        |
+| Mudança de stack                  | ADR + RFC + atualização de docs       |
+| Breaking change em API            | ADR + bump MAJOR + deprecation notice |
+| Mudança de schema compartilhado   | RFC + migration plan                  |
 
 Templates: [templates/rfc-template.md](./templates/rfc-template.md), [templates/adr-template.md](./templates/adr-template.md).
 
@@ -275,20 +276,20 @@ Templates: [templates/rfc-template.md](./templates/rfc-template.md), [templates/
 
 ## 12. Acesso e permissões
 
-| Branch | Push direto | Merge via PR |
-|--------|-------------|--------------|
-| `main` | Proibido | Obrigatório |
-| `develop` | Proibido | Obrigatório |
-| Feature branches | Permitido (autor) | — |
+| Branch           | Push direto       | Merge via PR |
+| ---------------- | ----------------- | ------------ |
+| `main`           | Proibido          | Obrigatório  |
+| `develop`        | Proibido          | Obrigatório  |
+| Feature branches | Permitido (autor) | —            |
 
 ---
 
 ## 13. Referências cruzadas
 
-| Tópico | Documento |
-|--------|-----------|
-| Coding standards | [03-Coding-Standards.md](./03-Coding-Standards.md) |
-| CI/CD | [06-DevOps.md](./06-DevOps.md) |
+| Tópico             | Documento                                              |
+| ------------------ | ------------------------------------------------------ |
+| Coding standards   | [03-Coding-Standards.md](./03-Coding-Standards.md)     |
+| CI/CD              | [06-DevOps.md](./06-DevOps.md)                         |
 | Definition of Done | [11-Definition-of-Done.md](./11-Definition-of-Done.md) |
-| Roadmap | [09-Roadmap.md](./09-Roadmap.md) |
-| Backlog | [10-Backlog.md](./10-Backlog.md) |
+| Roadmap            | [09-Roadmap.md](./09-Roadmap.md)                       |
+| Backlog            | [10-Backlog.md](./10-Backlog.md)                       |

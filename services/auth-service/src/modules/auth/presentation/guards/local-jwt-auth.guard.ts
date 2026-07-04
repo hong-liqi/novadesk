@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY, parseBearerToken } from '@portfolio/auth';
-import type { AuthRequest } from '@portfolio/auth';
+import { IS_PUBLIC_KEY, parseBearerToken } from '@novadesk/auth';
+import type { AuthRequest } from '@novadesk/auth';
 import { JwtService } from '@infrastructure/auth/jwt.service';
 
 @Injectable()

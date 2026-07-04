@@ -1,12 +1,12 @@
 'use client';
 
-import { Button, Input, Stack, Surface, Text } from '@portfolio/ui';
+import { Button, Input, Stack, Surface, Text } from '@novadesk/ui';
 import { FormEvent, useState } from 'react';
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 const CONTACT_ENDPOINT = '/api/v1/notifications/send';
-const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'contact@portfolio.local';
+const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'contact@novadesk.local';
 
 export function ContactForm() {
   const [name, setName] = useState('');
@@ -26,7 +26,7 @@ export function ContactForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           to: CONTACT_EMAIL,
-          subject: `Portfolio contact from ${name}`,
+          subject: `NovaDesk contact from ${name}`,
           body: `From: ${name} <${email}>\n\n${message}`,
           html: `<p><strong>From:</strong> ${name} (${email})</p><p>${message.replace(/\n/g, '<br/>')}</p>`,
         }),

@@ -46,11 +46,11 @@ Spell adotou arquitetura **monólito modular** com separação clara entre domí
 
 ### 3.2 Módulos
 
-| Módulo | Responsabilidade |
-|--------|------------------|
-| Auth | Registro, login, perfil, preferências |
-| Learning | Algoritmo SRS, sessões de estudo, progresso |
-| Content | Decks de vocabulário, palavras, traduções, áudio |
+| Módulo   | Responsabilidade                                 |
+| -------- | ------------------------------------------------ |
+| Auth     | Registro, login, perfil, preferências            |
+| Learning | Algoritmo SRS, sessões de estudo, progresso      |
+| Content  | Decks de vocabulário, palavras, traduções, áudio |
 
 ---
 
@@ -79,27 +79,27 @@ Baseado no SM-2 (SuperMemo 2) adaptado:
 
 ## 5. Tecnologias
 
-| Camada | Tecnologia |
-|--------|------------|
-| Backend | Node.js, TypeScript, Express |
-| Frontend | React, TypeScript |
-| Banco de dados | PostgreSQL |
-| Cache | Redis (sessões SRS, cache de decks) |
-| Autenticação | JWT |
-| Deploy | Docker, VPS |
-| Testes | Jest |
+| Camada         | Tecnologia                          |
+| -------------- | ----------------------------------- |
+| Backend        | Node.js, TypeScript, Express        |
+| Frontend       | React, TypeScript                   |
+| Banco de dados | PostgreSQL                          |
+| Cache          | Redis (sessões SRS, cache de decks) |
+| Autenticação   | JWT                                 |
+| Deploy         | Docker, VPS                         |
+| Testes         | Jest                                |
 
 ---
 
 ## 6. Responsabilidades
 
-| Componente | Responsabilidade |
-|------------|------------------|
-| Auth Module | Identidade, sessões, preferências de estudo |
-| Learning Module | SRS, sessões, progresso, estatísticas |
-| Content Module | CRUD de decks e palavras, importação |
-| Redis | Estado de sessão ativa, cache de cards devidos |
-| PostgreSQL | Persistência de usuários, progresso, conteúdo |
+| Componente      | Responsabilidade                               |
+| --------------- | ---------------------------------------------- |
+| Auth Module     | Identidade, sessões, preferências de estudo    |
+| Learning Module | SRS, sessões, progresso, estatísticas          |
+| Content Module  | CRUD de decks e palavras, importação           |
+| Redis           | Estado de sessão ativa, cache de cards devidos |
+| PostgreSQL      | Persistência de usuários, progresso, conteúdo  |
 
 ---
 
@@ -125,24 +125,24 @@ Suporte a importação de decks em formatos variados (CSV, Anki) com validação
 
 ## 8. Soluções
 
-| Desafio | Solução |
-|---------|---------|
-| Calibração SRS | Ease factor inicial por nível de proficiência; ajuste dinâmico após 20 revisões |
-| Performance | Índice composto (user_id, next_review_date); cache Redis de cards devidos com TTL 5min |
-| Multi-device | Last-write-wins com timestamp; sync on login |
-| Importação | Pipeline de validação: parse → validate → deduplicate → batch insert |
+| Desafio        | Solução                                                                                |
+| -------------- | -------------------------------------------------------------------------------------- |
+| Calibração SRS | Ease factor inicial por nível de proficiência; ajuste dinâmico após 20 revisões        |
+| Performance    | Índice composto (user_id, next_review_date); cache Redis de cards devidos com TTL 5min |
+| Multi-device   | Last-write-wins com timestamp; sync on login                                           |
+| Importação     | Pipeline de validação: parse → validate → deduplicate → batch insert                   |
 
 ---
 
 ## 9. Resultados
 
-| Métrica | Resultado |
-|---------|-----------|
-| Retenção após 30 dias | 78% (vs 35% com estudo tradicional) |
-| Tempo médio de sessão | 12 minutos |
-| Streak médio de usuários ativos | 14 dias |
-| Performance de seleção | < 50ms para 10.000 palavras |
-| Uptime | 99.2% em 6 meses de operação |
+| Métrica                         | Resultado                           |
+| ------------------------------- | ----------------------------------- |
+| Retenção após 30 dias           | 78% (vs 35% com estudo tradicional) |
+| Tempo médio de sessão           | 12 minutos                          |
+| Streak médio de usuários ativos | 14 dias                             |
+| Performance de seleção          | < 50ms para 10.000 palavras         |
+| Uptime                          | 99.2% em 6 meses de operação        |
 
 ---
 
@@ -156,9 +156,9 @@ Suporte a importação de decks em formatos variados (CSV, Anki) com validação
 
 ---
 
-## 11. Relação com Portfolio OS
+## 11. Relação com NovaDesk
 
-Conceitos do Spell que informam o Portfolio OS:
+Conceitos do Spell que informam o NovaDesk:
 
 - Monólito modular como padrão válido (HelpDesk API)
 - Redis para cache e estado efêmero

@@ -9,7 +9,7 @@
 
 ## 1. Objetivo
 
-Definir padrões para toda documentação do Portfolio OS: engenharia, serviços, APIs, ADRs, RFCs, READMEs e comentários inline.
+Definir padrões para toda documentação do NovaDesk: engenharia, serviços, APIs, ADRs, RFCs, READMEs e comentários inline.
 
 ---
 
@@ -238,7 +238,7 @@ RFC aceita gera: backlog items + ADR (se decisão arquitetural).
 
 A documentação deve ser escrita de forma que agentes de IA (Cursor, Codex, Claude) possam:
 
-1. Ler `PORTFOLIO_OS_MASTER_SPEC.md` como ponto de entrada
+1. Ler `NOVADESK_MASTER_SPEC.md` como ponto de entrada
 2. Seguir links para documentos específicos
 3. Encontrar backlog items com escopo claro
 4. Verificar DoD antes de marcar tarefa como completa

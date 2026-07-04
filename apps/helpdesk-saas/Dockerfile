@@ -6,7 +6,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages ./packages
 COPY apps/helpdesk-saas/package.json ./apps/helpdesk-saas/
-RUN pnpm install --frozen-lockfile --filter @portfolio/helpdesk-saas...
+RUN pnpm install --frozen-lockfile --filter @novadesk/helpdesk-saas...
 
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/helpdesk-saas ./apps/helpdesk-saas
-RUN pnpm turbo run build --filter=@portfolio/helpdesk-saas
+RUN pnpm turbo run build --filter=@novadesk/helpdesk-saas
 
 FROM node:20-alpine AS production
 WORKDIR /app

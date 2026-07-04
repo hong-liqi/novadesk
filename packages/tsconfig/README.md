@@ -1,14 +1,14 @@
-# @portfolio/tsconfig
+# @novadesk/tsconfig
 
-Shared TypeScript configuration presets for Portfolio OS.
+Shared TypeScript configuration presets for NovaDesk.
 
 ## Exports
 
-- `@portfolio/tsconfig`
-- `@portfolio/tsconfig/base`
-- `@portfolio/tsconfig/node`
-- `@portfolio/tsconfig/react`
-- `@portfolio/tsconfig/nestjs`
+- `@novadesk/tsconfig`
+- `@novadesk/tsconfig/base`
+- `@novadesk/tsconfig/node`
+- `@novadesk/tsconfig/react`
+- `@novadesk/tsconfig/nestjs`
 
 ## Purpose
 

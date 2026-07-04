@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import { LoggerInterceptor, LoggerService, createLogger } from '@portfolio/logger';
+import { LoggerInterceptor, LoggerService, createLogger } from '@novadesk/logger';
 import { createSwaggerConfig } from '@infrastructure/swagger/swagger.config';
 import { AppModule } from './app.module';
 
@@ -20,10 +20,7 @@ async function bootstrap(): Promise<void> {
 
   const document = SwaggerModule.createDocument(
     app,
-    createSwaggerConfig(
-      'Notification Service',
-      'Notification delivery API for Portfolio OS',
-    ),
+    createSwaggerConfig('Notification Service', 'Notification delivery API for NovaDesk'),
   );
   SwaggerModule.setup('api/docs', app, document);
 

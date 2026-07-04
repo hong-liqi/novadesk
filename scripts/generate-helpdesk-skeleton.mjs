@@ -364,7 +364,7 @@ export type WorkspaceStore = {
 `,
   'stores/index.ts': `export type { WorkspaceStore } from './workspace.store';
 `,
-  'services/api-client.ts': `/** Typed API client — uses @portfolio/sdk when implemented */
+  'services/api-client.ts': `/** Typed API client — uses @novadesk/sdk when implemented */
 export const helpdeskApiClient = {
   baseUrl: process.env.NEXT_PUBLIC_HELPDESK_API_URL ?? '/api/v1',
 };

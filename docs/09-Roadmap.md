@@ -20,7 +20,7 @@
 | M6 Analytics              | ✅ Concluído                 |
 | M7 Realtime Chat          | ✅ Concluído                 |
 | M8 Admin Portal           | ✅ Concluído                 |
-| M9 Portfolio Website      | ✅ Concluído                 |
+| M9 NovaDesk Website       | ✅ Concluído                 |
 | M10 CapRover / Infra      | ✅ captain-definition + docs |
 | M11–M13 Obs/Prod          | 🔲 Parcial                   |
 
@@ -28,7 +28,7 @@
 
 ## 1. Visão geral
 
-O desenvolvimento do Portfolio OS segue 14 milestones sequenciais (M0–M13), cada um entregando valor incremental e mantendo o ecossistema em estado deployável. A duração estimada total é de **24–30 semanas** em ritmo de desenvolvimento individual em tempo integral.
+O desenvolvimento do NovaDesk segue 14 milestones sequenciais (M0–M13), cada um entregando valor incremental e mantendo o ecossistema em estado deployável. A duração estimada total é de **24–30 semanas** em ritmo de desenvolvimento individual em tempo integral.
 
 ```
 M0 ──► M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 ──► M7 ──► M8 ──► M9 ──► M10 ──► M11 ──► M12 ──► M13
@@ -62,16 +62,16 @@ Fund.  Pkgs   Auth   GW     Notif  Help   Anlyt  Chat   Admin  Web    Infra   Ob
 
 **Objetivo:** Criar todos os pacotes compartilhados que serão consumidos por serviços e apps.
 
-| Entregável              | Critério de sucesso                     |
-| ----------------------- | --------------------------------------- |
-| `@portfolio/typescript` | Configs base publicadas                 |
-| `@portfolio/eslint`     | Regras compartilhadas                   |
-| `@portfolio/config`     | Schemas Zod de env vars                 |
-| `@portfolio/shared`     | Tipos, enums, schemas, utils            |
-| `@portfolio/logger`     | Logger Pino com context                 |
-| `@portfolio/auth`       | JWT utils, guards, client               |
-| `@portfolio/sdk`        | HTTP client base                        |
-| `@portfolio/ui`         | Design system inicial (10+ componentes) |
+| Entregável             | Critério de sucesso                     |
+| ---------------------- | --------------------------------------- |
+| `@novadesk/typescript` | Configs base publicadas                 |
+| `@novadesk/eslint`     | Regras compartilhadas                   |
+| `@novadesk/config`     | Schemas Zod de env vars                 |
+| `@novadesk/shared`     | Tipos, enums, schemas, utils            |
+| `@novadesk/logger`     | Logger Pino com context                 |
+| `@novadesk/auth`       | JWT utils, guards, client               |
+| `@novadesk/sdk`        | HTTP client base                        |
+| `@novadesk/ui`         | Design system inicial (10+ componentes) |
 
 **Dependências:** M0.
 
@@ -213,14 +213,14 @@ Fund.  Pkgs   Auth   GW     Notif  Help   Anlyt  Chat   Admin  Web    Infra   Ob
 
 ---
 
-### M9 — Portfolio Website (Semanas 22–23)
+### M9 — NovaDesk Website (Semanas 22–23)
 
 **Objetivo:** Site público do portfólio.
 
 | Entregável            | Critério de sucesso                 |
 | --------------------- | ----------------------------------- |
 | Landing page          | Design profissional, responsivo     |
-| Showcase de projetos  | Portfolio OS + case studies         |
+| Showcase de projetos  | NovaDesk + case studies             |
 | SEO                   | Meta tags, sitemap, structured data |
 | Formulário de contato | Integrado com Notification Service  |
 | Performance           | Lighthouse score ≥ 90               |
@@ -367,7 +367,7 @@ graph TD
 
 ## 6. Critérios de conclusão do projeto
 
-O Portfolio OS v1.0 está completo quando:
+O NovaDesk v1.0 está completo quando:
 
 - [ ] Todos os milestones M0–M13 concluídos
 - [ ] Todos os 560 backlog items Done

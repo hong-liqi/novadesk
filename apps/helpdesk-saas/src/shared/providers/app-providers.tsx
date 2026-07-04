@@ -1,7 +1,7 @@
 'use client';
 
-import { AuthProvider } from '@portfolio/auth/client';
-import type { AuthUser } from '@portfolio/auth/types';
+import { AuthProvider } from '@novadesk/auth/client';
+import type { AuthUser } from '@novadesk/auth/types';
 import { useCallback, type ReactNode } from 'react';
 import { authClient, tokenManager } from '@/shared/services';
 import { WorkspaceProvider } from './workspace-provider';

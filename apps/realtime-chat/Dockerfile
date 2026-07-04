@@ -6,7 +6,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages ./packages
 COPY apps/realtime-chat/package.json ./apps/realtime-chat/
-RUN pnpm install --frozen-lockfile --filter @portfolio/realtime-chat...
+RUN pnpm install --frozen-lockfile --filter @novadesk/realtime-chat...
 
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/realtime-chat ./apps/realtime-chat
-RUN pnpm turbo run build --filter=@portfolio/realtime-chat
+RUN pnpm turbo run build --filter=@novadesk/realtime-chat
 
 FROM node:20-alpine AS production
 WORKDIR /app

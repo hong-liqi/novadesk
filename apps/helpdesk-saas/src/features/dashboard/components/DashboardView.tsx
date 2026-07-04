@@ -1,7 +1,7 @@
 'use client';
 
-import type { DashboardSummary } from '@portfolio/sdk';
-import { Surface, Text } from '@portfolio/ui';
+import type { DashboardSummary } from '@novadesk/sdk';
+import { Surface, Text } from '@novadesk/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { helpdeskClient } from '@/shared/services';
 import { useWorkspace } from '@/shared/hooks/use-workspace';

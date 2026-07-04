@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
-import { Public } from '@portfolio/auth';
+import { Public } from '@novadesk/auth';
 import { RedisHealthIndicator } from './redis-health.indicator';
 
 @ApiTags('health')
@@ -26,8 +26,6 @@ export class HealthController {
   ready() {
     const redisUrl = this.configService.get<string>('REDIS_URL');
 
-    return this.health.check([
-      () => this.redisHealth.isHealthy('redis', redisUrl),
-    ]);
+    return this.health.check([() => this.redisHealth.isHealthy('redis', redisUrl)]);
   }
 }

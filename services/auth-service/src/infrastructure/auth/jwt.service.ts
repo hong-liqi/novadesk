@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { SignJWT, exportJWK, jwtVerify, type JWK, type KeyLike } from 'jose';
 import { createPrivateKey, createPublicKey } from 'node:crypto';
 import { randomUUID } from 'node:crypto';
-import type { JwtPayload } from '@portfolio/auth';
-import type { Role } from '@portfolio/shared';
+import type { JwtPayload } from '@novadesk/auth';
+import type { Role } from '@novadesk/shared';
 import { normalizePemKey } from '../../shared/lib/normalize-key';
 import { parseDuration } from '../../shared/lib/parse-duration';
 
@@ -38,9 +38,9 @@ export class JwtService implements OnModuleInit {
 
     this.privateKey = createPrivateKey(normalizePemKey(privateKeyPem));
     this.publicKey = createPublicKey(normalizePemKey(publicKeyPem));
-    this.kid = this.configService.get<string>('JWT_KID', 'portfolio-auth-dev-1');
-    this.issuer = this.configService.get<string>('JWT_ISSUER', 'portfolio-os-auth');
-    this.audience = this.configService.get<string>('JWT_AUDIENCE', 'portfolio-os');
+    this.kid = this.configService.get<string>('JWT_KID', 'novadesk-auth-dev-1');
+    this.issuer = this.configService.get<string>('JWT_ISSUER', 'novadesk-auth');
+    this.audience = this.configService.get<string>('JWT_AUDIENCE', 'novadesk');
     this.accessTokenTtlMs = parseDuration(
       this.configService.get<string>('ACCESS_TOKEN_TTL', '15m'),
     );

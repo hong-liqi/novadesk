@@ -1,4 +1,4 @@
-export { PortfolioClient, createSdkClient } from './client';
+export { NovaDeskClient, createSdkClient } from './client';
 export { AuthClient, createAuthClient } from './auth/auth.client';
 export { HelpdeskClient, createHelpdeskClient } from './helpdesk/helpdesk.client';
 export { AnalyticsClient, createAnalyticsClient } from './analytics/analytics.client';

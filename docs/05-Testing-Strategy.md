@@ -9,7 +9,7 @@
 
 ## 1. Objetivo
 
-Definir a estratégia completa de testes do Portfolio OS: pirâmide de testes, ferramentas, cobertura, padrões, ambientes de teste e integração com CI/CD.
+Definir a estratégia completa de testes do NovaDesk: pirâmide de testes, ferramentas, cobertura, padrões, ambientes de teste e integração com CI/CD.
 
 Todo código de produção deve ser testável. Código sem testes não atende Definition of Done.
 
@@ -32,26 +32,26 @@ Todo código de produção deve ser testável. Código sem testes não atende De
 
 ### 2.1 Proporção alvo
 
-| Camada | % testes | % cobertura linhas alvo |
-|--------|----------|-------------------------|
-| Unitário | 65% | 85% em use cases e domain |
-| Integração | 25% | 75% em controllers e repos |
-| E2E | 10% | 100% dos fluxos críticos |
+| Camada     | % testes | % cobertura linhas alvo    |
+| ---------- | -------- | -------------------------- |
+| Unitário   | 65%      | 85% em use cases e domain  |
+| Integração | 25%      | 75% em controllers e repos |
+| E2E        | 10%      | 100% dos fluxos críticos   |
 
 ---
 
 ## 3. Ferramentas
 
-| Camada | Backend | Frontend | Pacotes |
-|--------|---------|----------|---------|
-| Unitário | Jest 29 | Vitest 1 | Jest ou Vitest |
-| Integração | Jest + Supertest | — | Jest |
-| Componente | — | Vitest + Testing Library | Vitest (ui) |
-| E2E | — | Playwright 1 | — |
-| Containers | Testcontainers | — | Testcontainers |
-| Mocking | jest.mock, MSW | MSW, vi.mock | — |
-| Coverage | Istanbul (c8) | Istanbul (c8) | Istanbul |
-| Snapshot | Limitado | Componentes estáveis | — |
+| Camada     | Backend          | Frontend                 | Pacotes        |
+| ---------- | ---------------- | ------------------------ | -------------- |
+| Unitário   | Jest 29          | Vitest 1                 | Jest ou Vitest |
+| Integração | Jest + Supertest | —                        | Jest           |
+| Componente | —                | Vitest + Testing Library | Vitest (ui)    |
+| E2E        | —                | Playwright 1             | —              |
+| Containers | Testcontainers   | —                        | Testcontainers |
+| Mocking    | jest.mock, MSW   | MSW, vi.mock             | —              |
+| Coverage   | Istanbul (c8)    | Istanbul (c8)            | Istanbul       |
+| Snapshot   | Limitado         | Componentes estáveis     | —              |
 
 Detalhamento de stack em [02-Tech-Stack.md](./02-Tech-Stack.md).
 
@@ -61,13 +61,13 @@ Detalhamento de stack em [02-Tech-Stack.md](./02-Tech-Stack.md).
 
 ### 4.1 Escopo
 
-| Camada | O que testar |
-|--------|-------------|
-| Domain | Entidades, value objects, regras de negócio puras |
-| Application | Use cases com repositórios mockados |
-| Shared | Funções utilitárias puras |
-| UI package | Componentes isolados, props, acessibilidade |
-| Frontend hooks | Hooks customizados com renderHook |
+| Camada         | O que testar                                      |
+| -------------- | ------------------------------------------------- |
+| Domain         | Entidades, value objects, regras de negócio puras |
+| Application    | Use cases com repositórios mockados               |
+| Shared         | Funções utilitárias puras                         |
+| UI package     | Componentes isolados, props, acessibilidade       |
+| Frontend hooks | Hooks customizados com renderHook                 |
 
 ### 4.2 Padrões
 
@@ -91,13 +91,13 @@ Detalhamento de stack em [02-Tech-Stack.md](./02-Tech-Stack.md).
 
 ### 5.1 Escopo
 
-| Alvo | Abordagem |
-|------|-----------|
-| Controllers REST | Supertest contra app NestJS com banco real (Testcontainers) |
-| Repositórios Prisma | Testcontainers PostgreSQL |
-| Consumers BullMQ | Redis Testcontainer + processamento real |
-| Guards e middlewares | Request simulado com tokens reais |
-| Migrations | Apply + rollback em banco limpo |
+| Alvo                 | Abordagem                                                   |
+| -------------------- | ----------------------------------------------------------- |
+| Controllers REST     | Supertest contra app NestJS com banco real (Testcontainers) |
+| Repositórios Prisma  | Testcontainers PostgreSQL                                   |
+| Consumers BullMQ     | Redis Testcontainer + processamento real                    |
+| Guards e middlewares | Request simulado com tokens reais                           |
+| Migrations           | Apply + rollback em banco limpo                             |
 
 ### 5.2 Ambiente
 
@@ -123,16 +123,16 @@ Playwright com configuração por app em `04-apps/{app}/e2e/`.
 
 ### 6.2 Fluxos críticos obrigatórios
 
-| App | Fluxo | Prioridade |
-|-----|-------|------------|
-| HelpDesk SaaS | Login → criar ticket → receber resposta | P0 |
-| HelpDesk SaaS | Agente assume ticket → resolve | P0 |
-| Admin Portal | Login admin → criar tenant → criar usuário | P0 |
-| Analytics Dashboard | Login → visualizar dashboard → filtrar período | P1 |
-| Realtime Chat | Login → enviar mensagem → receber em tempo real | P1 |
-| Portfolio Website | Navegação → formulário de contato | P1 |
-| Auth | Login → refresh token → logout | P0 |
-| Auth | Registro → verificação de e-mail | P1 |
+| App                 | Fluxo                                           | Prioridade |
+| ------------------- | ----------------------------------------------- | ---------- |
+| HelpDesk SaaS       | Login → criar ticket → receber resposta         | P0         |
+| HelpDesk SaaS       | Agente assume ticket → resolve                  | P0         |
+| Admin Portal        | Login admin → criar tenant → criar usuário      | P0         |
+| Analytics Dashboard | Login → visualizar dashboard → filtrar período  | P1         |
+| Realtime Chat       | Login → enviar mensagem → receber em tempo real | P1         |
+| NovaDesk Website    | Navegação → formulário de contato               | P1         |
+| Auth                | Login → refresh token → logout                  | P0         |
+| Auth                | Registro → verificação de e-mail                | P1         |
 
 ### 6.3 Configuração
 
@@ -163,12 +163,12 @@ Não obrigatório na v1.0. Planejado:
 
 ## 8. Testes de segurança
 
-| Tipo | Ferramenta | Frequência |
-|------|------------|------------|
-| Dependency audit | npm audit, Dependabot | Cada PR + diário |
-| SAST | ESLint security plugins | Cada PR |
-| OWASP ZAP (baseline) | ZAP Docker | Semanal em staging |
-| Auth testing | Testes integração | Cada PR |
+| Tipo                 | Ferramenta              | Frequência         |
+| -------------------- | ----------------------- | ------------------ |
+| Dependency audit     | npm audit, Dependabot   | Cada PR + diário   |
+| SAST                 | ESLint security plugins | Cada PR            |
+| OWASP ZAP (baseline) | ZAP Docker              | Semanal em staging |
+| Auth testing         | Testes integração       | Cada PR            |
 
 Detalhamento em [07-Security.md](./07-Security.md).
 
@@ -178,13 +178,13 @@ Detalhamento em [07-Security.md](./07-Security.md).
 
 ### 9.1 Thresholds mínimos (CI bloqueia se abaixo)
 
-| Escopo | Linhas | Branches | Functions |
-|--------|--------|----------|-----------|
-| Backend services (domain + application) | 85% | 80% | 85% |
-| Backend services (overall) | 80% | 75% | 80% |
-| Frontend apps (features) | 70% | 65% | 70% |
-| Packages (shared, auth, sdk) | 90% | 85% | 90% |
-| Packages (ui) | 60% | 55% | 60% |
+| Escopo                                  | Linhas | Branches | Functions |
+| --------------------------------------- | ------ | -------- | --------- |
+| Backend services (domain + application) | 85%    | 80%      | 85%       |
+| Backend services (overall)              | 80%    | 75%      | 80%       |
+| Frontend apps (features)                | 70%    | 65%      | 70%       |
+| Packages (shared, auth, sdk)            | 90%    | 85%      | 90%       |
+| Packages (ui)                           | 60%    | 55%      | 60%       |
 
 ### 9.2 Exclusões de cobertura
 
@@ -249,25 +249,25 @@ playwright.config.ts
 
 ### 11.2 Seeds
 
-| Ambiente | Seed |
-|----------|------|
-| local | `prisma/seed.ts` com dados de demonstração |
-| ci | Factories programáticas, sem seed file |
-| staging | Seed de demonstração + dados sintéticos |
-| e2e | API setup antes de cada suite |
+| Ambiente | Seed                                       |
+| -------- | ------------------------------------------ |
+| local    | `prisma/seed.ts` com dados de demonstração |
+| ci       | Factories programáticas, sem seed file     |
+| staging  | Seed de demonstração + dados sintéticos    |
+| e2e      | API setup antes de cada suite              |
 
 ---
 
 ## 12. Integração com CI
 
-| Stage | Testes executados | Bloqueante |
-|-------|-------------------|------------|
-| Lint | — | Sim |
-| Typecheck | — | Sim |
-| Unit | Jest/Vitest por pacote afetado | Sim |
-| Integration | Jest + Testcontainers | Sim |
-| E2E | Playwright (após deploy preview) | Sim |
-| Coverage | Threshold check | Sim |
+| Stage       | Testes executados                | Bloqueante |
+| ----------- | -------------------------------- | ---------- |
+| Lint        | —                                | Sim        |
+| Typecheck   | —                                | Sim        |
+| Unit        | Jest/Vitest por pacote afetado   | Sim        |
+| Integration | Jest + Testcontainers            | Sim        |
+| E2E         | Playwright (após deploy preview) | Sim        |
+| Coverage    | Threshold check                  | Sim        |
 
 Pipeline detalhado em [06-DevOps.md](./06-DevOps.md).
 
@@ -308,9 +308,9 @@ Ver [11-Definition-of-Done.md](./11-Definition-of-Done.md).
 
 ## 16. Referências cruzadas
 
-| Tópico | Documento |
-|--------|-----------|
-| Coding standards | [03-Coding-Standards.md](./03-Coding-Standards.md) |
-| CI/CD | [06-DevOps.md](./06-DevOps.md) |
-| Segurança | [07-Security.md](./07-Security.md) |
+| Tópico             | Documento                                              |
+| ------------------ | ------------------------------------------------------ |
+| Coding standards   | [03-Coding-Standards.md](./03-Coding-Standards.md)     |
+| CI/CD              | [06-DevOps.md](./06-DevOps.md)                         |
+| Segurança          | [07-Security.md](./07-Security.md)                     |
 | Definition of Done | [11-Definition-of-Done.md](./11-Definition-of-Done.md) |

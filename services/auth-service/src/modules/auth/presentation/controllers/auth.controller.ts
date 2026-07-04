@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Public, CurrentUser } from '@portfolio/auth';
-import type { AuthUser } from '@portfolio/auth';
+import { Public, CurrentUser } from '@novadesk/auth';
+import type { AuthUser } from '@novadesk/auth';
 import type { Request, Response } from 'express';
 import type {
   AuthTokensResponse,

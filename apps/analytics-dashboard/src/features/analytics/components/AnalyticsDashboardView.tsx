@@ -1,7 +1,7 @@
 'use client';
 
-import type { AnalyticsKpis, AnalyticsTrends } from '@portfolio/sdk';
-import { Button, Surface, Text } from '@portfolio/ui';
+import type { AnalyticsKpis, AnalyticsTrends } from '@novadesk/sdk';
+import { Button, Surface, Text } from '@novadesk/ui';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { analyticsClient } from '@/shared/services';
 import { useWorkspace } from '@/shared/hooks/use-workspace';

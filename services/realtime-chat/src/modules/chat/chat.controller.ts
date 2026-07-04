@@ -1,6 +1,6 @@
 import { Controller, Get, Headers, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { USER_ID_HEADER } from '@portfolio/shared';
+import { USER_ID_HEADER } from '@novadesk/shared';
 import { ChatRepository } from './chat.repository';
 import type { ChatMessageResponse } from './chat.types';
 

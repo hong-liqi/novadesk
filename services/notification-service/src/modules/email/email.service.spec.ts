@@ -54,7 +54,7 @@ describe('EmailService', () => {
         const values: Record<string, string | number> = {
           SMTP_HOST: 'localhost',
           SMTP_PORT: 1025,
-          SMTP_FROM: 'noreply@portfolio-os.dev',
+          SMTP_FROM: 'noreply@novadesk.dev',
         };
         return values[key] ?? fallback;
       }),
@@ -76,7 +76,7 @@ describe('EmailService', () => {
       secure: false,
     });
     expect(sendMail).toHaveBeenCalledWith({
-      from: 'noreply@portfolio-os.dev',
+      from: 'noreply@novadesk.dev',
       to: 'user@example.com',
       subject: 'Hello',
       text: 'Welcome',

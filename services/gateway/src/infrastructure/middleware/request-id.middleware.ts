@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
-import { REQUEST_ID_HEADER } from '@portfolio/shared';
+import { REQUEST_ID_HEADER } from '@novadesk/shared';
 
 @Injectable()
 export class RequestIdMiddleware implements NestMiddleware {

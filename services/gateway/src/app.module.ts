@@ -9,9 +9,9 @@ import {
   observabilityConfigSchema,
   redisConfigSchema,
   validateConfig,
-} from '@portfolio/config';
-import { JwtAuthGuard } from '@portfolio/auth';
-import { LoggerModule } from '@portfolio/logger';
+} from '@novadesk/config';
+import { JwtAuthGuard } from '@novadesk/auth';
+import { LoggerModule } from '@novadesk/logger';
 import { ProxyInfrastructureModule } from '@infrastructure/proxy/proxy-infrastructure.module';
 import { ObservabilityModule } from '@infrastructure/observability/observability.module';
 import { HealthModule } from '@presentation/health/health.module';

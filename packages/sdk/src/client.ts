@@ -1,10 +1,10 @@
-import type { ApiError, ApiResponse } from '@portfolio/shared';
+import type { ApiError, ApiResponse } from '@novadesk/shared';
 import { SdkError } from './errors';
 import { applyRequestInterceptors, applyResponseInterceptors } from './interceptors';
 import { withRetry } from './retry';
 import type {
   HttpMethod,
-  PortfolioClientOptions,
+  NovaDeskClientOptions,
   RequestContext,
   RequestOptions,
   ResponseContext,
@@ -14,13 +14,13 @@ const DEFAULT_TIMEOUT_MS = 10_000;
 const DEFAULT_RETRIES = 2;
 const DEFAULT_RETRY_DELAY_MS = 300;
 
-export class PortfolioClient {
+export class NovaDeskClient {
   private readonly options: Required<
-    Pick<PortfolioClientOptions, 'timeoutMs' | 'retries' | 'retryDelayMs'>
+    Pick<NovaDeskClientOptions, 'timeoutMs' | 'retries' | 'retryDelayMs'>
   > &
-    PortfolioClientOptions & { fetchFn: typeof fetch };
+    NovaDeskClientOptions & { fetchFn: typeof fetch };
 
-  constructor(options: PortfolioClientOptions) {
+  constructor(options: NovaDeskClientOptions) {
     this.options = {
       timeoutMs: DEFAULT_TIMEOUT_MS,
       retries: DEFAULT_RETRIES,
@@ -263,8 +263,8 @@ export class PortfolioClient {
   }
 }
 
-export function createSdkClient(options: PortfolioClientOptions): PortfolioClient {
-  return new PortfolioClient(options);
+export function createSdkClient(options: NovaDeskClientOptions): NovaDeskClient {
+  return new NovaDeskClient(options);
 }
 
 function mergeAbortSignals(primary: AbortSignal | undefined, secondary: AbortSignal): AbortSignal {

@@ -1,4 +1,4 @@
-import type { Role } from '@portfolio/shared';
+import type { Role } from '@novadesk/shared';
 import type { AuthRequest, AuthUser, JwtPayload } from '../types';
 
 export function normalizeHeaderValue(value: string | string[] | undefined): string | undefined {

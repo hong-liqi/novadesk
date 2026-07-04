@@ -1,3 +1,3 @@
-import eslint from '@portfolio/eslint-config/react';
+import eslint from '@novadesk/eslint-config/react';
 
 export default eslint;

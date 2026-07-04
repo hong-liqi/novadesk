@@ -1,4 +1,4 @@
-import { Badge, Stack, Surface, Text } from '@portfolio/ui';
+import { Badge, Stack, Surface, Text } from '@novadesk/ui';
 import Link from 'next/link';
 import { CASE_STUDIES } from '@/lib/case-studies';
 
@@ -11,8 +11,8 @@ export function CaseStudiesSection() {
             Case studies
           </Text>
           <Text as="p" tone="muted" className="max-w-2xl !text-slate-400">
-            Prior projects that shaped architectural decisions in Portfolio OS — documented as
-            narrative case studies with lessons learned.
+            Prior projects that shaped architectural decisions in NovaDesk — documented as narrative
+            case studies with lessons learned.
           </Text>
         </Stack>
 

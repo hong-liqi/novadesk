@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const authEnvSchema = z.object({
-  JWT_ISSUER: z.string().min(1).default('portfolio-os-auth'),
-  JWT_AUDIENCE: z.string().min(1).default('portfolio-os'),
+  JWT_ISSUER: z.string().min(1).default('novadesk-auth'),
+  JWT_AUDIENCE: z.string().min(1).default('novadesk'),
   JWT_PRIVATE_KEY: z.string().min(1).optional(),
   JWT_PUBLIC_KEY: z.string().min(1).optional(),
   JWT_KID: z.string().min(1).optional(),

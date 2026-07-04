@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import { buildAuthUser } from '@portfolio/auth';
-import type { AuthUser, JwtPayload } from '@portfolio/auth';
+import { buildAuthUser } from '@novadesk/auth';
+import type { AuthUser, JwtPayload } from '@novadesk/auth';
 
 @Injectable()
 export class JwtValidationService {
@@ -13,8 +13,8 @@ export class JwtValidationService {
   async validateToken(token: string): Promise<{ payload: JwtPayload; user: AuthUser }> {
     try {
       const { payload } = await jwtVerify(token, this.getJwks(), {
-        issuer: this.configService.get<string>('JWT_ISSUER', 'portfolio-os-auth'),
-        audience: this.configService.get<string>('JWT_AUDIENCE', 'portfolio-os'),
+        issuer: this.configService.get<string>('JWT_ISSUER', 'novadesk-auth'),
+        audience: this.configService.get<string>('JWT_AUDIENCE', 'novadesk'),
       });
 
       const jwtPayload = payload as unknown as JwtPayload;

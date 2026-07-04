@@ -4,7 +4,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Realtime Chat',
-  description: 'Portfolio OS — Realtime ticket chat',
+  description: 'NovaDesk — Realtime ticket chat',
 };
 
 export default function RootLayout({

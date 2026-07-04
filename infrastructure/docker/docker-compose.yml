@@ -1,7 +1,7 @@
 services:
   redis:
     image: redis:7-alpine
-    container_name: portfolio-redis
+    container_name: novadesk-redis
     networks:
       - data
     ports:
@@ -16,10 +16,10 @@ services:
 
   postgres-auth:
     image: postgres:16-alpine
-    container_name: portfolio-postgres-auth
+    container_name: novadesk-postgres-auth
     environment:
-      POSTGRES_USER: portfolio
-      POSTGRES_PASSWORD: portfolio
+      POSTGRES_USER: novadesk
+      POSTGRES_PASSWORD: novadesk
       POSTGRES_DB: auth_db
     networks:
       - data
@@ -28,17 +28,17 @@ services:
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U portfolio -d auth_db']
+      test: ['CMD-SHELL', 'pg_isready -U novadesk -d auth_db']
       interval: 10s
       timeout: 5s
       retries: 5
 
   postgres-notification:
     image: postgres:16-alpine
-    container_name: portfolio-postgres-notification
+    container_name: novadesk-postgres-notification
     environment:
-      POSTGRES_USER: portfolio
-      POSTGRES_PASSWORD: portfolio
+      POSTGRES_USER: novadesk
+      POSTGRES_PASSWORD: novadesk
       POSTGRES_DB: notification_db
     networks:
       - data
@@ -47,17 +47,17 @@ services:
     volumes:
       - postgres_notification_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U portfolio -d notification_db']
+      test: ['CMD-SHELL', 'pg_isready -U novadesk -d notification_db']
       interval: 10s
       timeout: 5s
       retries: 5
 
   postgres-helpdesk:
     image: postgres:16-alpine
-    container_name: portfolio-postgres-helpdesk
+    container_name: novadesk-postgres-helpdesk
     environment:
-      POSTGRES_USER: portfolio
-      POSTGRES_PASSWORD: portfolio
+      POSTGRES_USER: novadesk
+      POSTGRES_PASSWORD: novadesk
       POSTGRES_DB: helpdesk_db
     networks:
       - data
@@ -66,17 +66,17 @@ services:
     volumes:
       - postgres_helpdesk_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U portfolio -d helpdesk_db']
+      test: ['CMD-SHELL', 'pg_isready -U novadesk -d helpdesk_db']
       interval: 10s
       timeout: 5s
       retries: 5
 
   postgres-analytics:
     image: postgres:16-alpine
-    container_name: portfolio-postgres-analytics
+    container_name: novadesk-postgres-analytics
     environment:
-      POSTGRES_USER: portfolio
-      POSTGRES_PASSWORD: portfolio
+      POSTGRES_USER: novadesk
+      POSTGRES_PASSWORD: novadesk
       POSTGRES_DB: analytics_db
     networks:
       - data
@@ -85,17 +85,17 @@ services:
     volumes:
       - postgres_analytics_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U portfolio -d analytics_db']
+      test: ['CMD-SHELL', 'pg_isready -U novadesk -d analytics_db']
       interval: 10s
       timeout: 5s
       retries: 5
 
   postgres-chat:
     image: postgres:16-alpine
-    container_name: portfolio-postgres-chat
+    container_name: novadesk-postgres-chat
     environment:
-      POSTGRES_USER: portfolio
-      POSTGRES_PASSWORD: portfolio
+      POSTGRES_USER: novadesk
+      POSTGRES_PASSWORD: novadesk
       POSTGRES_DB: chat_db
     networks:
       - data
@@ -104,14 +104,14 @@ services:
     volumes:
       - postgres_chat_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U portfolio -d chat_db']
+      test: ['CMD-SHELL', 'pg_isready -U novadesk -d chat_db']
       interval: 10s
       timeout: 5s
       retries: 5
 
   mailpit:
     image: axllent/mailpit:latest
-    container_name: portfolio-mailpit
+    container_name: novadesk-mailpit
     networks:
       - backend
     ports:
@@ -122,14 +122,14 @@ services:
     build:
       context: ../..
       dockerfile: services/auth-service/Dockerfile
-    container_name: portfolio-auth-service
+    container_name: novadesk-auth-service
     env_file:
       - ../../services/auth-service/.env.example
     environment:
       SERVICE_NAME: auth-service
       PORT: 3001
       REDIS_URL: redis://redis:6379
-      DATABASE_URL: postgresql://portfolio:portfolio@postgres-auth:5432/auth_db
+      DATABASE_URL: postgresql://novadesk:novadesk@postgres-auth:5432/auth_db
     networks:
       - backend
       - data
@@ -143,14 +143,14 @@ services:
     build:
       context: ../..
       dockerfile: services/notification-service/Dockerfile
-    container_name: portfolio-notification-service
+    container_name: novadesk-notification-service
     env_file:
       - ../../services/notification-service/.env.example
     environment:
       SERVICE_NAME: notification-service
       PORT: 3002
       REDIS_URL: redis://redis:6379
-      DATABASE_URL: postgresql://portfolio:portfolio@postgres-notification:5432/notification_db
+      DATABASE_URL: postgresql://novadesk:novadesk@postgres-notification:5432/notification_db
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
     networks:
@@ -168,14 +168,14 @@ services:
     build:
       context: ../..
       dockerfile: services/helpdesk-api/Dockerfile
-    container_name: portfolio-helpdesk-api
+    container_name: novadesk-helpdesk-api
     env_file:
       - ../../services/helpdesk-api/.env.example
     environment:
       SERVICE_NAME: helpdesk-api
       PORT: 3003
       REDIS_URL: redis://redis:6379
-      DATABASE_URL: postgresql://portfolio:portfolio@postgres-helpdesk:5432/helpdesk_db
+      DATABASE_URL: postgresql://novadesk:novadesk@postgres-helpdesk:5432/helpdesk_db
     networks:
       - backend
       - data
@@ -191,14 +191,14 @@ services:
     build:
       context: ../..
       dockerfile: services/analytics-api/Dockerfile
-    container_name: portfolio-analytics-api
+    container_name: novadesk-analytics-api
     env_file:
       - ../../services/analytics-api/.env.example
     environment:
       SERVICE_NAME: analytics-api
       PORT: 3004
       REDIS_URL: redis://redis:6379
-      DATABASE_URL: postgresql://portfolio:portfolio@postgres-analytics:5432/analytics_db
+      DATABASE_URL: postgresql://novadesk:novadesk@postgres-analytics:5432/analytics_db
     networks:
       - backend
       - data
@@ -216,14 +216,14 @@ services:
     build:
       context: ../..
       dockerfile: services/realtime-chat/Dockerfile
-    container_name: portfolio-realtime-chat-service
+    container_name: novadesk-realtime-chat-service
     env_file:
       - ../../services/realtime-chat/.env.example
     environment:
       SERVICE_NAME: realtime-chat-service
       PORT: 3005
       REDIS_URL: redis://redis:6379
-      DATABASE_URL: postgresql://portfolio:portfolio@postgres-chat:5432/chat_db
+      DATABASE_URL: postgresql://novadesk:novadesk@postgres-chat:5432/chat_db
       AUTH_JWKS_URL: http://auth-service:3001/.well-known/jwks.json
     networks:
       - backend
@@ -242,7 +242,7 @@ services:
     build:
       context: ../..
       dockerfile: services/gateway/Dockerfile
-    container_name: portfolio-gateway
+    container_name: novadesk-gateway
     environment:
       SERVICE_NAME: gateway
       PORT: 3000
@@ -252,8 +252,8 @@ services:
       HELPDESK_SERVICE_URL: http://helpdesk-api:3003
       ANALYTICS_SERVICE_URL: http://analytics-api:3004
       REALTIME_CHAT_SERVICE_URL: http://realtime-chat-service:3005
-      JWT_ISSUER: portfolio-os-auth
-      JWT_AUDIENCE: portfolio-os
+      JWT_ISSUER: novadesk-auth
+      JWT_AUDIENCE: novadesk
       AUTH_JWKS_URL: http://auth-service:3001/.well-known/jwks.json
       THROTTLE_TTL: 60000
       THROTTLE_LIMIT: 100
@@ -273,7 +273,7 @@ services:
     build:
       context: ../..
       dockerfile: apps/helpdesk-saas/Dockerfile
-    container_name: portfolio-helpdesk
+    container_name: novadesk-helpdesk
     environment:
       PORT: 3010
     networks:
@@ -283,7 +283,7 @@ services:
     build:
       context: ../..
       dockerfile: apps/analytics-dashboard/Dockerfile
-    container_name: portfolio-analytics
+    container_name: novadesk-analytics
     environment:
       PORT: 3011
     networks:
@@ -293,7 +293,7 @@ services:
     build:
       context: ../..
       dockerfile: apps/admin-panel/Dockerfile
-    container_name: portfolio-admin
+    container_name: novadesk-admin
     environment:
       PORT: 3012
     networks:
@@ -303,7 +303,7 @@ services:
     build:
       context: ../..
       dockerfile: apps/realtime-chat/Dockerfile
-    container_name: portfolio-chat-app
+    container_name: novadesk-chat-app
     environment:
       PORT: 3014
     networks:
@@ -313,7 +313,7 @@ services:
     build:
       context: ../..
       dockerfile: website/Dockerfile
-    container_name: portfolio-website
+    container_name: novadesk-website
     environment:
       PORT: 3013
     networks:
@@ -321,7 +321,7 @@ services:
 
   nginx:
     image: nginx:1.25-alpine
-    container_name: portfolio-nginx
+    container_name: novadesk-nginx
     ports:
       - '80:80'
     volumes:

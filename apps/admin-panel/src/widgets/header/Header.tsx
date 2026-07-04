@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@portfolio/auth/client';
-import { Button } from '@portfolio/ui';
+import { useAuth } from '@novadesk/auth/client';
+import { Button } from '@novadesk/ui';
 import { useRouter } from 'next/navigation';
 import { useCallback, useRef, useState } from 'react';
 import { routes } from '@/shared/lib/routes';
@@ -21,7 +21,7 @@ export function Header() {
   return (
     <div className="flex w-full items-center justify-between gap-4">
       <div>
-        <h1 className="text-base font-semibold text-neutral-900">Portfolio OS</h1>
+        <h1 className="text-base font-semibold text-neutral-900">NovaDesk</h1>
         <p className="text-xs text-neutral-500">Platform administration</p>
       </div>
 

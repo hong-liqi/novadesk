@@ -1,12 +1,12 @@
 # API Gateway
 
-Entry point and routing layer for Portfolio OS. Terminates TLS at the edge (via Nginx in production), enforces authentication headers, and proxies requests to downstream services.
+Entry point and routing layer for NovaDesk. Terminates TLS at the edge (via Nginx in production), enforces authentication headers, and proxies requests to downstream services.
 
 ## Overview
 
 | Property | Value                                         |
 | -------- | --------------------------------------------- |
-| Package  | `@portfolio/gateway`                          |
+| Package  | `@novadesk/gateway`                           |
 | Port     | `3000`                                        |
 | Auth     | Global `JwtAuthGuard` with `@Public()` bypass |
 
@@ -22,7 +22,7 @@ Entry point and routing layer for Portfolio OS. Terminates TLS at the edge (via 
 # From monorepo root
 cp services/gateway/.env.example services/gateway/.env
 pnpm install
-pnpm turbo run dev --filter=@portfolio/gateway
+pnpm turbo run dev --filter=@novadesk/gateway
 ```
 
 ## API
@@ -73,7 +73,7 @@ upstream chat_ws {
 Build from the monorepo root:
 
 ```bash
-docker build -f services/gateway/Dockerfile -t portfolio/gateway .
+docker build -f services/gateway/Dockerfile -t novadesk/gateway .
 ```
 
 ## Architecture

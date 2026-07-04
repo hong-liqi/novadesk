@@ -6,7 +6,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages ./packages
 COPY apps/analytics-dashboard/package.json ./apps/analytics-dashboard/
-RUN pnpm install --frozen-lockfile --filter @portfolio/analytics-dashboard...
+RUN pnpm install --frozen-lockfile --filter @novadesk/analytics-dashboard...
 
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/analytics-dashboard ./apps/analytics-dashboard
-RUN pnpm turbo run build --filter=@portfolio/analytics-dashboard
+RUN pnpm turbo run build --filter=@novadesk/analytics-dashboard
 
 FROM node:20-alpine AS production
 WORKDIR /app

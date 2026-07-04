@@ -156,9 +156,9 @@ Suporte a importação de decks em formatos variados (CSV, Anki) com validação
 
 ---
 
-## 11. Relação com Portfolio OS
+## 11. Relação com NovaDesk
 
-Conceitos do Spell que informam o Portfolio OS:
+Conceitos do Spell que informam o NovaDesk:
 
 - Monólito modular como padrão válido (HelpDesk API)
 - Redis para cache e estado efêmero

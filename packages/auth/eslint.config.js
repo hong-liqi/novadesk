@@ -1,3 +1,3 @@
-import eslint from '@portfolio/eslint-config/nestjs';
+import eslint from '@novadesk/eslint-config/nestjs';
 
 export default eslint;

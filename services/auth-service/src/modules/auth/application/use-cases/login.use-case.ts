@@ -1,5 +1,5 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import type { Role } from '@portfolio/shared';
+import type { Role } from '@novadesk/shared';
 import { AuditService } from '@infrastructure/auth/audit.service';
 import { JwtService } from '@infrastructure/auth/jwt.service';
 import { PasswordService } from '@infrastructure/auth/password.service';

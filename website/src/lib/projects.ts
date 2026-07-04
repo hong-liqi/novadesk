@@ -1,4 +1,4 @@
-export interface PortfolioModule {
+export interface NovaDeskModule {
   id: string;
   name: string;
   description: string;
@@ -7,7 +7,7 @@ export interface PortfolioModule {
   type: 'app' | 'service';
 }
 
-export const PORTFOLIO_MODULES: PortfolioModule[] = [
+export const NOVADESK_MODULES: NovaDeskModule[] = [
   {
     id: 'helpdesk',
     name: 'HelpDesk SaaS',

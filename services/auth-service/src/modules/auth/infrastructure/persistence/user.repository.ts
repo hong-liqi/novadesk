@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@infrastructure/database/prisma.service';
-import type { Role } from '@portfolio/shared';
+import type { Role } from '@novadesk/shared';
 import type { TenantRole } from '@generated/prisma';
 import type { UserWithMemberships } from '../../domain/entities/user.entity';
 import type {

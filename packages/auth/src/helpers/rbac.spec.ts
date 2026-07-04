@@ -1,4 +1,4 @@
-import { ROLES } from '@portfolio/shared';
+import { ROLES } from '@novadesk/shared';
 import { hasPermission, hasRole } from './rbac';
 
 describe('rbac helpers', () => {

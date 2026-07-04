@@ -15,7 +15,7 @@ describe('config package', () => {
     const config = createConfig(
       baseEnvSchema,
       {
-        APP_NAME: 'portfolio-os',
+        APP_NAME: 'novadesk',
         PORT: '3100',
         LOG_LEVEL: 'debug',
       } as NodeJS.ProcessEnv,
@@ -28,19 +28,19 @@ describe('config package', () => {
 
   it('parses a combined service config', () => {
     const config = createConfig(serviceEnvSchema, {
-      DATABASE_URL: 'postgresql://db.example.com:5432/portfolio',
+      DATABASE_URL: 'postgresql://db.example.com:5432/novadesk',
       REDIS_URL: 'redis://redis.example.com:6379',
-      APP_NAME: 'portfolio-os',
+      APP_NAME: 'novadesk',
       PORT: '3000',
-      JWT_ISSUER: 'portfolio-os-auth',
-      JWT_AUDIENCE: 'portfolio-os',
+      JWT_ISSUER: 'novadesk-auth',
+      JWT_AUDIENCE: 'novadesk',
       CORS_ORIGINS: 'https://example.com, https://admin.example.com',
       ENABLE_REQUEST_LOGGING: 'false',
       LOG_PRETTY: 'true',
       DATABASE_SSL: 'true',
     } as NodeJS.ProcessEnv);
 
-    expect(config.REDIS_PREFIX).toBe('portfolio-os');
+    expect(config.REDIS_PREFIX).toBe('novadesk');
     expect(config.ACCESS_TOKEN_TTL).toBe('15m');
     expect(config.CORS_ORIGINS).toEqual(['https://example.com', 'https://admin.example.com']);
     expect(config.ENABLE_REQUEST_LOGGING).toBe(false);
@@ -50,7 +50,7 @@ describe('config package', () => {
 
   it('accepts array cors origins and boolean log pretty values', () => {
     const config = createConfig(serviceEnvSchema, {
-      DATABASE_URL: 'postgresql://db.example.com:5432/portfolio',
+      DATABASE_URL: 'postgresql://db.example.com:5432/novadesk',
       REDIS_URL: 'redis://redis.example.com:6379',
       CORS_ORIGINS: ['https://one.example.com'],
       LOG_PRETTY: true,
@@ -64,7 +64,7 @@ describe('config package', () => {
 
   it('applies schema defaults for optional service flags', () => {
     const config = createConfig(serviceEnvSchema, {
-      DATABASE_URL: 'postgresql://db.example.com:5432/portfolio',
+      DATABASE_URL: 'postgresql://db.example.com:5432/novadesk',
       REDIS_URL: 'redis://redis.example.com:6379',
     } as NodeJS.ProcessEnv);
 
@@ -117,6 +117,6 @@ describe('config package', () => {
 
   it('keeps auth schema optional for key material', () => {
     const config = createConfig(authEnvSchema, {} as NodeJS.ProcessEnv);
-    expect(config.JWT_ISSUER).toBe('portfolio-os-auth');
+    expect(config.JWT_ISSUER).toBe('novadesk-auth');
   });
 });

@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@portfolio/auth/client';
-import { Button } from '@portfolio/ui';
+import { useAuth } from '@novadesk/auth/client';
+import { Button } from '@novadesk/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
 import { fetchChatHistory, getGatewayOrigin, type ChatMessage } from '@/shared/services/api-client';
@@ -139,7 +139,7 @@ export function ChatRoom() {
       <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-medium">Sign in required</h2>
         <p className="mt-2 text-sm text-slate-600">
-          Authenticate via Portfolio OS (auth tokens in local storage) to join a ticket room.
+          Authenticate via NovaDesk (auth tokens in local storage) to join a ticket room.
         </p>
       </div>
     );

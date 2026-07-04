@@ -21,7 +21,7 @@ export interface ThemeProviderProps {
 export function ThemeProvider({
   children,
   defaultMode = 'light',
-  storageKey = 'portfolio-theme-mode',
+  storageKey = 'novadesk-theme-mode',
 }: ThemeProviderProps) {
   const [mode, setMode] = useState<ThemeMode>(defaultMode);
 
@@ -75,7 +75,7 @@ export interface ThemeScriptProps {
 }
 
 export function ThemeScript({
-  storageKey = 'portfolio-theme-mode',
+  storageKey = 'novadesk-theme-mode',
   defaultMode = 'light',
 }: ThemeScriptProps) {
   const script = `

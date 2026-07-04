@@ -1,8 +1,8 @@
 {
-  "name": "@portfolio/config",
+  "name": "@novadesk/config",
   "version": "0.1.0",
   "private": true,
-  "description": "Typed and validated environment configuration schemas for Portfolio OS",
+  "description": "Typed and validated environment configuration schemas for NovaDesk",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -32,12 +32,12 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@portfolio/shared": "workspace:*",
+    "@novadesk/shared": "workspace:*",
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@portfolio/eslint-config": "workspace:*",
-    "@portfolio/tsconfig": "workspace:*",
+    "@novadesk/eslint-config": "workspace:*",
+    "@novadesk/tsconfig": "workspace:*",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
     "eslint": "^9.17.0",

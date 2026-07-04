@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Public } from '@portfolio/auth';
+import { Public } from '@novadesk/auth';
 import { JwtService } from '@infrastructure/auth/jwt.service';
 
 @ApiTags('jwks')

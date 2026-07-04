@@ -1,6 +1,6 @@
-# @portfolio/config
+# @novadesk/config
 
-Centralized, typed environment configuration for Portfolio OS.
+Centralized, typed environment configuration for NovaDesk.
 
 ## Purpose
 
@@ -24,13 +24,13 @@ It keeps environment parsing consistent across services and applications without
 ## Installation
 
 ```bash
-pnpm add @portfolio/config
+pnpm add @novadesk/config
 ```
 
 ## Usage
 
 ```ts
-import { createConfig, serviceEnvSchema } from '@portfolio/config';
+import { createConfig, serviceEnvSchema } from '@novadesk/config';
 
 const config = createConfig(serviceEnvSchema, process.env);
 

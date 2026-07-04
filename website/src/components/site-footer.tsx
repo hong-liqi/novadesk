@@ -1,4 +1,4 @@
-import { Text } from '@portfolio/ui';
+import { Text } from '@novadesk/ui';
 import Link from 'next/link';
 
 const FOOTER_LINKS = [
@@ -13,7 +13,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
         <div>
           <Text as="p" size="sm" weight="semibold" className="text-white">
-            Portfolio OS
+            NovaDesk
           </Text>
           <Text as="p" size="sm" tone="muted" className="mt-1 max-w-md !text-slate-400">
             Production-grade monorepo demonstrating senior-level software architecture.
@@ -33,7 +33,7 @@ export function SiteFooter() {
         </nav>
 
         <Text as="p" size="xs" tone="muted" className="!text-slate-500">
-          © {new Date().getFullYear()} Portfolio OS. All rights reserved.
+          © {new Date().getFullYear()} NovaDesk. All rights reserved.
         </Text>
       </div>
     </footer>

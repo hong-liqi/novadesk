@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { randomUUID } from 'node:crypto';
-import type { RequestContext } from '@portfolio/shared';
-import { REQUEST_ID_HEADER } from '@portfolio/shared';
+import type { RequestContext } from '@novadesk/shared';
+import { REQUEST_ID_HEADER } from '@novadesk/shared';
 
 const requestContextStorage = new AsyncLocalStorage<RequestContext>();
 

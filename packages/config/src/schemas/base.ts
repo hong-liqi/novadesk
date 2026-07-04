@@ -4,7 +4,7 @@ export const nodeEnvValues = ['development', 'test', 'staging', 'production'] as
 
 export const baseEnvSchema = z.object({
   NODE_ENV: z.enum(nodeEnvValues).default('development'),
-  APP_NAME: z.string().min(1).default('portfolio-os'),
+  APP_NAME: z.string().min(1).default('novadesk'),
   SERVICE_NAME: z.string().min(1).optional(),
   PORT: z.coerce.number().int().positive().default(3000),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),

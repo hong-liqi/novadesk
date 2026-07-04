@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { LoggerInterceptor, LoggerService, createLogger } from '@portfolio/logger';
+import { LoggerInterceptor, LoggerService, createLogger } from '@novadesk/logger';
 import { createSwaggerConfig } from '@infrastructure/swagger/swagger.config';
 import { AppModule } from './app.module';
 
@@ -24,7 +24,7 @@ async function bootstrap(): Promise<void> {
 
   const document = SwaggerModule.createDocument(
     app,
-    createSwaggerConfig('Auth Service', 'Authentication and identity API for Portfolio OS'),
+    createSwaggerConfig('Auth Service', 'Authentication and identity API for NovaDesk'),
   );
   SwaggerModule.setup('api/docs', app, document);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { ThemeProvider, ThemeScript } from '@portfolio/ui';
+import { ThemeProvider, ThemeScript } from '@novadesk/ui';
 import type { ReactNode } from 'react';
 
 export function Providers({ children }: { children: ReactNode }) {

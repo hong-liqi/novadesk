@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from '@portfolio/auth';
+import { RolesGuard } from '@novadesk/auth';
 import { AuthServicesModule } from '@infrastructure/auth/auth-services.module';
 import { USER_REPOSITORY } from './application/ports/user.repository.port';
 import { GetMeUseCase } from './application/use-cases/get-me.use-case';

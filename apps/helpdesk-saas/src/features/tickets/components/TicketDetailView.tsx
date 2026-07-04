@@ -1,7 +1,7 @@
 'use client';
 
-import type { HelpdeskMessage, HelpdeskTicket } from '@portfolio/sdk';
-import { Badge, Button, Stack } from '@portfolio/ui';
+import type { HelpdeskMessage, HelpdeskTicket } from '@novadesk/sdk';
+import { Badge, Button, Stack } from '@novadesk/ui';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { routes } from '@/shared/lib/routes';

@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@portfolio/auth/client';
-import { ROLES } from '@portfolio/shared';
+import { useAuth } from '@novadesk/auth/client';
+import { ROLES } from '@novadesk/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect, type ReactNode } from 'react';
 import { routes } from '@/shared/lib/routes';

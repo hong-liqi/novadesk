@@ -1,4 +1,4 @@
-export type PortfolioErrorCode =
+export type NovaDeskErrorCode =
   | 'VALIDATION_ERROR'
   | 'AUTHENTICATION_ERROR'
   | 'AUTHORIZATION_ERROR'
@@ -8,16 +8,16 @@ export type PortfolioErrorCode =
   | 'EXTERNAL_SERVICE_ERROR'
   | 'UNKNOWN_ERROR';
 
-export interface PortfolioErrorOptions {
-  code: PortfolioErrorCode;
+export interface NovaDeskErrorOptions {
+  code: NovaDeskErrorCode;
   message: string;
   status: number;
   details?: Record<string, unknown>;
   cause?: unknown;
 }
 
-export class PortfolioError extends Error {
-  readonly code: PortfolioErrorCode;
+export class NovaDeskError extends Error {
+  readonly code: NovaDeskErrorCode;
 
   readonly status: number;
 
@@ -25,9 +25,9 @@ export class PortfolioError extends Error {
 
   override readonly cause?: unknown;
 
-  constructor(options: PortfolioErrorOptions) {
+  constructor(options: NovaDeskErrorOptions) {
     super(options.message, options.cause ? { cause: options.cause } : undefined);
-    this.name = 'PortfolioError';
+    this.name = 'NovaDeskError';
     this.code = options.code;
     this.status = options.status;
     this.details = options.details;
@@ -45,14 +45,14 @@ export class PortfolioError extends Error {
   }
 }
 
-export class ValidationError extends PortfolioError {
+export class ValidationError extends NovaDeskError {
   constructor(message = 'Validation failed', details?: Record<string, unknown>, cause?: unknown) {
     super({ code: 'VALIDATION_ERROR', message, status: 400, details, cause });
     this.name = 'ValidationError';
   }
 }
 
-export class AuthenticationError extends PortfolioError {
+export class AuthenticationError extends NovaDeskError {
   constructor(
     message = 'Authentication required',
     details?: Record<string, unknown>,
@@ -63,7 +63,7 @@ export class AuthenticationError extends PortfolioError {
   }
 }
 
-export class AuthorizationError extends PortfolioError {
+export class AuthorizationError extends NovaDeskError {
   constructor(
     message = 'Insufficient permissions',
     details?: Record<string, unknown>,
@@ -74,28 +74,28 @@ export class AuthorizationError extends PortfolioError {
   }
 }
 
-export class NotFoundError extends PortfolioError {
+export class NotFoundError extends NovaDeskError {
   constructor(message = 'Resource not found', details?: Record<string, unknown>, cause?: unknown) {
     super({ code: 'NOT_FOUND', message, status: 404, details, cause });
     this.name = 'NotFoundError';
   }
 }
 
-export class ConflictError extends PortfolioError {
+export class ConflictError extends NovaDeskError {
   constructor(message = 'Conflict detected', details?: Record<string, unknown>, cause?: unknown) {
     super({ code: 'CONFLICT', message, status: 409, details, cause });
     this.name = 'ConflictError';
   }
 }
 
-export class RateLimitError extends PortfolioError {
+export class RateLimitError extends NovaDeskError {
   constructor(message = 'Rate limit exceeded', details?: Record<string, unknown>, cause?: unknown) {
     super({ code: 'RATE_LIMITED', message, status: 429, details, cause });
     this.name = 'RateLimitError';
   }
 }
 
-export class ExternalServiceError extends PortfolioError {
+export class ExternalServiceError extends NovaDeskError {
   constructor(
     message = 'External service failed',
     details?: Record<string, unknown>,

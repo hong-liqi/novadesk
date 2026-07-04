@@ -1,11 +1,11 @@
-import type { ApiResponse } from '@portfolio/shared';
+import type { ApiResponse } from '@novadesk/shared';
 import {
   createAuthClient,
   createSdkClient,
   type AuthClient,
   type RequestInterceptor,
-} from '@portfolio/sdk';
-import { createTokenManager, type TokenManager } from '@portfolio/auth/client';
+} from '@novadesk/sdk';
+import { createTokenManager, type TokenManager } from '@novadesk/auth/client';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '/api/v1';
 
@@ -62,12 +62,12 @@ function authTokenInterceptor(): RequestInterceptor {
   };
 }
 
-const portfolioClient = createSdkClient({
+const novadeskClient = createSdkClient({
   baseUrl: API_BASE_URL,
   requestInterceptors: [authTokenInterceptor()],
 });
 
-export const authClient: AuthClient = createAuthClient(portfolioClient);
+export const authClient: AuthClient = createAuthClient(novadeskClient);
 
 function extractData<T>(response: ApiResponse<T>): T {
   return response.data;
@@ -75,28 +75,28 @@ function extractData<T>(response: ApiResponse<T>): T {
 
 export const tenantsClient = {
   list(): Promise<Tenant[]> {
-    return portfolioClient.get<Tenant[]>('/tenants').then(extractData);
+    return novadeskClient.get<Tenant[]>('/tenants').then(extractData);
   },
 
   get(id: string): Promise<Tenant> {
-    return portfolioClient.get<Tenant>(`/tenants/${id}`).then(extractData);
+    return novadeskClient.get<Tenant>(`/tenants/${id}`).then(extractData);
   },
 
   create(input: CreateTenantInput): Promise<Tenant> {
-    return portfolioClient.post<Tenant>('/tenants', input).then(extractData);
+    return novadeskClient.post<Tenant>('/tenants', input).then(extractData);
   },
 
   update(id: string, input: UpdateTenantInput): Promise<Tenant> {
-    return portfolioClient.patch<Tenant>(`/tenants/${id}`, input).then(extractData);
+    return novadeskClient.patch<Tenant>(`/tenants/${id}`, input).then(extractData);
   },
 
   delete(id: string): Promise<{ success: true }> {
-    return portfolioClient.delete<{ success: true }>(`/tenants/${id}`).then(extractData);
+    return novadeskClient.delete<{ success: true }>(`/tenants/${id}`).then(extractData);
   },
 };
 
 export async function fetchPlatformHealth(): Promise<HealthCheckResult> {
-  const response = await portfolioClient.get<HealthCheckResult>('/health');
+  const response = await novadeskClient.get<HealthCheckResult>('/health');
   return extractData(response);
 }
 

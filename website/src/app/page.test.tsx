@@ -7,13 +7,13 @@ vi.mock('@/components/providers', () => ({
 }));
 
 describe('HomePage', () => {
-  it('shows Portfolio OS branding and main sections', () => {
+  it('shows NovaDesk branding and main sections', () => {
     render(<HomePage />);
-    expect(screen.getAllByText('Portfolio OS').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('NovaDesk').length).toBeGreaterThan(0);
     expect(
       screen.getByRole('heading', { name: 'Integrated engineering ecosystem' }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Portfolio OS modules' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'NovaDesk modules' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Case studies' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Get in touch' })).toBeInTheDocument();
   });

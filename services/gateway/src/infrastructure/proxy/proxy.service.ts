@@ -7,7 +7,7 @@ import {
   ROLES_HEADER,
   TENANT_ID_HEADER,
   USER_ID_HEADER,
-} from '@portfolio/shared';
+} from '@novadesk/shared';
 import { buildProxyRoutes, matchProxyRoute, type ProxyRoute } from './proxy.routes';
 
 const PROPAGATED_HEADERS = [

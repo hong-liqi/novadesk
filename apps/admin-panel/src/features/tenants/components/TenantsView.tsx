@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@portfolio/auth/client';
-import { ROLES } from '@portfolio/shared';
+import { useAuth } from '@novadesk/auth/client';
+import { ROLES } from '@novadesk/shared';
 import {
   Badge,
   Button,
@@ -13,8 +13,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@portfolio/ui';
-import { Modal, useDisclosure } from '@portfolio/ui/client';
+} from '@novadesk/ui';
+import { Modal, useDisclosure } from '@novadesk/ui/client';
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import {
   tenantsClient,

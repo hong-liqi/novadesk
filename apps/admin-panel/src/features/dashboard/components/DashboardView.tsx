@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge, Surface, Text } from '@portfolio/ui';
+import { Badge, Surface, Text } from '@novadesk/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { fetchPlatformHealth, type HealthCheckResult } from '@/shared/services';
 

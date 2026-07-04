@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Roles } from '@portfolio/auth';
-import { ROLES } from '@portfolio/shared';
+import { Roles } from '@novadesk/auth';
+import { ROLES } from '@novadesk/shared';
 import type {
   CreateTenantDto,
   TenantResponse,

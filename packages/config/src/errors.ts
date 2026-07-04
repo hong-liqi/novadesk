@@ -1,4 +1,4 @@
-import { ValidationError } from '@portfolio/shared';
+import { ValidationError } from '@novadesk/shared';
 
 export class ConfigValidationError extends ValidationError {
   constructor(message: string, details?: Record<string, unknown>) {

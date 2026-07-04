@@ -1,6 +1,6 @@
-# @portfolio/ui
+# @novadesk/ui
 
-Reusable design system foundation for Portfolio OS.
+Reusable design system foundation for NovaDesk.
 
 ## Purpose
 
@@ -35,13 +35,13 @@ It does not contain application-specific screens or business flows.
 ## Installation
 
 ```bash
-pnpm add @portfolio/ui react react-dom
+pnpm add @novadesk/ui react react-dom
 ```
 
 ## Usage
 
 ```tsx
-import { Button, ThemeProvider, Text } from '@portfolio/ui';
+import { Button, ThemeProvider, Text } from '@novadesk/ui';
 
 export function Example() {
   return (

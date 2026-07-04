@@ -1,4 +1,4 @@
-import { Text } from '@portfolio/ui';
+import { Text } from '@novadesk/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MarkdownContent } from '@/components/markdown-content';
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: CaseStudyPageProps) {
     title: `${meta.title} — Case Study`,
     description: meta.summary,
     openGraph: {
-      title: `${meta.title} — Portfolio OS Case Study`,
+      title: `${meta.title} — NovaDesk Case Study`,
       description: meta.summary,
       type: 'article',
     },

@@ -42,14 +42,14 @@ Broom adotou arquitetura **pipeline de análise** com processamento assíncrono 
 
 ### 3.2 Componentes
 
-| Componente | Responsabilidade |
-|------------|------------------|
-| API Server | REST API, autenticação, gestão de scans |
-| Job Queue | Orquestração de análises assíncronas |
-| Workers | Execução de analyzers em repositórios clonados |
-| Analyzer Plugins | Módulos de análise extensíveis |
-| CLI | Interface de linha de comando |
-| Dashboard | Visualização de resultados e tendências |
+| Componente       | Responsabilidade                               |
+| ---------------- | ---------------------------------------------- |
+| API Server       | REST API, autenticação, gestão de scans        |
+| Job Queue        | Orquestração de análises assíncronas           |
+| Workers          | Execução de analyzers em repositórios clonados |
+| Analyzer Plugins | Módulos de análise extensíveis                 |
+| CLI              | Interface de linha de comando                  |
+| Dashboard        | Visualização de resultados e tendências        |
 
 ---
 
@@ -76,39 +76,39 @@ Broom adotou arquitetura **pipeline de análise** com processamento assíncrono 
 Score = (Severidade × Impacto) / Esforço estimado
 
 | Severidade | Peso |
-|------------|------|
-| Critical | 10 |
-| High | 7 |
-| Medium | 4 |
-| Low | 1 |
+| ---------- | ---- |
+| Critical   | 10   |
+| High       | 7    |
+| Medium     | 4    |
+| Low        | 1    |
 
 ---
 
 ## 5. Tecnologias
 
-| Camada | Tecnologia |
-|--------|------------|
-| Backend | Python, FastAPI |
-| Workers | Python, Celery |
-| Frontend | React, TypeScript |
-| Banco de dados | PostgreSQL |
-| Fila | Redis + Celery |
-| Containers | Docker (isolated analysis) |
-| CLI | Python, Click |
-| CI integration | GitHub Actions plugin |
+| Camada         | Tecnologia                 |
+| -------------- | -------------------------- |
+| Backend        | Python, FastAPI            |
+| Workers        | Python, Celery             |
+| Frontend       | React, TypeScript          |
+| Banco de dados | PostgreSQL                 |
+| Fila           | Redis + Celery             |
+| Containers     | Docker (isolated analysis) |
+| CLI            | Python, Click              |
+| CI integration | GitHub Actions plugin      |
 
 ---
 
 ## 6. Responsabilidades
 
-| Componente | Responsabilidade |
-|------------|------------------|
-| API Server | CRUD de scans, auth, webhooks |
-| Celery Workers | Execução de análises em containers isolados |
-| Analyzer Plugins | Lógica específica de cada tipo de análise |
-| Dashboard | Visualização, filtros, exportação |
-| CLI | Interface para desenvolvedores individuais |
-| GitHub Integration | OAuth, webhooks para scans automáticos |
+| Componente         | Responsabilidade                            |
+| ------------------ | ------------------------------------------- |
+| API Server         | CRUD de scans, auth, webhooks               |
+| Celery Workers     | Execução de análises em containers isolados |
+| Analyzer Plugins   | Lógica específica de cada tipo de análise   |
+| Dashboard          | Visualização, filtros, exportação           |
+| CLI                | Interface para desenvolvedores individuais  |
+| GitHub Integration | OAuth, webhooks para scans automáticos      |
 
 ---
 
@@ -134,24 +134,24 @@ Suporte a npm, pip, cargo, go modules com interfaces unificadas.
 
 ## 8. Soluções
 
-| Desafio | Solução |
-|---------|---------|
-| Isolamento | Docker containers efêmeros com network disabled, read-only filesystem |
-| Performance | Análise incremental (diff-based), timeout por analyzer (5 min), parallel workers |
-| Falsos positivos | Allowlist configurável, confidence score, manual dismiss com aprendizado |
-| Package managers | Plugin architecture com interface comum: detect → parse → audit |
+| Desafio          | Solução                                                                          |
+| ---------------- | -------------------------------------------------------------------------------- |
+| Isolamento       | Docker containers efêmeros com network disabled, read-only filesystem            |
+| Performance      | Análise incremental (diff-based), timeout por analyzer (5 min), parallel workers |
+| Falsos positivos | Allowlist configurável, confidence score, manual dismiss com aprendizado         |
+| Package managers | Plugin architecture com interface comum: detect → parse → audit                  |
 
 ---
 
 ## 9. Resultados
 
-| Métrica | Resultado |
-|---------|-----------|
-| Tempo médio de scan (médio, 5k files) | 3.5 minutos |
-| Precisão de dead code detection | 82% (após tuning) |
-| Vulnerabilidades detectadas | 94% vs manual audit |
-| Redução de débito técnico em equipes piloto | 40% em 3 meses |
-| Falsos positivos após tuning | < 15% |
+| Métrica                                     | Resultado           |
+| ------------------------------------------- | ------------------- |
+| Tempo médio de scan (médio, 5k files)       | 3.5 minutos         |
+| Precisão de dead code detection             | 82% (após tuning)   |
+| Vulnerabilidades detectadas                 | 94% vs manual audit |
+| Redução de débito técnico em equipes piloto | 40% em 3 meses      |
+| Falsos positivos após tuning                | < 15%               |
 
 ---
 
@@ -165,11 +165,11 @@ Suporte a npm, pip, cargo, go modules com interfaces unificadas.
 
 ---
 
-## 11. Relação com Portfolio OS
+## 11. Relação com NovaDesk
 
-Conceitos do Broom que informam o Portfolio OS:
+Conceitos do Broom que informam o NovaDesk:
 
-- Pipeline de análise assíncrona (BullMQ workers no Portfolio OS)
+- Pipeline de análise assíncrona (BullMQ workers no NovaDesk)
 - Containers isolados para execução (Docker no CI)
 - Plugin/extensible architecture (pacotes compartilhados)
 - Priorização por severidade (alertas em Observability)

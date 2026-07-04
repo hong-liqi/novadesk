@@ -1,9 +1,9 @@
 {
-  "name": "@portfolio/eslint-config",
+  "name": "@novadesk/eslint-config",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Shared ESLint flat config presets for Portfolio OS",
+  "description": "Shared ESLint flat config presets for NovaDesk",
   "main": "./base.js",
   "exports": {
     ".": "./base.js",

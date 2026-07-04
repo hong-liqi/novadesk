@@ -1,6 +1,6 @@
-# @portfolio/sdk
+# @novadesk/sdk
 
-Reusable HTTP client foundation for Portfolio OS.
+Reusable HTTP client foundation for NovaDesk.
 
 ## Purpose
 
@@ -16,7 +16,7 @@ It intentionally avoids domain-specific endpoint clients.
 
 ## Public API
 
-- `PortfolioClient`
+- `NovaDeskClient`
 - `createSdkClient`
 - `SdkError`
 - `withRetry`
@@ -25,7 +25,7 @@ It intentionally avoids domain-specific endpoint clients.
 - `bearerTokenInterceptor`
 - `requestIdInterceptor`
 - `HttpMethod`
-- `PortfolioClientOptions`
+- `NovaDeskClientOptions`
 - `RequestOptions`
 - `RequestContext`
 - `ResponseContext`
@@ -35,15 +35,15 @@ It intentionally avoids domain-specific endpoint clients.
 ## Installation
 
 ```bash
-pnpm add @portfolio/sdk
+pnpm add @novadesk/sdk
 ```
 
 ## Usage
 
 ```ts
-import { PortfolioClient, bearerTokenInterceptor } from '@portfolio/sdk';
+import { NovaDeskClient, bearerTokenInterceptor } from '@novadesk/sdk';
 
-const client = new PortfolioClient({
+const client = new NovaDeskClient({
   baseUrl: 'https://api.example.com',
   requestInterceptors: [bearerTokenInterceptor(() => 'access-token')],
 });
@@ -54,7 +54,7 @@ const response = await client.get<{ ok: boolean }>('/health');
 ## Error handling
 
 ```ts
-import { SdkError } from '@portfolio/sdk';
+import { SdkError } from '@novadesk/sdk';
 
 try {
   await client.get('/protected');
@@ -76,5 +76,5 @@ try {
 
 ## Notes
 
-- The client expects API responses to use the `@portfolio/shared` envelope.
+- The client expects API responses to use the `@novadesk/shared` envelope.
 - Domain-specific clients should live in application packages once business endpoints exist.

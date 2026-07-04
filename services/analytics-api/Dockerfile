@@ -6,7 +6,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages ./packages
 COPY services/analytics-api/package.json ./services/analytics-api/
-RUN pnpm install --frozen-lockfile --filter @portfolio/analytics-api...
+RUN pnpm install --frozen-lockfile --filter @novadesk/analytics-api...
 
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -15,8 +15,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY services/analytics-api ./services/analytics-api
-RUN pnpm --filter @portfolio/analytics-api db:generate
-RUN pnpm turbo run build --filter=@portfolio/analytics-api
+RUN pnpm --filter @novadesk/analytics-api db:generate
+RUN pnpm turbo run build --filter=@novadesk/analytics-api
 
 FROM node:20-alpine AS production
 WORKDIR /app

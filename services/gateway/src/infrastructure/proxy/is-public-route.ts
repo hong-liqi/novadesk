@@ -1,6 +1,6 @@
 const PUBLIC_AUTH_PATHS = new Set(['/api/v1/auth/login', '/api/v1/auth/register']);
 
-/** Public notification endpoint for portfolio contact form (rate-limited at gateway). */
+/** Public notification endpoint for NovaDesk contact form (rate-limited at gateway). */
 const PUBLIC_NOTIFICATION_PATHS = new Set(['/api/v1/notifications/send']);
 
 export function isPublicRoute(path: string): boolean {

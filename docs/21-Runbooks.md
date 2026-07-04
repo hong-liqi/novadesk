@@ -9,7 +9,7 @@
 
 ## 1. Objetivo
 
-Procedimentos operacionais para diagnóstico, resolução e prevenção de incidentes no Portfolio OS.
+Procedimentos operacionais para diagnóstico, resolução e prevenção de incidentes no NovaDesk.
 
 ---
 
@@ -31,14 +31,14 @@ Procedimentos operacionais para diagnóstico, resolução e prevenção de incid
 
 ### 2.3 Resolução
 
-| Causa | Ação |
-|-------|------|
-| Container crash | `docker compose restart {service}` |
-| OOM (Out of Memory) | Aumentar memory limit; investigar memory leak |
-| Database connection failed | Verificar PostgreSQL; verificar connection string |
-| Redis connection failed | Verificar Redis; `docker compose restart redis` |
-| Migration pendente | Executar `migrate-all.sh` |
-| Bug em deploy recente | Rollback para versão anterior (ver Runbook: Rollback) |
+| Causa                      | Ação                                                  |
+| -------------------------- | ----------------------------------------------------- |
+| Container crash            | `docker compose restart {service}`                    |
+| OOM (Out of Memory)        | Aumentar memory limit; investigar memory leak         |
+| Database connection failed | Verificar PostgreSQL; verificar connection string     |
+| Redis connection failed    | Verificar Redis; `docker compose restart redis`       |
+| Migration pendente         | Executar `migrate-all.sh`                             |
+| Bug em deploy recente      | Rollback para versão anterior (ver Runbook: Rollback) |
 
 ### 2.4 Escalação
 
@@ -157,13 +157,13 @@ A cada 90 dias ou imediatamente se comprometidas.
 
 ### 7.3 Resolução
 
-| Causa | Ação |
-|-------|------|
-| Deploy recente | Rollback |
-| Database issue | Verificar connections, slow queries |
-| Downstream service down | Circuit breaker deve estar ativo; restart downstream |
-| Rate limiting misconfiguration | Ajustar limites |
-| Bug específico | Hotfix branch → deploy |
+| Causa                          | Ação                                                 |
+| ------------------------------ | ---------------------------------------------------- |
+| Deploy recente                 | Rollback                                             |
+| Database issue                 | Verificar connections, slow queries                  |
+| Downstream service down        | Circuit breaker deve estar ativo; restart downstream |
+| Rate limiting misconfiguration | Ajustar limites                                      |
+| Bug específico                 | Hotfix branch → deploy                               |
 
 ---
 
@@ -198,7 +198,7 @@ Executar renovação via Certbot com plugin Nginx, validar configuração do Ngi
 
 ### 9.3 Verificação
 
-Verificar datas de validade do certificado SSL via OpenSSL client contra `portfolio-os.dev:443`.
+Verificar datas de validade do certificado SSL via OpenSSL client contra `novadesk.dev:443`.
 
 ---
 
@@ -206,7 +206,7 @@ Verificar datas de validade do certificado SSL via OpenSSL client contra `portfo
 
 ### 10.1 Setup local
 
-1. Clone: `git clone {repo} && cd portfolio`
+1. Clone: `git clone {repo} && cd novadesk`
 2. Node.js 20: `nvm use` (via .nvmrc)
 3. pnpm: `corepack enable && corepack prepare pnpm@9 --activate`
 4. Install: `pnpm install`
@@ -219,7 +219,7 @@ Verificar datas de validade do certificado SSL via OpenSSL client contra `portfo
 
 ### 10.2 Leitura obrigatória
 
-1. [PORTFOLIO_OS_MASTER_SPEC.md](../PORTFOLIO_OS_MASTER_SPEC.md)
+1. [NOVADESK_MASTER_SPEC.md](../NOVADESK_MASTER_SPEC.md)
 2. [docs/README.md](./README.md) — ordem de leitura
 3. [11-Definition-of-Done.md](./11-Definition-of-Done.md)
 4. [03-Coding-Standards.md](./03-Coding-Standards.md)
@@ -229,20 +229,20 @@ Verificar datas de validade do certificado SSL via OpenSSL client contra `portfo
 
 ## 11. Contatos e escalação
 
-| Severidade | Tempo de resposta | Ação |
-|------------|-------------------|------|
-| P0 — Critical | 1 hora | Resolver imediatamente |
-| P1 — High | 4 horas | Resolver no mesmo dia |
-| P2 — Medium | 24 horas | Planejar correção |
-| P3 — Low | 1 semana | Backlog |
+| Severidade    | Tempo de resposta | Ação                   |
+| ------------- | ----------------- | ---------------------- |
+| P0 — Critical | 1 hora            | Resolver imediatamente |
+| P1 — High     | 4 horas           | Resolver no mesmo dia  |
+| P2 — Medium   | 24 horas          | Planejar correção      |
+| P3 — Low      | 1 semana          | Backlog                |
 
 ---
 
 ## 12. Referências cruzadas
 
-| Tópico | Documento |
-|--------|-----------|
-| DevOps | [06-DevOps.md](./06-DevOps.md) |
-| Observabilidade | [08-Observability.md](./08-Observability.md) |
-| Segurança | [07-Security.md](./07-Security.md) |
-| Backup | [17-Data-Architecture.md](./17-Data-Architecture.md) |
+| Tópico          | Documento                                            |
+| --------------- | ---------------------------------------------------- |
+| DevOps          | [06-DevOps.md](./06-DevOps.md)                       |
+| Observabilidade | [08-Observability.md](./08-Observability.md)         |
+| Segurança       | [07-Security.md](./07-Security.md)                   |
+| Backup          | [17-Data-Architecture.md](./17-Data-Architecture.md) |

@@ -1,4 +1,4 @@
-# Contributing to Portfolio OS
+# Contributing to NovaDesk
 
 1. Read [docs/README.md](../docs/README.md) before coding
 2. Pick a backlog item from [docs/10-Backlog.md](../docs/10-Backlog.md)

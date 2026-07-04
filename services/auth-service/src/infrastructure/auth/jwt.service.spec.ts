@@ -15,8 +15,8 @@ describe('JwtService', () => {
         JWT_PRIVATE_KEY: privateKey,
         JWT_PUBLIC_KEY: publicKey,
         JWT_KID: 'test-kid',
-        JWT_ISSUER: 'portfolio-os-auth',
-        JWT_AUDIENCE: 'portfolio-os',
+        JWT_ISSUER: 'novadesk-auth',
+        JWT_AUDIENCE: 'novadesk',
         ACCESS_TOKEN_TTL: '15m',
       };
       return values[key] ?? defaultValue;
@@ -44,7 +44,7 @@ describe('JwtService', () => {
     expect(payload.email).toBe('user@example.com');
     expect(payload.roles).toEqual(['user']);
     expect(payload.tenantId).toBe('tenant-1');
-    expect(payload.iss).toBe('portfolio-os-auth');
+    expect(payload.iss).toBe('novadesk-auth');
     expect(payload.jti).toBeTruthy();
   });
 

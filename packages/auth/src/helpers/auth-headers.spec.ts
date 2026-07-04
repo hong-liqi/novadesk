@@ -1,4 +1,4 @@
-import { ROLES } from '@portfolio/shared';
+import { ROLES } from '@novadesk/shared';
 import { buildAuthUser, extractRequestIdentity, parseBearerToken } from './auth-headers';
 
 describe('auth headers helpers', () => {

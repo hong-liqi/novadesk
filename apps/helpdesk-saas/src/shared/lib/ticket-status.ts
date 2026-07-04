@@ -1,4 +1,4 @@
-import type { BadgeVariant } from '@portfolio/ui';
+import type { BadgeVariant } from '@novadesk/ui';
 
 export function ticketStatusLabel(status: string): string {
   return status

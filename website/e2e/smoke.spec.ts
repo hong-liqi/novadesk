@@ -6,7 +6,7 @@ test.describe('smoke', () => {
     await expect(
       page.getByRole('heading', { name: 'Integrated engineering ecosystem' }),
     ).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Portfolio OS modules' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'NovaDesk modules' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Case studies' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Get in touch' })).toBeVisible();
   });

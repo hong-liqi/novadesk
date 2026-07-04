@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '@portfolio/ui';
+import { Button } from '@novadesk/ui';
 import { routes } from '@/shared/lib/routes';
 
 export default function HomePage() {

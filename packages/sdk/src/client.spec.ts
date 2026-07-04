@@ -1,11 +1,11 @@
-import { PortfolioClient, createSdkClient } from './client';
+import { NovaDeskClient, createSdkClient } from './client';
 import { SdkError } from './errors';
 import { bearerTokenInterceptor, requestIdInterceptor } from './interceptors';
 import { withRetry } from './retry';
 
 const baseUrl = 'https://api.example.com';
 
-describe('PortfolioClient', () => {
+describe('NovaDeskClient', () => {
   it('performs GET requests and unwraps ApiResponse', async () => {
     const fetchFn = jest.fn().mockResolvedValue(
       new Response(
@@ -17,7 +17,7 @@ describe('PortfolioClient', () => {
       ),
     );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
     const result = await client.get<{ ok: boolean }>('/health');
 
     expect(result.data.ok).toBe(true);
@@ -43,7 +43,7 @@ describe('PortfolioClient', () => {
       ),
     );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
 
     await expect(client.get('/protected')).rejects.toMatchObject({
       code: 'UNAUTHORIZED',
@@ -60,7 +60,7 @@ describe('PortfolioClient', () => {
       }),
     );
 
-    const client = new PortfolioClient({
+    const client = new NovaDeskClient({
       baseUrl,
       fetchFn,
       retries: 0,
@@ -89,7 +89,7 @@ describe('PortfolioClient', () => {
         }),
     );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0, timeoutMs: 1 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0, timeoutMs: 1 });
 
     await expect(client.get('/slow')).rejects.toMatchObject({
       code: 'TIMEOUT',
@@ -99,7 +99,7 @@ describe('PortfolioClient', () => {
 
   it('creates clients from the factory helper', () => {
     const client = createSdkClient({ baseUrl });
-    expect(client).toBeInstanceOf(PortfolioClient);
+    expect(client).toBeInstanceOf(NovaDeskClient);
   });
 
   it('supports write methods and query params', async () => {
@@ -112,7 +112,7 @@ describe('PortfolioClient', () => {
       ),
     );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
 
     await client.post('/items', { name: 'alpha' });
     await client.put('/items/1', { name: 'beta' });
@@ -135,7 +135,7 @@ describe('PortfolioClient', () => {
       }),
     );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
 
     await expect(client.get('/broken')).rejects.toMatchObject({
       code: 'HTTP_ERROR',
@@ -145,7 +145,7 @@ describe('PortfolioClient', () => {
 
   it('maps network failures to SdkError', async () => {
     const fetchFn = jest.fn().mockRejectedValue(new Error('socket hang up'));
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
 
     await expect(client.get('/offline')).rejects.toMatchObject({
       code: 'NETWORK_ERROR',
@@ -162,7 +162,7 @@ describe('PortfolioClient', () => {
       ),
     );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
     const result = await client.get('/empty');
 
     expect(result).toEqual({});
@@ -196,7 +196,7 @@ describe('PortfolioClient', () => {
         ),
       );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 1, retryDelayMs: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 1, retryDelayMs: 0 });
     const result = await client.get<{ ok: boolean }>('/flaky');
 
     expect(result.data.ok).toBe(true);
@@ -211,7 +211,7 @@ describe('PortfolioClient', () => {
       }),
     );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
     const result = await client.getText('/analytics/export', { params: { workspaceId: 'ws-1' } });
 
     expect(result).toBe('col1,col2\n1,2');
@@ -242,7 +242,7 @@ describe('PortfolioClient', () => {
       ),
     );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
 
     await expect(client.getText('/export')).rejects.toMatchObject({
       code: 'FORBIDDEN',
@@ -252,7 +252,7 @@ describe('PortfolioClient', () => {
 
   it('maps getText HTTP failures without envelope to SdkError', async () => {
     const fetchFn = jest.fn().mockResolvedValue(new Response('bad gateway', { status: 502 }));
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
 
     await expect(client.getText('/export')).rejects.toMatchObject({
       code: 'HTTP_ERROR',
@@ -274,7 +274,7 @@ describe('PortfolioClient', () => {
         }),
     );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0, timeoutMs: 1 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0, timeoutMs: 1 });
 
     await expect(client.getText('/slow-export')).rejects.toMatchObject({
       code: 'TIMEOUT',
@@ -284,7 +284,7 @@ describe('PortfolioClient', () => {
 
   it('maps getText network failures to SdkError', async () => {
     const fetchFn = jest.fn().mockRejectedValue(new Error('connection reset'));
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
 
     await expect(client.getText('/export')).rejects.toMatchObject({
       code: 'NETWORK_ERROR',
@@ -302,7 +302,7 @@ describe('PortfolioClient', () => {
         }),
       );
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 1, retryDelayMs: 0 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 1, retryDelayMs: 0 });
     const result = await client.getText('/export');
 
     expect(result).toBe('ticketId,status\n1,open');
@@ -326,7 +326,7 @@ describe('PortfolioClient', () => {
       );
     });
 
-    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0, timeoutMs: 60_000 });
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0, timeoutMs: 60_000 });
 
     await expect(client.get('/abort-early', { signal: controller.signal })).rejects.toMatchObject({
       code: 'TIMEOUT',
@@ -368,7 +368,7 @@ describe('retry helpers', () => {
       }),
     );
 
-    const client = new PortfolioClient({
+    const client = new NovaDeskClient({
       baseUrl,
       fetchFn,
       retries: 0,

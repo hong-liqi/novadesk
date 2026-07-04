@@ -1,5 +1,5 @@
-import type { User, UserTenantMembership } from '@portfolio/shared';
-import type { PortfolioClient } from '../client';
+import type { User, UserTenantMembership } from '@novadesk/shared';
+import type { NovaDeskClient } from '../client';
 
 export interface LoginInput {
   email: string;
@@ -37,7 +37,7 @@ export interface MeResponse {
 }
 
 export class AuthClient {
-  constructor(private readonly client: PortfolioClient) {}
+  constructor(private readonly client: NovaDeskClient) {}
 
   login(input: LoginInput): Promise<AuthTokens> {
     return this.client.post<AuthTokens>('/auth/login', input).then((response) => response.data);
@@ -74,6 +74,6 @@ export class AuthClient {
   }
 }
 
-export function createAuthClient(client: PortfolioClient): AuthClient {
+export function createAuthClient(client: NovaDeskClient): AuthClient {
   return new AuthClient(client);
 }

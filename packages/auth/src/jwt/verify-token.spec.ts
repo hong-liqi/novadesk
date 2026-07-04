@@ -20,8 +20,8 @@ describe('verifyAccessToken', () => {
     });
 
     const payload = await verifyAccessToken('token', {
-      issuer: 'portfolio',
-      audience: 'portfolio-api',
+      issuer: 'novadesk',
+      audience: 'novadesk-api',
       jwksUrl: 'https://auth.example.com/.well-known/jwks.json',
     });
 
@@ -33,8 +33,8 @@ describe('verifyAccessToken', () => {
 
     await expect(
       verifyAccessToken('bad-token', {
-        issuer: 'portfolio',
-        audience: 'portfolio-api',
+        issuer: 'novadesk',
+        audience: 'novadesk-api',
         jwksUrl: 'https://auth.example.com/.well-known/jwks.json',
       }),
     ).rejects.toBeInstanceOf(TokenVerificationError);

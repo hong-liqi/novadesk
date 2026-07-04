@@ -1,14 +1,14 @@
-# @portfolio/eslint-config
+# @novadesk/eslint-config
 
-Shared ESLint flat config presets for Portfolio OS.
+Shared ESLint flat config presets for NovaDesk.
 
 ## Exports
 
-- `@portfolio/eslint-config`
-- `@portfolio/eslint-config/base`
-- `@portfolio/eslint-config/node`
-- `@portfolio/eslint-config/react`
-- `@portfolio/eslint-config/nestjs`
+- `@novadesk/eslint-config`
+- `@novadesk/eslint-config/base`
+- `@novadesk/eslint-config/node`
+- `@novadesk/eslint-config/react`
+- `@novadesk/eslint-config/nestjs`
 
 ## Purpose
 
@@ -17,7 +17,7 @@ This package centralizes linting rules so all packages share the same baseline f
 ## Usage
 
 ```js
-import eslintConfig from '@portfolio/eslint-config/react';
+import eslintConfig from '@novadesk/eslint-config/react';
 
 export default eslintConfig;
 ```

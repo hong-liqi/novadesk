@@ -160,9 +160,9 @@ Candidatos tendiam a responder de forma socialmente desejável, inflando scores.
 
 ---
 
-## 11. Relação com Portfolio OS
+## 11. Relação com NovaDesk
 
-Conceitos do Teste de Perfil que informam o Portfolio OS:
+Conceitos do Teste de Perfil que informam o NovaDesk:
 
 - Engine de regras como padrão (SLA policies no HelpDesk)
 - Relatórios e visualizações (Analytics Dashboard)

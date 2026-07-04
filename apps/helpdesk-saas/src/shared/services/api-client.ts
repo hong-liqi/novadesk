@@ -1,4 +1,4 @@
-import { TENANT_ID_HEADER } from '@portfolio/shared';
+import { TENANT_ID_HEADER } from '@novadesk/shared';
 import {
   createAuthClient,
   createHelpdeskClient,
@@ -6,8 +6,8 @@ import {
   type AuthClient,
   type HelpdeskClient,
   type RequestInterceptor,
-} from '@portfolio/sdk';
-import { createTokenManager, type TokenManager } from '@portfolio/auth/client';
+} from '@novadesk/sdk';
+import { createTokenManager, type TokenManager } from '@novadesk/auth/client';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '/api/v1';
 
@@ -58,12 +58,12 @@ function authTokenInterceptor(): RequestInterceptor {
   };
 }
 
-const portfolioClient = createSdkClient({
+const novadeskClient = createSdkClient({
   baseUrl: API_BASE_URL,
   requestInterceptors: [authTokenInterceptor(), tenantIdInterceptor()],
 });
 
-export const authClient: AuthClient = createAuthClient(portfolioClient);
-export const helpdeskClient: HelpdeskClient = createHelpdeskClient(portfolioClient);
+export const authClient: AuthClient = createAuthClient(novadeskClient);
+export const helpdeskClient: HelpdeskClient = createHelpdeskClient(novadeskClient);
 
 export { API_BASE_URL };

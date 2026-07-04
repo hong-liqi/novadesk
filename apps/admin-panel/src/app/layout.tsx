@@ -4,7 +4,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Admin Portal',
-  description: 'Portfolio OS — platform administration',
+  description: 'NovaDesk — platform administration',
 };
 
 export default function RootLayout({

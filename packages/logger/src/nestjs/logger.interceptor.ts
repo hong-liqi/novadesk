@@ -14,7 +14,7 @@ import {
   ROLES_HEADER,
   ROLE_LIST,
   type Role,
-} from '@portfolio/shared';
+} from '@novadesk/shared';
 import { createRequestContext, runWithContext } from '../context';
 import { LoggerService } from './logger.service';
 
@@ -35,7 +35,7 @@ export class LoggerInterceptor implements NestInterceptor {
     }>();
 
     const requestId = this.normalizeHeader(request.headers[REQUEST_ID_HEADER]) ?? randomUUID();
-    const service = process.env.SERVICE_NAME ?? 'portfolio-service';
+    const service = process.env.SERVICE_NAME ?? 'novadesk-service';
     const requestContext = createRequestContext({
       requestId,
       service,

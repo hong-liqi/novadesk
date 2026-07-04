@@ -4,7 +4,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Analytics Dashboard',
-  description: 'Portfolio OS — workspace analytics and KPI reporting',
+  description: 'NovaDesk — workspace analytics and KPI reporting',
 };
 
 export default function RootLayout({

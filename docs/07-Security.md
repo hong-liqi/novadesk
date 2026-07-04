@@ -9,21 +9,21 @@
 
 ## 1. Objetivo
 
-Definir a estratégia de segurança do Portfolio OS: autenticação, autorização, proteção de dados, comunicação segura, gestão de secrets, threat model e práticas de secure development.
+Definir a estratégia de segurança do NovaDesk: autenticação, autorização, proteção de dados, comunicação segura, gestão de secrets, threat model e práticas de secure development.
 
 ---
 
 ## 2. Princípios de segurança
 
-| Princípio | Implementação |
-|-----------|---------------|
-| Defense in depth | Múltiplas camadas: Nginx, Gateway, serviços, banco |
-| Least privilege | Roles mínimos, scopes granulares |
-| Fail secure | Erro de auth → deny, nunca allow |
-| Zero trust (inter-serviços) | Validação de token mesmo em rede interna |
-| Secure by default | HTTPS, headers, CORS restritivo em production |
-| No secrets in code | Variáveis de ambiente + GitHub Secrets |
-| Input validation everywhere | Toda entrada validada na fronteira |
+| Princípio                   | Implementação                                      |
+| --------------------------- | -------------------------------------------------- |
+| Defense in depth            | Múltiplas camadas: Nginx, Gateway, serviços, banco |
+| Least privilege             | Roles mínimos, scopes granulares                   |
+| Fail secure                 | Erro de auth → deny, nunca allow                   |
+| Zero trust (inter-serviços) | Validação de token mesmo em rede interna           |
+| Secure by default           | HTTPS, headers, CORS restritivo em production      |
+| No secrets in code          | Variáveis de ambiente + GitHub Secrets             |
+| Input validation everywhere | Toda entrada validada na fronteira                 |
 
 ---
 
@@ -31,37 +31,37 @@ Definir a estratégia de segurança do Portfolio OS: autenticação, autorizaç�
 
 ### 3.1 Ativos
 
-| Ativo | Criticidade |
-|-------|-------------|
-| Credenciais de usuário | Crítica |
-| Tokens JWT (private key) | Crítica |
-| Dados de tickets (HelpDesk) | Alta |
-| Dados de analytics | Média |
-| Mensagens de chat | Alta |
-| Configuração de infraestrutura | Alta |
-| Código fonte | Média |
+| Ativo                          | Criticidade |
+| ------------------------------ | ----------- |
+| Credenciais de usuário         | Crítica     |
+| Tokens JWT (private key)       | Crítica     |
+| Dados de tickets (HelpDesk)    | Alta        |
+| Dados de analytics             | Média       |
+| Mensagens de chat              | Alta        |
+| Configuração de infraestrutura | Alta        |
+| Código fonte                   | Média       |
 
 ### 3.2 Vetores de ameaça
 
-| Vetor | Mitigação |
-|-------|-----------|
+| Vetor                         | Mitigação                                     |
+| ----------------------------- | --------------------------------------------- |
 | Injection (SQL, XSS, command) | Prisma ORM, input validation, output encoding |
-| Broken authentication | JWT RS256, refresh rotation, rate limiting |
-| Broken access control | RBAC + tenant isolation + RLS |
-| Sensitive data exposure | HTTPS, encryption at rest, log sanitization |
-| SSRF | Whitelist de URLs em HTTP clients |
-| DoS | Rate limiting (Nginx + Gateway + Throttler) |
-| CSRF | SameSite cookies, CSRF tokens em forms |
-| Dependency vulnerabilities | npm audit, Dependabot, Snyk |
+| Broken authentication         | JWT RS256, refresh rotation, rate limiting    |
+| Broken access control         | RBAC + tenant isolation + RLS                 |
+| Sensitive data exposure       | HTTPS, encryption at rest, log sanitization   |
+| SSRF                          | Whitelist de URLs em HTTP clients             |
+| DoS                           | Rate limiting (Nginx + Gateway + Throttler)   |
+| CSRF                          | SameSite cookies, CSRF tokens em forms        |
+| Dependency vulnerabilities    | npm audit, Dependabot, Snyk                   |
 
 ### 3.3 STRIDE por componente
 
-| Componente | Spoofing | Tampering | Repudiation | Info Disclosure | DoS | Elevation |
-|------------|----------|-----------|-------------|-----------------|-----|-----------|
-| Auth Service | JWT + MFA futuro | Signed tokens | Audit log | Key protection | Rate limit | RBAC |
-| Gateway | Token validation | Request ID | Access log | Header sanitization | Rate limit | Scope check |
-| HelpDesk | Tenant auth | Input validation | Ticket audit trail | Tenant isolation | Pagination | Role check |
-| Chat | WS auth | Message validation | Message log | Room isolation | Connection limit | Room permissions |
+| Componente   | Spoofing         | Tampering          | Repudiation        | Info Disclosure     | DoS              | Elevation        |
+| ------------ | ---------------- | ------------------ | ------------------ | ------------------- | ---------------- | ---------------- |
+| Auth Service | JWT + MFA futuro | Signed tokens      | Audit log          | Key protection      | Rate limit       | RBAC             |
+| Gateway      | Token validation | Request ID         | Access log         | Header sanitization | Rate limit       | Scope check      |
+| HelpDesk     | Tenant auth      | Input validation   | Ticket audit trail | Tenant isolation    | Pagination       | Role check       |
+| Chat         | WS auth          | Message validation | Message log        | Room isolation      | Connection limit | Room permissions |
 
 ---
 
@@ -71,51 +71,51 @@ Definir a estratégia de segurança do Portfolio OS: autenticação, autorizaç�
 
 Auth Service (APP-01) é o **Identity Provider** centralizado.
 
-| Responsabilidade | Auth Service |
-|------------------|--------------|
-| Registro de usuário | Sim |
-| Login (email + password) | Sim |
-| Emissão JWT | Sim |
-| Refresh token | Sim |
-| Logout / revogação | Sim |
-| Password reset | Sim |
-| Verificação de e-mail | Sim |
-| Gestão de roles | Sim |
-| Gestão de tenants | Sim |
-| OAuth2/OIDC (futuro) | v1.1 (Google, GitHub) |
-| MFA (futuro) | v1.2 (TOTP) |
+| Responsabilidade         | Auth Service          |
+| ------------------------ | --------------------- |
+| Registro de usuário      | Sim                   |
+| Login (email + password) | Sim                   |
+| Emissão JWT              | Sim                   |
+| Refresh token            | Sim                   |
+| Logout / revogação       | Sim                   |
+| Password reset           | Sim                   |
+| Verificação de e-mail    | Sim                   |
+| Gestão de roles          | Sim                   |
+| Gestão de tenants        | Sim                   |
+| OAuth2/OIDC (futuro)     | v1.1 (Google, GitHub) |
+| MFA (futuro)             | v1.2 (TOTP)           |
 
 ### 4.2 JWT — Access Token
 
-| Propriedade | Valor |
-|-------------|-------|
-| Algoritmo | RS256 (RSA + SHA-256) |
-| TTL | 15 minutos |
-| Issuer | `portfolio-os-auth` |
-| Audience | `portfolio-os` |
-| Claims | `sub`, `email`, `roles`, `tenant_id`, `scope`, `iat`, `exp`, `jti` |
+| Propriedade | Valor                                                              |
+| ----------- | ------------------------------------------------------------------ |
+| Algoritmo   | RS256 (RSA + SHA-256)                                              |
+| TTL         | 15 minutos                                                         |
+| Issuer      | `novadesk-auth`                                                    |
+| Audience    | `novadesk`                                                         |
+| Claims      | `sub`, `email`, `roles`, `tenant_id`, `scope`, `iat`, `exp`, `jti` |
 
 ### 4.3 JWT — Refresh Token
 
-| Propriedade | Valor |
-|-------------|-------|
-| Formato | Opaque token (UUID v4) |
-| TTL | 7 dias |
-| Armazenamento server | Redis: `refresh:{token_hash}` → metadata |
-| Armazenamento client | httpOnly, Secure, SameSite=Strict cookie |
-| Rotação | Novo refresh token a cada uso; anterior invalidado |
-| Reuse detection | Se refresh usado duas vezes → revogar todos tokens do user |
+| Propriedade          | Valor                                                      |
+| -------------------- | ---------------------------------------------------------- |
+| Formato              | Opaque token (UUID v4)                                     |
+| TTL                  | 7 dias                                                     |
+| Armazenamento server | Redis: `refresh:{token_hash}` → metadata                   |
+| Armazenamento client | httpOnly, Secure, SameSite=Strict cookie                   |
+| Rotação              | Novo refresh token a cada uso; anterior invalidado         |
+| Reuse detection      | Se refresh usado duas vezes → revogar todos tokens do user |
 
 ### 4.4 Password policy
 
-| Regra | Valor |
-|-------|-------|
-| Comprimento mínimo | 8 caracteres |
-| Complexidade | 1 maiúscula, 1 minúscula, 1 número |
-| Hashing | bcrypt, cost factor 12 |
-| Histórico | Últimas 5 senhas não reutilizáveis (futuro) |
-| Brute force | Lock após 5 tentativas em 15 min |
-| Reset | Token por e-mail, TTL 1 hora, single use |
+| Regra              | Valor                                       |
+| ------------------ | ------------------------------------------- |
+| Comprimento mínimo | 8 caracteres                                |
+| Complexidade       | 1 maiúscula, 1 minúscula, 1 número          |
+| Hashing            | bcrypt, cost factor 12                      |
+| Histórico          | Últimas 5 senhas não reutilizáveis (futuro) |
+| Brute force        | Lock após 5 tentativas em 15 min            |
+| Reset              | Token por e-mail, TTL 1 hora, single use    |
 
 ### 4.5 JWKS
 
@@ -134,12 +134,12 @@ Auth Service (APP-01) é o **Identity Provider** centralizado.
 
 ### 4.7 Service-to-service authentication
 
-| Mecanismo | Uso |
-|-----------|-----|
-| Service JWT | Comunicação inter-serviços com scope `service:*` |
-| Emissão | Auth Service endpoint interno (não exposto via Gateway) |
-| TTL | 5 minutos |
-| Validação | Gateway ou serviço destino via JWKS |
+| Mecanismo   | Uso                                                     |
+| ----------- | ------------------------------------------------------- |
+| Service JWT | Comunicação inter-serviços com scope `service:*`        |
+| Emissão     | Auth Service endpoint interno (não exposto via Gateway) |
+| TTL         | 5 minutos                                               |
+| Validação   | Gateway ou serviço destino via JWKS                     |
 
 ---
 
@@ -147,37 +147,37 @@ Auth Service (APP-01) é o **Identity Provider** centralizado.
 
 ### 5.1 RBAC — Roles
 
-| Role | Descrição | Acesso |
-|------|-----------|--------|
-| `super_admin` | Administrador da plataforma | Tudo |
-| `admin` | Administrador de tenant | Tenant completo |
-| `agent` | Agente de suporte | Tickets do tenant |
-| `user` | Usuário final | Próprios tickets, chat |
-| `guest` | Não autenticado | Portfolio website, registro |
+| Role          | Descrição                   | Acesso                     |
+| ------------- | --------------------------- | -------------------------- |
+| `super_admin` | Administrador da plataforma | Tudo                       |
+| `admin`       | Administrador de tenant     | Tenant completo            |
+| `agent`       | Agente de suporte           | Tickets do tenant          |
+| `user`        | Usuário final               | Próprios tickets, chat     |
+| `guest`       | Não autenticado             | NovaDesk website, registro |
 
 ### 5.2 Permissões granulares (HelpDesk)
 
-| Permissão | Roles |
-|-----------|-------|
-| `ticket:create` | user, agent, admin |
-| `ticket:read:own` | user |
-| `ticket:read:all` | agent, admin |
-| `ticket:update` | agent, admin |
-| `ticket:delete` | admin |
-| `ticket:assign` | agent, admin |
-| `tenant:manage` | admin, super_admin |
-| `user:manage` | admin, super_admin |
-| `analytics:view` | admin, super_admin |
-| `analytics:export` | admin |
+| Permissão          | Roles              |
+| ------------------ | ------------------ |
+| `ticket:create`    | user, agent, admin |
+| `ticket:read:own`  | user               |
+| `ticket:read:all`  | agent, admin       |
+| `ticket:update`    | agent, admin       |
+| `ticket:delete`    | admin              |
+| `ticket:assign`    | agent, admin       |
+| `tenant:manage`    | admin, super_admin |
+| `user:manage`      | admin, super_admin |
+| `analytics:view`   | admin, super_admin |
+| `analytics:export` | admin              |
 
 ### 5.3 Implementação
 
-| Camada | Mecanismo |
-|--------|-----------|
-| Gateway | Valida JWT, injeta headers de identidade |
-| Serviço | Guard NestJS `@Roles()` + `@Permissions()` |
-| Banco | Row-Level Security (RLS) PostgreSQL |
-| Frontend | Route guards + conditional rendering |
+| Camada   | Mecanismo                                  |
+| -------- | ------------------------------------------ |
+| Gateway  | Valida JWT, injeta headers de identidade   |
+| Serviço  | Guard NestJS `@Roles()` + `@Permissions()` |
+| Banco    | Row-Level Security (RLS) PostgreSQL        |
+| Frontend | Route guards + conditional rendering       |
 
 ### 5.4 Tenant isolation
 
@@ -192,33 +192,33 @@ Auth Service (APP-01) é o **Identity Provider** centralizado.
 
 ### 6.1 TLS
 
-| Ambiente | TLS |
-|----------|-----|
-| local | HTTP (exceção aceita) |
-| staging | HTTPS (Let's Encrypt) |
+| Ambiente   | TLS                             |
+| ---------- | ------------------------------- |
+| local      | HTTP (exceção aceita)           |
+| staging    | HTTPS (Let's Encrypt)           |
 | production | HTTPS (Let's Encrypt), TLS 1.2+ |
 
 ### 6.2 Headers de segurança
 
 Configurados via Nginx e Helmet:
 
-| Header | Valor |
-|--------|-------|
-| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` |
-| `X-Content-Type-Options` | `nosniff` |
-| `X-Frame-Options` | `DENY` |
-| `X-XSS-Protection` | `0` (desabilitado, CSP é preferido) |
-| `Content-Security-Policy` | Política restritiva por app |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` |
-| `Permissions-Policy` | Restringir camera, microphone, geolocation |
+| Header                      | Valor                                      |
+| --------------------------- | ------------------------------------------ |
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains`      |
+| `X-Content-Type-Options`    | `nosniff`                                  |
+| `X-Frame-Options`           | `DENY`                                     |
+| `X-XSS-Protection`          | `0` (desabilitado, CSP é preferido)        |
+| `Content-Security-Policy`   | Política restritiva por app                |
+| `Referrer-Policy`           | `strict-origin-when-cross-origin`          |
+| `Permissions-Policy`        | Restringir camera, microphone, geolocation |
 
 ### 6.3 CORS
 
-| Ambiente | Origins permitidos |
-|----------|-------------------|
-| local | `http://localhost:*` |
-| staging | `https://staging.portfolio-os.dev` |
-| production | `https://portfolio-os.dev` |
+| Ambiente   | Origins permitidos             |
+| ---------- | ------------------------------ |
+| local      | `http://localhost:*`           |
+| staging    | `https://staging.novadesk.dev` |
+| production | `https://novadesk.dev`         |
 
 ---
 
@@ -226,32 +226,32 @@ Configurados via Nginx e Helmet:
 
 ### 7.1 Classificação
 
-| Classificação | Exemplos | Proteção |
-|---------------|----------|----------|
-| Pública | Portfolio content, docs | Nenhuma especial |
-| Interna | Configuração, logs | Acesso restrito |
-| Confidencial | E-mails, tickets, chat | Encryption at rest, access control |
-| Restrita | Senhas, tokens, keys | Hashing, encryption, secrets manager |
+| Classificação | Exemplos               | Proteção                             |
+| ------------- | ---------------------- | ------------------------------------ |
+| Pública       | NovaDesk content, docs | Nenhuma especial                     |
+| Interna       | Configuração, logs     | Acesso restrito                      |
+| Confidencial  | E-mails, tickets, chat | Encryption at rest, access control   |
+| Restrita      | Senhas, tokens, keys   | Hashing, encryption, secrets manager |
 
 ### 7.2 Encryption
 
-| Tipo | Mecanismo |
-|------|-----------|
-| At rest (DB) | PostgreSQL volume encryption (LUKS no VPS) |
-| At rest (secrets) | GitHub Secrets, .env gitignored |
-| In transit | TLS 1.2+ |
-| Passwords | bcrypt |
-| PII em logs | Mascarado (email: `j***@example.com`) |
+| Tipo              | Mecanismo                                  |
+| ----------------- | ------------------------------------------ |
+| At rest (DB)      | PostgreSQL volume encryption (LUKS no VPS) |
+| At rest (secrets) | GitHub Secrets, .env gitignored            |
+| In transit        | TLS 1.2+                                   |
+| Passwords         | bcrypt                                     |
+| PII em logs       | Mascarado (email: `j***@example.com`)      |
 
 ### 7.3 Data retention
 
-| Dado | Retenção | Após retenção |
-|------|----------|---------------|
-| Tickets resolvidos | 2 anos | Anonimização |
-| Logs de aplicação | 90 dias | Deleção |
-| Audit logs | 1 ano | Arquivo |
-| Refresh tokens expirados | 7 dias | Deleção automática |
-| Contas inativas | 1 ano | Notificação + deleção |
+| Dado                     | Retenção | Após retenção         |
+| ------------------------ | -------- | --------------------- |
+| Tickets resolvidos       | 2 anos   | Anonimização          |
+| Logs de aplicação        | 90 dias  | Deleção               |
+| Audit logs               | 1 ano    | Arquivo               |
+| Refresh tokens expirados | 7 dias   | Deleção automática    |
+| Contas inativas          | 1 ano    | Notificação + deleção |
 
 ### 7.4 LGPD (práticas alinhadas)
 
@@ -265,14 +265,14 @@ Configurados via Nginx e Helmet:
 
 ## 8. Rate limiting
 
-| Camada | Limite | Janela |
-|--------|--------|--------|
-| Nginx (global) | 100 req/s por IP | 1s |
-| Gateway (autenticado) | 60 req/min por user | 1 min |
-| Gateway (não autenticado) | 20 req/min por IP | 1 min |
-| Auth login | 5 req/min por IP | 1 min |
-| Auth register | 3 req/min por IP | 1 min |
-| Password reset | 3 req/hora por email | 1 hora |
+| Camada                    | Limite               | Janela |
+| ------------------------- | -------------------- | ------ |
+| Nginx (global)            | 100 req/s por IP     | 1s     |
+| Gateway (autenticado)     | 60 req/min por user  | 1 min  |
+| Gateway (não autenticado) | 20 req/min por IP    | 1 min  |
+| Auth login                | 5 req/min por IP     | 1 min  |
+| Auth register             | 3 req/min por IP     | 1 min  |
+| Password reset            | 3 req/hora por email | 1 hora |
 
 Implementação: Redis sliding window.
 
@@ -280,13 +280,13 @@ Implementação: Redis sliding window.
 
 ## 9. Input validation e sanitização
 
-| Camada | Mecanismo |
-|--------|-----------|
-| HTTP | class-validator DTOs, Zod schemas |
-| SQL | Prisma ORM (parameterized queries) |
-| HTML (user content) | DOMPurify no frontend, sanitização no backend |
-| File upload (futuro) | Whitelist de MIME types, size limit, scan |
-| WebSocket | Schema validation em cada mensagem |
+| Camada               | Mecanismo                                     |
+| -------------------- | --------------------------------------------- |
+| HTTP                 | class-validator DTOs, Zod schemas             |
+| SQL                  | Prisma ORM (parameterized queries)            |
+| HTML (user content)  | DOMPurify no frontend, sanitização no backend |
+| File upload (futuro) | Whitelist de MIME types, size limit, scan     |
+| WebSocket            | Schema validation em cada mensagem            |
 
 ---
 
@@ -294,16 +294,16 @@ Implementação: Redis sliding window.
 
 Eventos auditados:
 
-| Evento | Dados registrados |
-|--------|-------------------|
-| Login (sucesso/falha) | userId, IP, userAgent, timestamp |
-| Logout | userId, timestamp |
-| Password change | userId, timestamp |
-| Role change | userId, targetUserId, oldRole, newRole |
-| Tenant create/update | userId, tenantId, action |
-| Ticket status change | userId, ticketId, oldStatus, newStatus |
-| Data export | userId, scope, timestamp |
-| Account deletion | userId, timestamp |
+| Evento                | Dados registrados                      |
+| --------------------- | -------------------------------------- |
+| Login (sucesso/falha) | userId, IP, userAgent, timestamp       |
+| Logout                | userId, timestamp                      |
+| Password change       | userId, timestamp                      |
+| Role change           | userId, targetUserId, oldRole, newRole |
+| Tenant create/update  | userId, tenantId, action               |
+| Ticket status change  | userId, ticketId, oldStatus, newStatus |
+| Data export           | userId, scope, timestamp               |
+| Account deletion      | userId, timestamp                      |
 
 Audit logs são append-only, armazenados em tabela dedicada, retidos por 1 ano.
 
@@ -311,12 +311,12 @@ Audit logs são append-only, armazenados em tabela dedicada, retidos por 1 ano.
 
 ## 11. Dependency security
 
-| Ferramenta | Frequência | Ação |
-|------------|------------|------|
-| npm audit | Cada PR | Bloqueia se critical |
-| Dependabot | Diário | Auto-PR para patches |
-| GitHub Dependency Review | Cada PR | Bloqueia novas vulnerabilidades |
-| CodeQL | Semanal | Alertas de segurança |
+| Ferramenta               | Frequência | Ação                            |
+| ------------------------ | ---------- | ------------------------------- |
+| npm audit                | Cada PR    | Bloqueia se critical            |
+| Dependabot               | Diário     | Auto-PR para patches            |
+| GitHub Dependency Review | Cada PR    | Bloqueia novas vulnerabilidades |
+| CodeQL                   | Semanal    | Alertas de segurança            |
 
 ---
 
@@ -324,12 +324,12 @@ Audit logs são append-only, armazenados em tabela dedicada, retidos por 1 ano.
 
 ### 12.1 Severidades
 
-| Severidade | Exemplo | Tempo de resposta |
-|------------|---------|-------------------|
-| P0 — Critical | Data breach, auth bypass | 1 hora |
-| P1 — High | XSS, privilege escalation | 4 horas |
-| P2 — Medium | Information disclosure | 24 horas |
-| P3 — Low | Missing security header | 1 semana |
+| Severidade    | Exemplo                   | Tempo de resposta |
+| ------------- | ------------------------- | ----------------- |
+| P0 — Critical | Data breach, auth bypass  | 1 hora            |
+| P1 — High     | XSS, privilege escalation | 4 horas           |
+| P2 — Medium   | Information disclosure    | 24 horas          |
+| P3 — Low      | Missing security header   | 1 semana          |
 
 ### 12.2 Procedimento
 
@@ -362,11 +362,11 @@ Todo serviço deve implementar:
 
 ## 14. Referências cruzadas
 
-| Tópico | Documento |
-|--------|-----------|
-| Arquitetura | [01-Architecture.md](./01-Architecture.md) |
-| APIs | [18-API-Design-Standards.md](./18-API-Design-Standards.md) |
-| DevOps | [06-DevOps.md](./06-DevOps.md) |
-| Observabilidade | [08-Observability.md](./08-Observability.md) |
-| Testes | [05-Testing-Strategy.md](./05-Testing-Strategy.md) |
-| Runbooks | [21-Runbooks.md](./21-Runbooks.md) |
+| Tópico          | Documento                                                  |
+| --------------- | ---------------------------------------------------------- |
+| Arquitetura     | [01-Architecture.md](./01-Architecture.md)                 |
+| APIs            | [18-API-Design-Standards.md](./18-API-Design-Standards.md) |
+| DevOps          | [06-DevOps.md](./06-DevOps.md)                             |
+| Observabilidade | [08-Observability.md](./08-Observability.md)               |
+| Testes          | [05-Testing-Strategy.md](./05-Testing-Strategy.md)         |
+| Runbooks        | [21-Runbooks.md](./21-Runbooks.md)                         |

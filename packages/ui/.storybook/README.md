@@ -13,11 +13,11 @@ src/components/
 Recommended packages:
 
 ```bash
-pnpm add -D storybook @storybook/react-vite @storybook/react --filter @portfolio/ui
+pnpm add -D storybook @storybook/react-vite @storybook/react --filter @novadesk/ui
 ```
 
 Run locally:
 
 ```bash
-pnpm --filter @portfolio/ui exec storybook dev -p 6006
+pnpm --filter @novadesk/ui exec storybook dev -p 6006
 ```

@@ -1,3 +1,3 @@
-import eslint from '@portfolio/eslint-config/node';
+import eslint from '@novadesk/eslint-config/node';
 
 export default eslint;

@@ -1,4 +1,4 @@
-import type { Role } from '@portfolio/shared';
+import type { Role } from '@novadesk/shared';
 import type { AuthUser } from '../types';
 
 export function hasRole(user: AuthUser | undefined, requiredRoles: Role[]): boolean {

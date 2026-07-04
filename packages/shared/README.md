@@ -1,6 +1,6 @@
-# @portfolio/shared
+# @novadesk/shared
 
-Foundation package for contracts, helpers and standardized errors reused by every application in Portfolio OS.
+Foundation package for contracts, helpers and standardized errors reused by every application in NovaDesk.
 
 ## Purpose
 
@@ -43,7 +43,7 @@ It does not contain business rules or application-specific workflows.
 
 ### Errors
 
-- `PortfolioError`
+- `NovaDeskError`
 - `ValidationError`
 - `AuthenticationError`
 - `AuthorizationError`
@@ -64,7 +64,7 @@ It does not contain business rules or application-specific workflows.
 ## Installation
 
 ```bash
-pnpm add @portfolio/shared
+pnpm add @novadesk/shared
 ```
 
 ## Usage
@@ -75,7 +75,7 @@ import {
   createCursor,
   eventEnvelopeSchema,
   normalizePageSize,
-} from '@portfolio/shared';
+} from '@novadesk/shared';
 
 const cursor = createCursor('ticket-123');
 const pageSize = normalizePageSize(250);

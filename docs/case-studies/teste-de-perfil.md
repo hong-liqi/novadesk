@@ -43,12 +43,12 @@ Teste de Perfil adotou arquitetura **modular com engine de regras** para scoring
 
 ### 3.2 Módulos
 
-| Módulo | Responsabilidade |
-|--------|------------------|
-| Auth | Registro, login, perfis de candidato e recrutador |
-| Test Engine | Aplicação de questionários, scoring adaptativo |
-| Report Engine | Geração de relatórios PDF e visualizações |
-| Admin | Gestão de questionários, regras e benchmarks |
+| Módulo        | Responsabilidade                                  |
+| ------------- | ------------------------------------------------- |
+| Auth          | Registro, login, perfis de candidato e recrutador |
+| Test Engine   | Aplicação de questionários, scoring adaptativo    |
+| Report Engine | Geração de relatórios PDF e visualizações         |
+| Admin         | Gestão de questionários, regras e benchmarks      |
 
 ---
 
@@ -82,27 +82,27 @@ Teste de Perfil adotou arquitetura **modular com engine de regras** para scoring
 
 ## 5. Tecnologias
 
-| Camada | Tecnologia |
-|--------|------------|
-| Backend | Node.js, TypeScript, NestJS |
-| Frontend | React, TypeScript, D3.js (radar charts) |
-| Banco de dados | PostgreSQL |
-| PDF Generation | Puppeteer |
-| Autenticação | JWT + invite tokens |
-| Deploy | Docker, AWS ECS |
-| Testes | Jest, Cypress |
+| Camada         | Tecnologia                              |
+| -------------- | --------------------------------------- |
+| Backend        | Node.js, TypeScript, NestJS             |
+| Frontend       | React, TypeScript, D3.js (radar charts) |
+| Banco de dados | PostgreSQL                              |
+| PDF Generation | Puppeteer                               |
+| Autenticação   | JWT + invite tokens                     |
+| Deploy         | Docker, AWS ECS                         |
+| Testes         | Jest, Cypress                           |
 
 ---
 
 ## 6. Responsabilidades
 
-| Componente | Responsabilidade |
-|------------|------------------|
-| Auth Module | Identidade, convites, roles (candidato/recrutador) |
-| Test Engine | Fluxo de questionário, adaptive logic, scoring |
-| Report Engine | Geração de relatórios, visualizações, exportação |
-| Admin Module | CRUD de questões, regras de scoring, benchmarks |
-| PostgreSQL | Persistência de testes, resultados, configurações |
+| Componente    | Responsabilidade                                   |
+| ------------- | -------------------------------------------------- |
+| Auth Module   | Identidade, convites, roles (candidato/recrutador) |
+| Test Engine   | Fluxo de questionário, adaptive logic, scoring     |
+| Report Engine | Geração de relatórios, visualizações, exportação   |
+| Admin Module  | CRUD de questões, regras de scoring, benchmarks    |
+| PostgreSQL    | Persistência de testes, resultados, configurações  |
 
 ---
 
@@ -128,25 +128,25 @@ Candidatos tendiam a responder de forma socialmente desejável, inflando scores.
 
 ## 8. Soluções
 
-| Desafio | Solução |
-|---------|---------|
+| Desafio                | Solução                                                                             |
+| ---------------------- | ----------------------------------------------------------------------------------- |
 | Validação psicométrica | Calibração com 200 respondentes piloto; Cronbach's alpha > 0.7 para todas dimensões |
-| Adaptive testing | Pré-computação de information matrix por questão; lookup O(1) |
-| PDF generation | Puppeteer renderiza React components; cache de templates |
-| Viés de resposta | Questões de validação (faking good detection); normalização de scores |
+| Adaptive testing       | Pré-computação de information matrix por questão; lookup O(1)                       |
+| PDF generation         | Puppeteer renderiza React components; cache de templates                            |
+| Viés de resposta       | Questões de validação (faking good detection); normalização de scores               |
 
 ---
 
 ## 9. Resultados
 
-| Métrica | Resultado |
-|---------|-----------|
-| Tempo médio de avaliação | 18 minutos |
-| Consistência test-retest | 0.82 (correlação) |
-| Satisfação de candidatos | 4.2/5 |
-| Redução de turnover em 6 meses (empresas piloto) | 25% |
-| Precisão de fit (validado com performance 6 meses) | 71% |
-| Avaliações completadas vs iniciadas | 78% |
+| Métrica                                            | Resultado         |
+| -------------------------------------------------- | ----------------- |
+| Tempo médio de avaliação                           | 18 minutos        |
+| Consistência test-retest                           | 0.82 (correlação) |
+| Satisfação de candidatos                           | 4.2/5             |
+| Redução de turnover em 6 meses (empresas piloto)   | 25%               |
+| Precisão de fit (validado com performance 6 meses) | 71%               |
+| Avaliações completadas vs iniciadas                | 78%               |
 
 ---
 
@@ -160,9 +160,9 @@ Candidatos tendiam a responder de forma socialmente desejável, inflando scores.
 
 ---
 
-## 11. Relação com Portfolio OS
+## 11. Relação com NovaDesk
 
-Conceitos do Teste de Perfil que informam o Portfolio OS:
+Conceitos do Teste de Perfil que informam o NovaDesk:
 
 - Engine de regras como padrão (SLA policies no HelpDesk)
 - Relatórios e visualizações (Analytics Dashboard)

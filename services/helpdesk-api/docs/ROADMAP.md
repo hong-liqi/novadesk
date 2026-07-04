@@ -102,19 +102,19 @@
 
 ---
 
-## Dependencies on Portfolio OS
+## Dependencies on NovaDesk
 
 | Dependency           | Status                     |
 | -------------------- | -------------------------- |
 | auth-service         | ✅ implemented             |
 | gateway              | ✅ proxy + JWT validation  |
 | notification-service | 🔲 shell only              |
-| @portfolio/sdk       | ✅ auth + helpdesk clients |
-| @portfolio/ui        | ✅ design system           |
+| @novadesk/sdk        | ✅ auth + helpdesk clients |
+| @novadesk/ui         | ✅ design system           |
 
 ---
 
-## Out of Scope (Portfolio Demo)
+## Out of Scope (NovaDesk Demo)
 
 - Billing / subscriptions
 - White-label theming

@@ -1,4 +1,5 @@
-# PORTFOLIO OS — ESPECIFICAÇÃO MESTRA
+# NovaDesk — ESPECIFICAÇÃO MESTRA
+
 Versão 1.0
 
 > ESTE DOCUMENTO É A FONTE DA VERDADE.
@@ -53,7 +54,7 @@ Demonstrar domínio em:
 
 # ESTRUTURA DO REPOSITÓRIO
 
-portfolio/
+novadesk/
 
 00-governance/
 01-docs/
@@ -90,9 +91,11 @@ Cada documento deve ser completo.
 # TECNOLOGIAS
 
 Linguagem:
+
 - TypeScript
 
 Frontend:
+
 - Next.js
 - React
 - Tailwind
@@ -101,6 +104,7 @@ Frontend:
 - Zod
 
 Backend:
+
 - NestJS
 - Prisma
 - PostgreSQL
@@ -108,12 +112,14 @@ Backend:
 - BullMQ
 
 Infra:
+
 - Docker
 - Docker Compose
 - Nginx
 - GitHub Actions
 
 Testes:
+
 - Vitest
 - Jest
 - Playwright
@@ -129,7 +135,7 @@ Testes:
 5. Analytics Dashboard
 6. Realtime Chat
 7. Admin Portal
-8. Portfolio Website
+8. NovaDesk Website
 
 Todos integrados.
 
@@ -247,4 +253,3 @@ Ao término do ecossistema, um recrutador deve conseguir avaliar:
 - experiência prática
 
 sem acesso a qualquer código proprietário.
-

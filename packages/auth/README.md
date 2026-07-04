@@ -1,6 +1,6 @@
-# @portfolio/auth
+# @novadesk/auth
 
-Authentication foundation for Portfolio OS.
+Authentication foundation for NovaDesk.
 
 ## Purpose
 
@@ -37,13 +37,13 @@ It does not implement the final authentication product.
 ## Installation
 
 ```bash
-pnpm add @portfolio/auth
+pnpm add @novadesk/auth
 ```
 
 ## Usage
 
 ```ts
-import { CurrentUser, JwtAuthGuard, Roles } from '@portfolio/auth';
+import { CurrentUser, JwtAuthGuard, Roles } from '@novadesk/auth';
 
 @Controller('profile')
 @UseGuards(JwtAuthGuard)

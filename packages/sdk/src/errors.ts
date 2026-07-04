@@ -1,4 +1,4 @@
-import type { ApiError } from '@portfolio/shared';
+import type { ApiError } from '@novadesk/shared';
 
 export class SdkError extends Error {
   constructor(

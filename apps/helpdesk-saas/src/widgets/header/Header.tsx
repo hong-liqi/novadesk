@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@portfolio/auth/client';
-import { Button } from '@portfolio/ui';
+import { useAuth } from '@novadesk/auth/client';
+import { Button } from '@novadesk/ui';
 import { useRouter } from 'next/navigation';
 import { useCallback, useRef, useState } from 'react';
 import { routes } from '@/shared/lib/routes';

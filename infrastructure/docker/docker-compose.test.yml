@@ -7,8 +7,8 @@ services:
   postgres-auth:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: portfolio
-      POSTGRES_PASSWORD: portfolio
+      POSTGRES_USER: novadesk
+      POSTGRES_PASSWORD: novadesk
       POSTGRES_DB: auth_db
     ports:
       - '5432:5432'

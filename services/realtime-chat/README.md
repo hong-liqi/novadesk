@@ -1,12 +1,12 @@
 # Realtime Chat Service
 
-NestJS WebSocket + REST service for ticket-scoped chat in Portfolio OS (M7).
+NestJS WebSocket + REST service for ticket-scoped chat in NovaDesk (M7).
 
 ## Overview
 
 | Property | Value                                          |
 | -------- | ---------------------------------------------- |
-| Package  | `@portfolio/realtime-chat-service`             |
+| Package  | `@novadesk/realtime-chat-service`              |
 | Port     | `3005`                                         |
 | Database | `chat_db` (PostgreSQL)                         |
 | Auth     | JWT on WebSocket handshake via `AUTH_JWKS_URL` |
@@ -36,7 +36,7 @@ Rooms use the naming convention `ticket:{ticketId}`.
 ```bash
 cp services/realtime-chat/.env.example services/realtime-chat/.env
 pnpm install
-pnpm turbo run dev --filter=@portfolio/realtime-chat-service
+pnpm turbo run dev --filter=@novadesk/realtime-chat-service
 ```
 
 Run `pnpm db:push` (or migrate) after starting `postgres-chat`.
@@ -46,7 +46,7 @@ Run `pnpm db:push` (or migrate) after starting `postgres-chat`.
 Built from monorepo root:
 
 ```bash
-docker build -f services/realtime-chat/Dockerfile -t portfolio/realtime-chat-service .
+docker build -f services/realtime-chat/Dockerfile -t novadesk/realtime-chat-service .
 ```
 
 When scaling beyond a single replica, configure sticky sessions on the gateway/nginx WebSocket upstream (see `services/gateway/README.md`).

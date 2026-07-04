@@ -1,8 +1,8 @@
 'use client';
 
-import { useAuth } from '@portfolio/auth/client';
-import { Button, Input, Stack } from '@portfolio/ui';
-import { AuthLayout } from '@portfolio/ui/client';
+import { useAuth } from '@novadesk/auth/client';
+import { Button, Input, Stack } from '@novadesk/ui';
+import { AuthLayout } from '@novadesk/ui/client';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 import { authClient } from '@/shared/services';

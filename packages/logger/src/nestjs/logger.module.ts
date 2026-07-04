@@ -13,7 +13,7 @@ export const LOGGER = Symbol('LOGGER');
       provide: LOGGER,
       useFactory: () =>
         createLogger({
-          service: process.env.SERVICE_NAME ?? 'portfolio-service',
+          service: process.env.SERVICE_NAME ?? 'novadesk-service',
           pretty: process.env.NODE_ENV !== 'production',
         }),
     },

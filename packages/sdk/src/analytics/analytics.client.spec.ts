@@ -1,9 +1,9 @@
-import { PortfolioClient } from '../client';
+import { NovaDeskClient } from '../client';
 import { AnalyticsClient, createAnalyticsClient } from './analytics.client';
 
 describe('AnalyticsClient', () => {
   it('calls KPI endpoint with workspace id', async () => {
-    const client = new PortfolioClient({
+    const client = new NovaDeskClient({
       baseUrl: 'https://api.example.com',
       fetchFn: jest.fn().mockResolvedValue(
         new Response(
@@ -44,7 +44,7 @@ describe('AnalyticsClient', () => {
       ),
     );
 
-    const client = new PortfolioClient({
+    const client = new NovaDeskClient({
       baseUrl: 'https://api.example.com',
       fetchFn,
       retries: 0,
@@ -60,7 +60,7 @@ describe('AnalyticsClient', () => {
   });
 
   it('exports CSV as plain text', async () => {
-    const client = new PortfolioClient({
+    const client = new NovaDeskClient({
       baseUrl: 'https://api.example.com',
       fetchFn: jest.fn().mockResolvedValue(
         new Response('ticketId,status\n1,open', {

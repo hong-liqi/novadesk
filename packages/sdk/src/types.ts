@@ -1,4 +1,4 @@
-import type { ApiError, ApiResponse } from '@portfolio/shared';
+import type { ApiError, ApiResponse } from '@novadesk/shared';
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -25,7 +25,7 @@ export interface ResponseContext<T = unknown> {
   requestId?: string;
 }
 
-export interface PortfolioClientOptions {
+export interface NovaDeskClientOptions {
   baseUrl: string;
   timeoutMs?: number;
   retries?: number;
