@@ -69,12 +69,8 @@ const portfolioClient = createSdkClient({
 
 export const authClient: AuthClient = createAuthClient(portfolioClient);
 
-function extractData<T>(response: ApiResponse<T> | T): T {
-  if (typeof response === 'object' && response !== null && 'data' in response) {
-    return (response as ApiResponse<T>).data;
-  }
-
-  return response as T;
+function extractData<T>(response: ApiResponse<T>): T {
+  return response.data;
 }
 
 export const tenantsClient = {
@@ -101,13 +97,7 @@ export const tenantsClient = {
 
 export async function fetchPlatformHealth(): Promise<HealthCheckResult> {
   const response = await portfolioClient.get<HealthCheckResult>('/health');
-  const payload = extractData(response);
-
-  if (typeof payload === 'object' && payload !== null && 'status' in payload) {
-    return payload;
-  }
-
-  return response as unknown as HealthCheckResult;
+  return extractData(response);
 }
 
 export { API_BASE_URL };
