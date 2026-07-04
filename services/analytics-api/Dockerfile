@@ -15,6 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY services/analytics-api ./services/analytics-api
+COPY --from=deps /app/services/analytics-api/node_modules ./services/analytics-api/node_modules
 RUN pnpm --filter @novadesk/analytics-api db:generate
 RUN pnpm turbo run build --filter=@novadesk/analytics-api
 

@@ -15,6 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY services/gateway ./services/gateway
+COPY --from=deps /app/services/gateway/node_modules ./services/gateway/node_modules
 RUN pnpm turbo run build --filter=@novadesk/gateway
 
 FROM node:20-alpine AS production

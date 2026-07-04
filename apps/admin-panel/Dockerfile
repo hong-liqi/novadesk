@@ -15,6 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/admin-panel ./apps/admin-panel
+COPY --from=deps /app/apps/admin-panel/node_modules ./apps/admin-panel/node_modules
 RUN pnpm turbo run build --filter=@novadesk/admin-panel
 
 FROM node:20-alpine AS production

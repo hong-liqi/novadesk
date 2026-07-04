@@ -15,6 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/realtime-chat ./apps/realtime-chat
+COPY --from=deps /app/apps/realtime-chat/node_modules ./apps/realtime-chat/node_modules
 RUN pnpm turbo run build --filter=@novadesk/realtime-chat
 
 FROM node:20-alpine AS production

@@ -15,6 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY services/helpdesk-api ./services/helpdesk-api
+COPY --from=deps /app/services/helpdesk-api/node_modules ./services/helpdesk-api/node_modules
 RUN pnpm --filter @novadesk/helpdesk-api db:generate
 RUN pnpm turbo run build --filter=@novadesk/helpdesk-api
 

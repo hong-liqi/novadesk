@@ -15,6 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY services/notification-service ./services/notification-service
+COPY --from=deps /app/services/notification-service/node_modules ./services/notification-service/node_modules
 RUN pnpm turbo run build --filter=@novadesk/notification-service
 
 FROM node:20-alpine AS production

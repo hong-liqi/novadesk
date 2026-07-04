@@ -16,6 +16,7 @@ COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY website ./website
 COPY docs/case-studies ./website/content/case-studies
+COPY --from=deps /app/website/node_modules ./website/node_modules
 RUN pnpm turbo run build --filter=@novadesk/website
 
 FROM node:20-alpine AS production
