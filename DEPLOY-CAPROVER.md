@@ -11,16 +11,25 @@ Guia passo a passo para publicar o monorepo inteiro no CapRover usando **deploy 
 | Frontends (Next.js) | 5           | helpdesk, analytics, admin, website, chat                          |
 | **Total**           | **13 apps** |                                                                    |
 
-**Banco de dados:** um único PostgreSQL 16 Alpine com 5 databases (`auth_db`, `notification_db`, `helpdesk_db`, `analytics_db`, `chat_db`). Dados persistem em volume do CapRover.
+## Visão geral — dois tipos de deploy
 
-**Cache/filas:** Redis 7 Alpine com AOF (append-only) para persistência.
+As 13 apps **não** seguem o mesmo processo de build. Existem **dois tipos**:
+
+| Tipo               | Apps                                  | O que acontece no build                                                                                               | Processo que sobe                       | Porta       |
+| ------------------ | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------- | ----------- |
+| **Infraestrutura** | `novadesk-postgres`, `novadesk-redis` | Imagem Docker mínima em cima de `postgres:16-alpine` / `redis:7-alpine`. **Sem Node, sem pnpm, sem compilar código.** | Daemon do Postgres ou Redis             | 5432 / 6379 |
+| **Aplicações**     | gateway, auth, frontends… (11 apps)   | Build do monorepo (`pnpm install` + `turbo build`) via Dockerfile multi-stage                                         | `node dist/main.js` ou `node server.js` | 3000–3014   |
+
+**Banco de dados:** um único PostgreSQL 16 Alpine com 5 databases (`auth_db`, `notification_db`, `helpdesk_db`, `analytics_db`, `chat_db`). O script de init cria os 4 databases extras na **primeira inicialização** do volume vazio.
+
+**Cache/filas:** Redis 7 Alpine com AOF (`--appendonly yes`) para persistência.
 
 ---
 
 ## Pré-requisitos
 
 1. CapRover instalado com HTTPS (ex.: `captain.broom.magicsoft.site`)
-2. Repositório no GitHub: `git@github.com:hong-liqi/novadesk.git`
+2. Repositório no GitHub: `https://github.com/hong-liqi/portifolio.git`
 3. DNS configurado para os subdomínios que você vai usar (ou use `*.seu-dominio.com` wildcard)
 4. SMTP para e-mails em produção (SendGrid, SES, Mailgun, etc.)
 
@@ -74,18 +83,182 @@ Em **Apps → Create New App**, crie cada app abaixo. Use exatamente estes nomes
 
 ---
 
+## Como cada app sabe o que buildar e executar?
+
+Todas as 13 apps usam o **mesmo repositório e branch**, mas cada uma aponta para um **Captain Definition Path diferente** no CapRover. Esse campo é o que diferencia gateway de auth, Postgres de Redis, etc.
+
+### Tipo A — Infraestrutura (Postgres e Redis)
+
+**Não há build de aplicação Node.** O Dockerfile só empacota a imagem oficial + configuração mínima.
+
+**Postgres** (`infrastructure/caprover/postgres/`):
+
+```
+CapRover app "novadesk-postgres"
+  └─ Captain Definition Path: infrastructure/caprover/postgres/captain-definition
+       └─ Dockerfile (3 linhas úteis):
+            FROM postgres:16-alpine
+            COPY init-databases.sh → /docker-entrypoint-initdb.d/
+            EXPOSE 5432
+       └─ Ao subir (primeira vez, volume vazio):
+            Postgres executa init-databases.sh
+            → cria notification_db, helpdesk_db, analytics_db, chat_db
+       └─ Processo final: postgres (daemon TCP na porta 5432)
+```
+
+Arquivos no repositório:
+
+| Arquivo                                               | Função                                                            |
+| ----------------------------------------------------- | ----------------------------------------------------------------- |
+| `infrastructure/caprover/postgres/captain-definition` | Diz ao CapRover qual Dockerfile usar                              |
+| `infrastructure/caprover/postgres/Dockerfile`         | `FROM postgres:16-alpine` + copia script de init                  |
+| `infrastructure/caprover/postgres/init-databases.sh`  | Cria os 4 databases além do `auth_db` (definido em `POSTGRES_DB`) |
+
+**Redis** (`infrastructure/caprover/redis/`):
+
+```
+CapRover app "novadesk-redis"
+  └─ Captain Definition Path: infrastructure/caprover/redis/captain-definition
+       └─ Dockerfile:
+            FROM redis:7-alpine
+            CMD ["redis-server", "--appendonly", "yes"]
+            EXPOSE 6379
+       └─ Processo final: redis-server (daemon TCP na porta 6379)
+```
+
+**Diferenças importantes vs apps de aplicação:**
+
+|                         | Postgres / Redis                                           | Apps Node (gateway, auth…)               |
+| ----------------------- | ---------------------------------------------------------- | ---------------------------------------- |
+| Build                   | ~10 segundos, só `docker build` da imagem base             | Minutos (`pnpm install` + `turbo build`) |
+| Env `PORT`              | **Não usa** — portas fixas 5432 / 6379                     | Obrigatório (`3000`, `3001`…)            |
+| HTTP Settings / domínio | **Não configurar** — marcar "Não expor como app web"       | Habilitar HTTPS + domínio                |
+| Persistência            | **Obrigatório** antes do 1º deploy (Passo 4)               | Não precisa de volume                    |
+| Acesso                  | Só apps internas via `srv-captain--novadesk-postgres:5432` | Gateway/frontends expostos publicamente  |
+
+### Tipo B — Aplicações (11 apps Node/Next.js)
+
+```
+CapRover app "novadesk-gateway"
+  └─ Captain Definition Path: services/gateway/captain-definition
+       └─ services/gateway/Dockerfile
+                 ├─ build: --filter @novadesk/gateway
+                 ├─ EXPOSE 3000
+                 └─ CMD ["node", "dist/main.js"]
+
+CapRover app "novadesk-auth"
+  └─ Captain Definition Path: services/auth-service/captain-definition
+       └─ services/auth-service/Dockerfile
+                 ├─ build: --filter @novadesk/auth-service
+                 ├─ EXPOSE 3001
+                 └─ CMD ["node", "dist/main.js"]
+```
+
+| Camada                      | O que define                               | Exemplo (gateway)                             |
+| --------------------------- | ------------------------------------------ | --------------------------------------------- |
+| **Captain Definition Path** | Qual Dockerfile do monorepo usar           | `services/gateway/captain-definition`         |
+| **Dockerfile**              | Dependências, build e binário final        | `pnpm turbo build --filter=@novadesk/gateway` |
+| **EXPOSE + CMD**            | Porta e processo que sobe no container     | `EXPOSE 3000` + `node dist/main.js`           |
+| **Env `PORT`**              | Porta em que o processo escuta             | `PORT=3000` (Passo 5)                         |
+| **HTTP Settings**           | CapRover encaminha tráfego para essa porta | Container HTTP Port = `3000`                  |
+
+> O contexto de build do Docker é sempre a **raiz do monorepo**. Por isso cada Dockerfile de aplicação copia `packages/`, `pnpm-workspace.yaml` etc., mas compila só o pacote daquele serviço.
+>
+> **Importante:** dentro de cada `captain-definition`, o `dockerfilePath` deve ser relativo à **raiz do repo** (ex.: `./infrastructure/caprover/postgres/Dockerfile`), não `./Dockerfile`.
+
+**Onde o processo escuta:** backends NestJS leem `PORT` em `main.ts` (`app.listen(port)`). Frontends Next.js usam `PORT` + `HOSTNAME=0.0.0.0`.
+
+---
+
 ## Passo 3 — Configurar deploy via Git (webhook)
 
-Para **cada uma das 13 apps**, repita:
+O repositório, branch e SSH key são os mesmos para todas as apps. O que muda é o **Captain Definition Path** e a **configuração pós-build** (env vars, volumes, domínio).
+
+### 3A — Deploy do Postgres (`novadesk-postgres`) — faça primeiro
+
+> **Antes do build:** configure o diretório persistente (Passo 4). Sem isso, os dados serão perdidos.
+
+1. Crie a app `novadesk-postgres` no CapRover
+2. **Configs do App** → marque **Não expor como app web**
+3. **Configs do App** → **Diretórios Persistentes** → adicione `/var/lib/postgresql/data` (label: `postgres-data`)
+4. **Configs do App** → **Environment Variables**:
+
+   ```env
+   POSTGRES_USER=novadesk
+   POSTGRES_PASSWORD=<SENHA_FORTE_AQUI>
+   POSTGRES_DB=auth_db
+   ```
+
+5. Aba **Implantação** → **Método 3**:
+   - **Repository:** `https://github.com/hong-liqi/portifolio.git`
+   - **Branch:** `main`
+   - **Chave SSH:** deploy key do CapRover
+   - **Captain Definition Path:** `infrastructure/caprover/postgres/captain-definition`
+6. Clique em **Salvar & Reiniciar** (ou **Forçar build**)
+
+**O que o CapRover faz neste build:**
+
+1. Clona o monorepo
+2. Lê `infrastructure/caprover/postgres/captain-definition` → aponta para o Dockerfile em `infrastructure/caprover/postgres/`
+3. Executa `docker build` — baixa `postgres:16-alpine`, copia `init-databases.sh` (não compila Node)
+4. Sobe o container — Postgres inicia na porta **5432**
+5. Na **primeira vez** (volume vazio): roda `init-databases.sh` e cria `notification_db`, `helpdesk_db`, `analytics_db`, `chat_db`
+
+**Validar:** App fica **Running**. Nos logs, procure por `database system is ready to accept connections`.
+
+**Hostname interno** (usado nas `DATABASE_URL` dos backends):
+
+```
+srv-captain--novadesk-postgres:5432
+```
+
+---
+
+### 3B — Deploy do Redis (`novadesk-redis`) — faça em seguida
+
+> **Antes do build:** configure o diretório persistente (Passo 4).
+
+1. Crie a app `novadesk-redis`
+2. **Configs do App** → marque **Não expor como app web**
+3. **Configs do App** → **Diretórios Persistentes** → adicione `/data` (label: `redis-data`)
+4. Aba **Implantação** → **Método 3**:
+   - Mesmo repo, branch e SSH do Postgres
+   - **Captain Definition Path:** `infrastructure/caprover/redis/captain-definition`
+5. **Salvar & Reiniciar**
+
+**O que o CapRover faz neste build:**
+
+1. Clona o monorepo
+2. Lê `infrastructure/caprover/redis/captain-definition`
+3. Executa `docker build` — baixa `redis:7-alpine`, define `CMD redis-server --appendonly yes`
+4. Sobe o container — Redis escuta na porta **6379**
+
+**Validar:** App fica **Running**. Logs devem mostrar `Ready to accept connections`.
+
+**Hostname interno:**
+
+```
+srv-captain--novadesk-redis:6379
+```
+
+---
+
+### 3C — Deploy das 11 aplicações (gateway, auth, frontends…)
+
+Para **cada uma das 11 apps de aplicação**, repita:
 
 1. Abra a app → aba **Implantação** (Deployment)
-2. Role até **Método 3: Implantar do Github/Bitbucket/Gitlab**
+2. **Método 3: Implantar do Github/Bitbucket/Gitlab**
 3. Preencha:
-   - **Repository:** `git@github.com:hong-liqi/novadesk.git` (ou HTTPS)
+   - **Repository:** `https://github.com/hong-liqi/portifolio.git` (ou HTTPS)
    - **Branch:** `main`
-   - **Chave SSH:** cole a deploy key do CapRover (ou usuário/senha)
-4. Em **Captain Definition Path** (no final da página), informe o caminho da tabela acima
-5. Clique em **Salvar & Reiniciar** (ou **Forçar build** na primeira vez)
+   - **Chave SSH:** mesma deploy key
+4. **Captain Definition Path:** caminho da tabela do Passo 2 (ex.: `services/gateway/captain-definition`)
+5. **Salvar & Reiniciar**
+
+Depois do build, configure as **env vars** (Passo 5) e, para gateway/frontends, **HTTP Settings** com domínio e HTTPS.
+
+> Apps de aplicação **dependem** do Postgres e Redis já estarem Running antes do primeiro deploy.
 
 ### Deploy key no GitHub
 
@@ -106,40 +279,31 @@ Após salvar o deploy Git em cada app, copie a **Webhook URL** e adicione no Git
 
 ---
 
-## Passo 4 — Persistência de dados (CRÍTICO)
+## Passo 4 — Persistência de dados (CRÍTICO — só Postgres e Redis)
 
-Sem isso, Postgres e Redis **perdem dados** a cada redeploy.
+Este passo é **exclusivo das apps de infraestrutura**. Apps Node não precisam de volume persistente.
+
+Sem volume, Postgres e Redis **perdem dados** a cada redeploy.
 
 ### `novadesk-postgres`
 
-1. App → **Configs do App** (App Configs)
-2. Marque **Não expor como app web** (Do not expose as web-app)
-3. Em **Diretórios Persistentes** (Persistent Directories), adicione:
+Configure **antes do primeiro build** (Passo 3A):
 
-   | Path no container          | Label           |
-   | -------------------------- | --------------- |
-   | `/var/lib/postgresql/data` | `postgres-data` |
-
-4. **Environment Variables:**
-
-   ```env
-   POSTGRES_USER=novadesk
-   POSTGRES_PASSWORD=<SENHA_FORTE_AQUI>
-   POSTGRES_DB=auth_db
-   ```
-
-5. **Port Mapping:** container `5432` (não precisa mapear para host se só apps internas usam)
+| Configuração           | Valor                                                       |
+| ---------------------- | ----------------------------------------------------------- |
+| Não expor como app web | ✅ marcado                                                  |
+| Diretório persistente  | `/var/lib/postgresql/data` → label `postgres-data`          |
+| Env vars               | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB=auth_db` |
 
 ### `novadesk-redis`
 
-1. Marque **Não expor como app web**
-2. Diretório persistente:
+Configure **antes do primeiro build** (Passo 3B):
 
-   | Path no container | Label        |
-   | ----------------- | ------------ |
-   | `/data`           | `redis-data` |
-
-3. Nenhuma variável obrigatória (AOF já está no Dockerfile)
+| Configuração           | Valor                        |
+| ---------------------- | ---------------------------- |
+| Não expor como app web | ✅ marcado                   |
+| Diretório persistente  | `/data` → label `redis-data` |
+| Env vars               | nenhuma obrigatória          |
 
 ---
 
@@ -257,25 +421,28 @@ Mais a porta de cada app:
 
 ## Passo 6 — Ordem de deploy
 
-Faça o primeiro build nesta ordem (infra → backends → gateway → frontends):
-
 ```
-1. novadesk-postgres
-2. novadesk-redis
-3. novadesk-auth
-4. novadesk-notification
-5. novadesk-helpdesk-api
-6. novadesk-analytics-api
-7. novadesk-chat-api
-8. novadesk-gateway
-9. novadesk-website
-10. novadesk-helpdesk
-11. novadesk-analytics
-12. novadesk-admin
-13. novadesk-chat
+Fase 1 — Infraestrutura (build rápido, sem Node):
+  1. novadesk-postgres   ← Passo 3A (volume + env ANTES do build)
+  2. novadesk-redis      ← Passo 3B (volume ANTES do build)
+
+Fase 2 — Backends (build lento, monorepo):
+  3. novadesk-auth
+  4. novadesk-notification
+  5. novadesk-helpdesk-api
+  6. novadesk-analytics-api
+  7. novadesk-chat-api
+  8. novadesk-gateway
+
+Fase 3 — Frontends:
+  9. novadesk-website
+  10. novadesk-helpdesk
+  11. novadesk-analytics
+  12. novadesk-admin
+  13. novadesk-chat
 ```
 
-Aguarde cada app ficar **Running** antes da próxima que depende dela.
+Aguarde cada app ficar **Running** antes da próxima que depende dela. Postgres e Redis devem estar prontos antes de qualquer backend.
 
 ---
 
