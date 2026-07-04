@@ -141,12 +141,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   private extractToken(client: Socket): string | undefined {
-    const authToken = client.handshake.auth?.token;
+    const authToken: unknown = client.handshake.auth.token;
     if (typeof authToken === 'string' && authToken.length > 0) {
       return authToken;
     }
 
-    const queryToken = client.handshake.query?.token;
+    const queryToken: unknown = client.handshake.query.token;
     if (typeof queryToken === 'string' && queryToken.length > 0) {
       return queryToken;
     }
