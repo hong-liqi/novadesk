@@ -323,6 +323,14 @@ Substitua:
 - `<JWT_*>` pelas chaves geradas no passo 1
 - `<SMTP_*>` pelo seu provedor de e-mail
 
+> **Senha com `+`, `#`, `@` etc.?** Gere a `DATABASE_URL` já codificada:
+>
+> ```bash
+> ./infrastructure/scripts/generate-database-url.sh 'SUA_SENHA' auth_db
+> ```
+>
+> Hostname interno do Postgres: `srv-captain--novadesk-postgres` (dois hífens: `captain--novadesk`).
+
 ### `novadesk-auth`
 
 ```env
@@ -335,8 +343,8 @@ JWT_PUBLIC_KEY=<JWT_PUBLIC_KEY>
 JWT_KID=prod-1
 JWT_ISSUER=novadesk-auth
 JWT_AUDIENCE=novadesk
-ACCESS_TOKEN_TTL=900
-REFRESH_TOKEN_TTL=604800
+ACCESS_TOKEN_TTL=15m
+REFRESH_TOKEN_TTL=7d
 ```
 
 ### `novadesk-notification`
