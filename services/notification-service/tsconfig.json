@@ -4,9 +4,13 @@
     "baseUrl": ".",
     "outDir": "dist",
     "rootDir": "src",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
       "@presentation/*": ["src/presentation/*"],
-      "@infrastructure/*": ["src/infrastructure/*"]
+      "@infrastructure/*": ["src/infrastructure/*"],
+      "@modules/*": ["src/modules/*"],
+      "@generated/prisma": ["src/generated/prisma"]
     }
   },
   "include": ["src/**/*"],

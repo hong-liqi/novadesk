@@ -1,6 +1,6 @@
 import { IS_PUBLIC_KEY, Public } from './index';
 
-describe('Public decorator', () => {
+describe('auth decorators', () => {
   it('should set isPublic metadata key', () => {
     class TestController {
       @Public()

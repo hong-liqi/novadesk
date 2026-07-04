@@ -1,61 +1,80 @@
 # @portfolio/sdk
 
-Typed HTTP client for consuming Portfolio OS APIs from apps and services.
+Reusable HTTP client foundation for Portfolio OS.
 
-## Features
+## Purpose
 
-- Fetch-based client with timeout, retry, and interceptors
-- Standard `ApiResponse` / `ApiError` mapping from `@portfolio/shared`
-- Domain client stubs (`auth`, `helpdesk`, `analytics`, `notification`, `chat`)
-- Bearer token and request ID interceptors
+This package provides a typed fetch wrapper with:
+
+- Timeout support
+- Retry policy
+- Request and response interceptors
+- Consistent API and transport error mapping
+- Request ID propagation
+
+It intentionally avoids domain-specific endpoint clients.
+
+## Public API
+
+- `PortfolioClient`
+- `createSdkClient`
+- `SdkError`
+- `withRetry`
+- `applyRequestInterceptors`
+- `applyResponseInterceptors`
+- `bearerTokenInterceptor`
+- `requestIdInterceptor`
+- `HttpMethod`
+- `PortfolioClientOptions`
+- `RequestOptions`
+- `RequestContext`
+- `ResponseContext`
+- `RequestInterceptor`
+- `ResponseInterceptor`
 
 ## Installation
 
 ```bash
-pnpm add @portfolio/sdk --filter @portfolio/your-app
+pnpm add @portfolio/sdk
 ```
 
 ## Usage
 
-```typescript
-import {
-  PortfolioClient,
-  bearerTokenInterceptor,
-  createAuthApiClient,
-} from '@portfolio/sdk';
+```ts
+import { PortfolioClient, bearerTokenInterceptor } from '@portfolio/sdk';
 
 const client = new PortfolioClient({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000',
-  requestInterceptors: [bearerTokenInterceptor(accessToken)],
+  baseUrl: 'https://api.example.com',
+  requestInterceptors: [bearerTokenInterceptor(() => 'access-token')],
 });
 
-const auth = createAuthApiClient(client);
-const status = await auth.getStatus();
+const response = await client.get<{ ok: boolean }>('/health');
 ```
 
 ## Error handling
 
-```typescript
+```ts
 import { SdkError } from '@portfolio/sdk';
 
 try {
-  await client.get('/resource');
+  await client.get('/protected');
 } catch (error) {
   if (error instanceof SdkError && error.code === 'UNAUTHORIZED') {
-    // refresh token flow
+    // refresh or redirect
   }
 }
 ```
 
 ## Scripts
 
-| Script | Description |
-|--------|-------------|
-| `pnpm build` | Compile TypeScript |
-| `pnpm test` | Run unit tests |
-| `pnpm lint` | ESLint |
-| `pnpm typecheck` | TypeScript check |
+| Script           | Description                   |
+| ---------------- | ----------------------------- |
+| `pnpm build`     | TypeScript build              |
+| `pnpm test`      | Jest tests with coverage      |
+| `pnpm lint`      | ESLint against `src/`         |
+| `pnpm typecheck` | TypeScript no-emit validation |
 
-## Foundation scope
+## Notes
 
-This package provides the HTTP foundation only. Business endpoints are added per application milestone.
+- The client expects API responses to use the `@portfolio/shared` envelope.
+- Domain-specific clients should live in application packages once business endpoints exist.

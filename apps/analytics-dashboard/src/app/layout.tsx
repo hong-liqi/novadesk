@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { AppProviders } from '@/shared/providers';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Analytics Dashboard',
-  description: 'Portfolio OS — Analytics Dashboard foundation',
+  description: 'Portfolio OS — workspace analytics and KPI reporting',
 };
 
 export default function RootLayout({
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="min-h-screen bg-neutral-50 text-neutral-900 antialiased">
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }

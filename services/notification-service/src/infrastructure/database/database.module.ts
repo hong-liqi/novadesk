@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from './prisma.service';
 
 export const DATABASE_TOKEN = Symbol('DATABASE');
 
@@ -11,6 +12,7 @@ export interface DatabaseConnection {
 @Global()
 @Module({
   providers: [
+    PrismaService,
     {
       provide: DATABASE_TOKEN,
       inject: [ConfigService],
@@ -23,6 +25,6 @@ export interface DatabaseConnection {
       },
     },
   ],
-  exports: [DATABASE_TOKEN],
+  exports: [DATABASE_TOKEN, PrismaService],
 })
 export class DatabaseModule {}

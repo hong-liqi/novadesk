@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import HomePage from './page';
 
 describe('HomePage', () => {
-  it('shows foundation ready message', () => {
+  it('shows helpdesk title', () => {
     render(<HomePage />);
-    expect(screen.getByText('Foundation ready')).toBeInTheDocument();
+    expect(screen.getByText('Helpdesk SaaS')).toBeInTheDocument();
   });
 });

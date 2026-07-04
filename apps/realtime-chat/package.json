@@ -13,11 +13,14 @@
     "clean": "rm -rf .next node_modules"
   },
   "dependencies": {
+    "@portfolio/auth": "workspace:*",
+    "@portfolio/sdk": "workspace:*",
     "@portfolio/shared": "workspace:*",
     "@portfolio/ui": "workspace:*",
     "next": "^14.2.21",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@portfolio/eslint-config": "workspace:*",

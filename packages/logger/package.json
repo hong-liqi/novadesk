@@ -2,15 +2,37 @@
   "name": "@portfolio/logger",
   "version": "0.1.0",
   "private": true,
-  "description": "Structured logging with Pino for Portfolio OS",
+  "description": "Structured logging foundation with request correlation and OpenTelemetry hooks for Portfolio OS",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./context": {
+      "types": "./dist/context.d.ts",
+      "default": "./dist/context.js"
+    },
+    "./logger": {
+      "types": "./dist/logger.d.ts",
+      "default": "./dist/logger.js"
+    },
+    "./telemetry": {
+      "types": "./dist/telemetry.d.ts",
+      "default": "./dist/telemetry.js"
+    },
+    "./nestjs": {
+      "types": "./dist/nestjs/index.d.ts",
+      "default": "./dist/nestjs/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsc -p tsconfig.build.json --watch",
     "lint": "eslint src --ignore-pattern '**/*.spec.ts'",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "jest --coverage",
     "clean": "rm -rf dist"
   },
   "dependencies": {
@@ -20,6 +42,7 @@
   },
   "devDependencies": {
     "@nestjs/common": "^10.4.15",
+    "@nestjs/testing": "^10.4.15",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
     "@types/jest": "^29.5.14",
@@ -35,6 +58,8 @@
     "@nestjs/common": "^10.0.0"
   },
   "peerDependenciesMeta": {
-    "@nestjs/common": { "optional": true }
+    "@nestjs/common": {
+      "optional": true
+    }
   }
 }

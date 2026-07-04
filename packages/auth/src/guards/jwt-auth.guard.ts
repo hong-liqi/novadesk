@@ -1,11 +1,8 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators';
+import { parseBearerToken } from '../helpers';
+import type { AuthRequest } from '../types';
 
 /**
  * Foundation guard — validates presence of auth headers injected by Gateway.
@@ -22,12 +19,11 @@ export class JwtAuthGuard implements CanActivate {
     ]);
     if (isPublic) return true;
 
-    const request = context.switchToHttp().getRequest<{
-      headers: Record<string, string | undefined>;
-    }>();
-
+    const request = context.switchToHttp().getRequest<AuthRequest>();
+    const token = parseBearerToken(request.headers.authorization);
     const userId = request.headers['x-user-id'];
-    if (!userId) {
+
+    if (!token && !userId && !request.user) {
       throw new UnauthorizedException('Missing authentication');
     }
 

@@ -15,6 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY website ./website
+COPY docs/case-studies ./website/content/case-studies
 RUN pnpm turbo run build --filter=@portfolio/website
 
 FROM node:20-alpine AS production

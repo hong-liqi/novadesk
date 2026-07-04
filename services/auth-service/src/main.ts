@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { LoggerInterceptor, LoggerService, createLogger } from '@portfolio/logger';
 import { createSwaggerConfig } from '@infrastructure/swagger/swagger.config';
@@ -11,7 +12,10 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
   app.use(helmet());
-  app.setGlobalPrefix('api/v1');
+  app.use(cookieParser());
+  app.setGlobalPrefix('api/v1', {
+    exclude: ['.well-known/jwks.json'],
+  });
   app.useGlobalInterceptors(app.get(LoggerInterceptor));
 
   const configService = app.get(ConfigService);

@@ -15,17 +15,17 @@ Definir padrões para toda documentação do Portfolio OS: engenharia, serviços
 
 ## 2. Tipos de documentação
 
-| Tipo | Localização | Audiência | Atualização |
-|------|-------------|-----------|-------------|
-| Engenharia | `docs/` | Desenvolvedores, agentes IA | A cada mudança arquitetural |
-| ADR | `docs/adr/` | Arquitetos, tech leads | A cada decisão arquitetural |
-| RFC | `docs/rfc/` | Time técnico | Durante discussão de proposta |
-| README de serviço | `{service}/README.md` | Desenvolvedores | A cada mudança de setup/API |
-| OpenAPI | `{service}/swagger` | Desenvolvedores, SDK | A cada mudança de API |
-| Case studies | `docs/case-studies/` | Recrutadores, público | Estável após publicação |
-| Runbooks | `docs/21-Runbooks.md` | Operações | A cada mudança operacional |
-| CHANGELOG | `CHANGELOG.md` | Todos | A cada release |
-| Comentários inline | Código fonte | Desenvolvedores | A cada mudança de código |
+| Tipo               | Localização           | Audiência                   | Atualização                   |
+| ------------------ | --------------------- | --------------------------- | ----------------------------- |
+| Engenharia         | `docs/`               | Desenvolvedores, agentes IA | A cada mudança arquitetural   |
+| ADR                | `docs/adr/`           | Arquitetos, tech leads      | A cada decisão arquitetural   |
+| RFC                | `docs/rfc/`           | Time técnico                | Durante discussão de proposta |
+| README de serviço  | `{service}/README.md` | Desenvolvedores             | A cada mudança de setup/API   |
+| OpenAPI            | `{service}/swagger`   | Desenvolvedores, SDK        | A cada mudança de API         |
+| Case studies       | `docs/case-studies/`  | Recrutadores, público       | Estável após publicação       |
+| Runbooks           | `docs/21-Runbooks.md` | Operações                   | A cada mudança operacional    |
+| CHANGELOG          | `CHANGELOG.md`        | Todos                       | A cada release                |
+| Comentários inline | Código fonte          | Desenvolvedores             | A cada mudança de código      |
 
 ---
 
@@ -44,29 +44,29 @@ Todo documento em `docs/` segue este header:
 
 ### 3.1 Seções obrigatórias
 
-| Seção | Descrição |
-|-------|-----------|
-| Objetivo | Por que este documento existe |
-| Conteúdo principal | Organizado em seções numeradas |
+| Seção                | Descrição                              |
+| -------------------- | -------------------------------------- |
+| Objetivo             | Por que este documento existe          |
+| Conteúdo principal   | Organizado em seções numeradas         |
 | Referências cruzadas | Tabela de links para docs relacionados |
 
 ### 3.2 Convenções de escrita
 
-| Regra | Descrição |
-|-------|-----------|
-| Idioma | Português brasileiro para docs de engenharia |
-| Tom | Técnico, direto, profissional |
-| Tempo verbal | Presente |
-| Identificadores | Inglês (nomes de serviços, campos, endpoints) |
-| Diagramas | ASCII ou Mermaid |
-| Tabelas | Para dados estruturados e comparações |
-| Sem placeholders | Documentos publicados não contêm TODO ou TBD |
+| Regra            | Descrição                                     |
+| ---------------- | --------------------------------------------- |
+| Idioma           | Português brasileiro para docs de engenharia  |
+| Tom              | Técnico, direto, profissional                 |
+| Tempo verbal     | Presente                                      |
+| Identificadores  | Inglês (nomes de serviços, campos, endpoints) |
+| Diagramas        | ASCII ou Mermaid                              |
+| Tabelas          | Para dados estruturados e comparações         |
+| Sem placeholders | Documentos publicados não contêm TODO ou TBD  |
 
 ---
 
 ## 4. README de serviço
 
-Todo serviço e app em `03-services/` e `04-apps/` possui README.md com:
+Todo serviço e app em `services/` e `apps/` possui README.md com:
 
 ### 4.1 Estrutura obrigatória
 
@@ -74,33 +74,43 @@ Todo serviço e app em `03-services/` e `04-apps/` possui README.md com:
 # {Service Name}
 
 ## Descrição
+
 Breve descrição do serviço e seu papel no ecossistema.
 
 ## Arquitetura
+
 Diagrama ou descrição das camadas e módulos.
 
 ## Setup local
+
 Passos para rodar o serviço isoladamente.
 
 ## Variáveis de ambiente
+
 Tabela com todas as variáveis necessárias.
 
 ## API
+
 Link para Swagger UI e resumo dos endpoints principais.
 
 ## Testes
+
 Como executar testes unitários e de integração.
 
 ## Docker
+
 Como buildar e rodar via Docker.
 
 ## Deploy
+
 Notas específicas de deploy.
 
 ## ADRs
+
 Links para ADRs relacionados.
 
 ## Roadmap
+
 Features planejadas para este serviço.
 ```
 
@@ -194,13 +204,13 @@ RFC aceita gera: backlog items + ADR (se decisão arquitetural).
 
 ## 8. Comentários inline
 
-| Situação | Comentário necessário |
-|----------|----------------------|
-| Regra de negócio não óbvia | Sim — explicar o porquê |
-| Workaround temporário | Sim — com referência BL-XXX e data |
-| Código autoexplicativo | Não |
-| TODO | Proibido em `main` — usar backlog item |
-| JSDoc em pacotes shared | Obrigatório em exports públicos |
+| Situação                   | Comentário necessário                  |
+| -------------------------- | -------------------------------------- |
+| Regra de negócio não óbvia | Sim — explicar o porquê                |
+| Workaround temporário      | Sim — com referência BL-XXX e data     |
+| Código autoexplicativo     | Não                                    |
+| TODO                       | Proibido em `main` — usar backlog item |
+| JSDoc em pacotes shared    | Obrigatório em exports públicos        |
 
 ---
 
@@ -208,13 +218,13 @@ RFC aceita gera: backlog items + ADR (se decisão arquitetural).
 
 ### 9.1 Ferramentas
 
-| Tipo | Ferramenta |
-|------|------------|
+| Tipo        | Ferramenta                  |
+| ----------- | --------------------------- |
 | Arquitetura | ASCII art (docs) ou Mermaid |
-| Sequência | Mermaid sequenceDiagram |
-| Fluxo | Mermaid flowchart |
-| ER | Mermaid erDiagram |
-| Infra | ASCII art |
+| Sequência   | Mermaid sequenceDiagram     |
+| Fluxo       | Mermaid flowchart           |
+| ER          | Mermaid erDiagram           |
+| Infra       | ASCII art                   |
 
 ### 9.2 Regras
 
@@ -260,10 +270,10 @@ Por isso, documentos devem ser **prescritivos** (não sugestivos) e **completos*
 
 ## 12. Referências cruzadas
 
-| Tópico | Documento |
-|--------|-----------|
-| Definition of Done | [11-Definition-of-Done.md](./11-Definition-of-Done.md) |
-| ADR template | [templates/adr-template.md](./templates/adr-template.md) |
-| RFC template | [templates/rfc-template.md](./templates/rfc-template.md) |
-| Coding standards | [03-Coding-Standards.md](./03-Coding-Standards.md) |
-| Índice | [README.md](./README.md) |
+| Tópico             | Documento                                                |
+| ------------------ | -------------------------------------------------------- |
+| Definition of Done | [11-Definition-of-Done.md](./11-Definition-of-Done.md)   |
+| ADR template       | [templates/adr-template.md](./templates/adr-template.md) |
+| RFC template       | [templates/rfc-template.md](./templates/rfc-template.md) |
+| Coding standards   | [03-Coding-Standards.md](./03-Coding-Standards.md)       |
+| Índice             | [README.md](./README.md)                                 |

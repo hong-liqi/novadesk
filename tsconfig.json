@@ -5,6 +5,7 @@
     { "path": "packages/shared" },
     { "path": "packages/logger" },
     { "path": "packages/auth" },
-    { "path": "packages/ui" }
+    { "path": "packages/ui" },
+    { "path": "packages/sdk" }
   ]
 }

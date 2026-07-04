@@ -1,13 +1,16 @@
 {
-  "extends": "@portfolio/tsconfig/node.json",
+  "extends": "../tsconfig/react.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
     "composite": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "noEmit": false,
+    "jsx": "react-jsx"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts"],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.spec.tsx"],
   "references": [{ "path": "../shared/tsconfig.build.json" }]
 }

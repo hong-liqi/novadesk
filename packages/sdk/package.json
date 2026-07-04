@@ -2,13 +2,33 @@
   "name": "@portfolio/sdk",
   "version": "0.1.0",
   "private": true,
-  "description": "Typed HTTP client for Portfolio OS APIs",
+  "description": "Reusable typed HTTP client foundation for Portfolio OS APIs",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
+    },
+    "./interceptors": {
+      "types": "./dist/interceptors.d.ts",
+      "default": "./dist/interceptors.js"
+    },
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "default": "./dist/errors.js"
+    },
+    "./retry": {
+      "types": "./dist/retry.d.ts",
+      "default": "./dist/retry.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
     }
   },
   "scripts": {
@@ -16,7 +36,7 @@
     "dev": "tsc -p tsconfig.build.json --watch",
     "lint": "eslint src --ignore-pattern '**/*.spec.ts'",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "jest --coverage",
     "clean": "rm -rf dist"
   },
   "dependencies": {

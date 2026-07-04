@@ -1,9 +1,1 @@
-export const ROLES = {
-  SUPER_ADMIN: 'super_admin',
-  ADMIN: 'admin',
-  AGENT: 'agent',
-  USER: 'user',
-  GUEST: 'guest',
-} as const;
-
-export type Role = (typeof ROLES)[keyof typeof ROLES];
+export { ROLE_LIST, ROLES, type Role } from '../constants/roles';

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { AppProviders } from '@/shared/providers/app-providers';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Realtime Chat',
-  description: 'Portfolio OS — Realtime Chat foundation',
+  description: 'Portfolio OS — Realtime ticket chat',
 };
 
 export default function RootLayout({
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }

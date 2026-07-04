@@ -2,13 +2,25 @@
   "name": "@portfolio/config",
   "version": "0.1.0",
   "private": true,
-  "description": "Environment configuration schemas for Portfolio OS",
+  "description": "Typed and validated environment configuration schemas for Portfolio OS",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./schemas": {
+      "types": "./dist/schemas/index.d.ts",
+      "default": "./dist/schemas/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
+    },
+    "./create-config": {
+      "types": "./dist/create-config.d.ts",
+      "default": "./dist/create-config.js"
     }
   },
   "scripts": {
@@ -16,10 +28,11 @@
     "dev": "tsc -p tsconfig.build.json --watch",
     "lint": "eslint src --ignore-pattern '**/*.spec.ts'",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "jest --coverage",
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@portfolio/shared": "workspace:*",
     "zod": "^3.24.1"
   },
   "devDependencies": {

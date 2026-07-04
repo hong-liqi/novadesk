@@ -1,41 +1,60 @@
-import pino, { type Logger, type LoggerOptions } from 'pino';
+import pino, { type DestinationStream, type Logger, type LoggerOptions } from 'pino';
 import { getRequestContext } from './context';
-import { redactPaths } from './redact';
+import type { TelemetryAdapter } from './telemetry';
+import { pickTelemetryContext } from './telemetry';
 
 export interface CreateLoggerOptions {
   service: string;
-  level?: string;
+  level?: LoggerOptions['level'];
   pretty?: boolean;
+  redactPaths?: string[];
+  telemetry?: TelemetryAdapter;
+  base?: Record<string, unknown>;
+  destination?: DestinationStream;
 }
 
 export function createLogger(options: CreateLoggerOptions): Logger {
-  const isDev = process.env.NODE_ENV === 'development';
-  const pinoOptions: LoggerOptions = {
-    level: options.level ?? process.env.LOG_LEVEL ?? 'info',
-    redact: { paths: redactPaths, censor: '[REDACTED]' },
-    base: { service: options.service },
-    mixin() {
-      const ctx = getRequestContext();
-      if (!ctx) return {};
-      return {
-        requestId: ctx.requestId,
-        ...(ctx.userId ? { userId: ctx.userId } : {}),
-        ...(ctx.tenantId ? { tenantId: ctx.tenantId } : {}),
-      };
-    },
-    ...(options.pretty ?? isDev
-      ? {
-          transport: {
-            target: 'pino-pretty',
-            options: { colorize: true, translateTime: 'SYS:standard' },
+  const pretty =
+    options.pretty ?? (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test');
+
+  const destination: DestinationStream | undefined =
+    options.destination ??
+    (pretty
+      ? (pino.transport({
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            translateTime: 'SYS:standard',
+            ignore: 'pid,hostname',
           },
-        }
-      : {}),
-  };
+        }) as DestinationStream)
+      : undefined);
 
-  return pino(pinoOptions);
-}
-
-export function createChildLogger(parent: Logger, module: string): Logger {
-  return parent.child({ module });
+  return pino(
+    {
+      level: options.level ?? process.env.LOG_LEVEL ?? 'info',
+      base: {
+        service: options.service,
+        ...options.base,
+      },
+      redact: options.redactPaths ?? [
+        'password',
+        'token',
+        'accessToken',
+        'refreshToken',
+        'authorization',
+        'secret',
+        'apiKey',
+      ],
+      mixin(): Record<string, unknown> {
+        const context = getRequestContext();
+        return {
+          ...context,
+          ...pickTelemetryContext(options.telemetry),
+        };
+      },
+      timestamp: pino.stdTimeFunctions.isoTime,
+    },
+    destination,
+  );
 }

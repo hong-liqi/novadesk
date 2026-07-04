@@ -13,8 +13,10 @@ function ThemeToggleProbe() {
 
 describe('ThemeProvider', () => {
   it('toggles between light and dark', () => {
+    window.localStorage.clear();
+
     render(
-      <ThemeProvider>
+      <ThemeProvider storageKey="test-theme">
         <ThemeToggleProbe />
       </ThemeProvider>,
     );

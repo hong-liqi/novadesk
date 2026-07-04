@@ -7,5 +7,6 @@ module.exports = {
   moduleNameMapper: {
     '^@presentation/(.*)$': '<rootDir>/src/presentation/$1',
     '^@infrastructure/(.*)$': '<rootDir>/src/infrastructure/$1',
+    '^@modules/(.*)$': '<rootDir>/src/modules/$1',
   },
 };

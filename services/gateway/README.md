@@ -4,11 +4,11 @@ Entry point and routing layer for Portfolio OS. Terminates TLS at the edge (via 
 
 ## Overview
 
-| Property | Value |
-|----------|-------|
-| Package | `@portfolio/gateway` |
-| Port | `3000` |
-| Auth | Global `JwtAuthGuard` with `@Public()` bypass |
+| Property | Value                                         |
+| -------- | --------------------------------------------- |
+| Package  | `@portfolio/gateway`                          |
+| Port     | `3000`                                        |
+| Auth     | Global `JwtAuthGuard` with `@Public()` bypass |
 
 ## Prerequisites
 
@@ -27,26 +27,46 @@ pnpm turbo run dev --filter=@portfolio/gateway
 
 ## API
 
-| Endpoint | Description |
-|----------|-------------|
-| `GET /api/v1/health/live` | Liveness probe (public) |
-| `GET /api/v1/health/ready` | Readiness probe (public) |
-| `GET /api/v1/status` | Gateway status stub (public) |
-| `GET /api/v1/metrics` | Prometheus metrics |
-| `GET /api/docs` | Swagger UI |
+| Endpoint                   | Description                  |
+| -------------------------- | ---------------------------- |
+| `GET /api/v1/health/live`  | Liveness probe (public)      |
+| `GET /api/v1/health/ready` | Readiness probe (public)     |
+| `GET /api/v1/status`       | Gateway status stub (public) |
+| `GET /api/v1/metrics`      | Prometheus metrics           |
+| `GET /api/docs`            | Swagger UI                   |
 
-Protected routes require an `x-user-id` header (foundation guard — full JWT validation in M2).
+Protected routes require a valid Bearer JWT. Propagated identity headers (`x-user-id`, `x-tenant-id`, `x-roles`) are forwarded to downstream services.
+
+## WebSocket proxy (realtime chat)
+
+Socket.IO connections are proxied from `/socket.io/*` to the realtime chat service (`REALTIME_CHAT_SERVICE_URL`). JWT validation happens on the chat service WebSocket handshake (token via `auth.token` or `?token=` query param).
+
+### Sticky sessions (required for production)
+
+When running **multiple gateway or chat service replicas**, WebSocket connections must stick to the same backend instance for the lifetime of the session. Configure session affinity in your load balancer:
+
+- **CapRover / Nginx**: enable `ip_hash` or `sticky` cookie on the upstream that serves `/socket.io/`
+- **Local Docker Compose**: a single gateway + single `realtime-chat-service` replica is sufficient for development; sticky sessions are not required until you scale out
+
+Example Nginx upstream snippet:
+
+```nginx
+upstream chat_ws {
+  ip_hash;
+  server realtime-chat-service:3005;
+}
+```
 
 ## Scripts
 
-| Script | Description |
-|--------|-------------|
-| `pnpm build` | Compile TypeScript |
-| `pnpm dev` | Start with hot reload |
-| `pnpm lint` | Run ESLint |
-| `pnpm typecheck` | Type-check without emit |
-| `pnpm test` | Run unit tests |
-| `pnpm test:integration` | Run e2e tests |
+| Script                  | Description             |
+| ----------------------- | ----------------------- |
+| `pnpm build`            | Compile TypeScript      |
+| `pnpm dev`              | Start with hot reload   |
+| `pnpm lint`             | Run ESLint              |
+| `pnpm typecheck`        | Type-check without emit |
+| `pnpm test`             | Run unit tests          |
+| `pnpm test:integration` | Run e2e tests           |
 
 ## Docker
 

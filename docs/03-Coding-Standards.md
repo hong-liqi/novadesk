@@ -17,16 +17,16 @@ Violações bloqueiam merge via CI (lint, typecheck, review).
 
 ## 2. Princípios gerais
 
-| Princípio | Descrição |
-|-----------|-----------|
-| Clareza sobre cleverness | Código explícito e legível supera abstrações inteligentes |
-| Single Responsibility | Cada módulo, classe e função faz uma coisa |
-| DRY com moderação | Não abstrair prematuramente; duplicação aceitável até o terceiro uso |
-| Fail fast | Validar entradas na fronteira; nunca propagar estado inválido |
-| Imutabilidade preferida | Evitar mutação de objetos compartilhados |
-| Tipos explícitos | TypeScript strict mode; proibir `any` sem justificativa documentada |
-| Sem lógica em controllers | Controllers delegam para use cases |
-| Sem lógica de negócio em pacotes shared | Apenas tipos, constantes e utils puros |
+| Princípio                               | Descrição                                                            |
+| --------------------------------------- | -------------------------------------------------------------------- |
+| Clareza sobre cleverness                | Código explícito e legível supera abstrações inteligentes            |
+| Single Responsibility                   | Cada módulo, classe e função faz uma coisa                           |
+| DRY com moderação                       | Não abstrair prematuramente; duplicação aceitável até o terceiro uso |
+| Fail fast                               | Validar entradas na fronteira; nunca propagar estado inválido        |
+| Imutabilidade preferida                 | Evitar mutação de objetos compartilhados                             |
+| Tipos explícitos                        | TypeScript strict mode; proibir `any` sem justificativa documentada  |
+| Sem lógica em controllers               | Controllers delegam para use cases                                   |
+| Sem lógica de negócio em pacotes shared | Apenas tipos, constantes e utils puros                               |
 
 ---
 
@@ -38,22 +38,22 @@ Violações bloqueiam merge via CI (lint, typecheck, review).
 - `noUncheckedIndexedAccess: true`
 - `noImplicitReturns: true`
 - `exactOptionalPropertyTypes: true` onde suportado
-- Configurações base herdadas de `packages/typescript`
+- Configurações base herdadas de `packages/tsconfig`
 
 ### 3.2 Nomenclatura
 
-| Elemento | Convenção | Exemplo |
-|----------|-----------|---------|
-| Arquivos (backend) | kebab-case | `create-ticket.use-case.ts` |
-| Arquivos (React components) | PascalCase | `TicketCard.tsx` |
-| Arquivos (hooks) | camelCase com prefixo use | `useTickets.ts` |
-| Interfaces | PascalCase, sem prefixo I | `Ticket`, `TicketRepository` |
-| Types | PascalCase | `TicketStatus` |
-| Enums | PascalCase | `TicketPriority` |
-| Constantes | SCREAMING_SNAKE_CASE | `MAX_RETRY_ATTEMPTS` |
-| Variáveis e funções | camelCase | `createTicket` |
-| Classes | PascalCase | `CreateTicketUseCase` |
-| Generics | T, K, V ou descritivos | `TEntity` |
+| Elemento                    | Convenção                 | Exemplo                      |
+| --------------------------- | ------------------------- | ---------------------------- |
+| Arquivos (backend)          | kebab-case                | `create-ticket.use-case.ts`  |
+| Arquivos (React components) | PascalCase                | `TicketCard.tsx`             |
+| Arquivos (hooks)            | camelCase com prefixo use | `useTickets.ts`              |
+| Interfaces                  | PascalCase, sem prefixo I | `Ticket`, `TicketRepository` |
+| Types                       | PascalCase                | `TicketStatus`               |
+| Enums                       | PascalCase                | `TicketPriority`             |
+| Constantes                  | SCREAMING_SNAKE_CASE      | `MAX_RETRY_ATTEMPTS`         |
+| Variáveis e funções         | camelCase                 | `createTicket`               |
+| Classes                     | PascalCase                | `CreateTicketUseCase`        |
+| Generics                    | T, K, V ou descritivos    | `TEntity`                    |
 
 ### 3.3 Proibições
 
@@ -139,15 +139,15 @@ src/
 
 ### 4.6 Tratamento de erros
 
-| Tipo | HTTP Status | Classe |
-|------|-------------|--------|
-| Validação | 400 | `ValidationException` |
-| Não autenticado | 401 | `UnauthorizedException` |
-| Não autorizado | 403 | `ForbiddenException` |
-| Não encontrado | 404 | `NotFoundException` |
-| Conflito | 409 | `ConflictException` |
-| Regra de negócio | 422 | `DomainException` |
-| Erro interno | 500 | `InternalServerErrorException` |
+| Tipo             | HTTP Status | Classe                         |
+| ---------------- | ----------- | ------------------------------ |
+| Validação        | 400         | `ValidationException`          |
+| Não autenticado  | 401         | `UnauthorizedException`        |
+| Não autorizado   | 403         | `ForbiddenException`           |
+| Não encontrado   | 404         | `NotFoundException`            |
+| Conflito         | 409         | `ConflictException`            |
+| Regra de negócio | 422         | `DomainException`              |
+| Erro interno     | 500         | `InternalServerErrorException` |
 
 Exceções de domínio nunca vazam detalhes internos para o cliente.
 
@@ -247,14 +247,14 @@ features/
 
 Resumo; detalhamento completo em [05-Testing-Strategy.md](./05-Testing-Strategy.md).
 
-| Regra | Descrição |
-|-------|-----------|
-| Nomenclatura | `describe('CreateTicketUseCase')` / `it('should create ticket when valid input')` |
-| Arrange-Act-Assert | Estrutura obrigatória |
-| Um assert por teste | Preferencialmente |
-| Mocks | Apenas em fronteiras (repositórios, HTTP clients) |
-| Fixtures | Factory functions, não objetos hardcoded |
-| Sem lógica em testes | Sem if/for em testes |
+| Regra                | Descrição                                                                         |
+| -------------------- | --------------------------------------------------------------------------------- |
+| Nomenclatura         | `describe('CreateTicketUseCase')` / `it('should create ticket when valid input')` |
+| Arrange-Act-Assert   | Estrutura obrigatória                                                             |
+| Um assert por teste  | Preferencialmente                                                                 |
+| Mocks                | Apenas em fronteiras (repositórios, HTTP clients)                                 |
+| Fixtures             | Factory functions, não objetos hardcoded                                          |
+| Sem lógica em testes | Sem if/for em testes                                                              |
 
 ---
 
@@ -305,26 +305,26 @@ Todo PR deve ser verificado contra:
 
 ## 12. Ferramentas de enforcement
 
-| Ferramenta | Escopo | Quando executa |
-|------------|--------|----------------|
-| ESLint | Lint | Pre-commit + CI |
-| Prettier | Format | Pre-commit + CI |
-| TypeScript compiler | Type check | CI |
-| commitlint | Commits | Commit-msg hook |
-| lint-staged | Staged files | Pre-commit |
-| Husky | Git hooks | Local |
+| Ferramenta          | Escopo       | Quando executa  |
+| ------------------- | ------------ | --------------- |
+| ESLint              | Lint         | Pre-commit + CI |
+| Prettier            | Format       | Pre-commit + CI |
+| TypeScript compiler | Type check   | CI              |
+| commitlint          | Commits      | Commit-msg hook |
+| lint-staged         | Staged files | Pre-commit      |
+| Husky               | Git hooks    | Local           |
 
-Configurações centralizadas em `packages/eslint` e `packages/typescript`.
+Configurações centralizadas em `packages/eslint-config` e `packages/tsconfig`.
 
 ---
 
 ## 13. Referências cruzadas
 
-| Tópico | Documento |
-|--------|-----------|
-| Tech stack | [02-Tech-Stack.md](./02-Tech-Stack.md) |
-| Testes | [05-Testing-Strategy.md](./05-Testing-Strategy.md) |
-| Git workflow | [04-Git-Workflow.md](./04-Git-Workflow.md) |
-| APIs | [18-API-Design-Standards.md](./18-API-Design-Standards.md) |
-| Documentação | [19-Documentation-Standards.md](./19-Documentation-Standards.md) |
-| Definition of Done | [11-Definition-of-Done.md](./11-Definition-of-Done.md) |
+| Tópico             | Documento                                                        |
+| ------------------ | ---------------------------------------------------------------- |
+| Tech stack         | [02-Tech-Stack.md](./02-Tech-Stack.md)                           |
+| Testes             | [05-Testing-Strategy.md](./05-Testing-Strategy.md)               |
+| Git workflow       | [04-Git-Workflow.md](./04-Git-Workflow.md)                       |
+| APIs               | [18-API-Design-Standards.md](./18-API-Design-Standards.md)       |
+| Documentação       | [19-Documentation-Standards.md](./19-Documentation-Standards.md) |
+| Definition of Done | [11-Definition-of-Done.md](./11-Definition-of-Done.md)           |

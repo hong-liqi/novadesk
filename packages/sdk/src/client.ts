@@ -53,6 +53,84 @@ export class PortfolioClient {
     return this.request<T>('DELETE', path, undefined, options);
   }
 
+  async getText(path: string, options?: RequestOptions): Promise<string> {
+    const url = this.buildUrl(path, options?.params);
+    const timeoutMs = options?.timeoutMs ?? this.options.timeoutMs;
+    const retries = options?.retries ?? this.options.retries;
+
+    return withRetry(
+      async () => {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => {
+          controller.abort();
+        }, timeoutMs);
+        const signal = mergeAbortSignals(options?.signal, controller.signal);
+
+        try {
+          const initialContext: RequestContext = {
+            url,
+            method: 'GET',
+            headers: {
+              Accept: 'text/csv,text/plain,*/*',
+              ...this.options.defaultHeaders,
+              ...options?.headers,
+            },
+            signal,
+          };
+
+          const context = await applyRequestInterceptors(initialContext, [
+            ...(this.options.requestInterceptors ?? []),
+          ]);
+
+          const response = await this.options.fetchFn(context.url, {
+            method: context.method,
+            headers: context.headers,
+            signal: context.signal,
+          });
+
+          const text = await response.text();
+
+          if (!response.ok) {
+            try {
+              const parsed = JSON.parse(text) as unknown;
+              if (isApiError(parsed)) {
+                throw SdkError.fromApiError(parsed);
+              }
+            } catch (error) {
+              if (error instanceof SdkError) {
+                throw error;
+              }
+            }
+
+            throw new SdkError(
+              `Request failed with status ${String(response.status)}`,
+              'HTTP_ERROR',
+              response.status,
+              response.headers.get('x-request-id') ?? undefined,
+            );
+          }
+
+          return text;
+        } catch (error) {
+          if (error instanceof DOMException && error.name === 'AbortError') {
+            throw SdkError.timeout();
+          }
+          if (error instanceof SdkError) {
+            throw error;
+          }
+          throw SdkError.network(error instanceof Error ? error.message : 'Network request failed');
+        } finally {
+          clearTimeout(timeout);
+        }
+      },
+      {
+        retries,
+        delayMs: this.options.retryDelayMs,
+        shouldRetry: (error) => error instanceof SdkError && (error.status ?? 0) >= 500,
+      },
+    );
+  }
+
   private async request<T>(
     method: HttpMethod,
     path: string,
@@ -69,7 +147,7 @@ export class PortfolioClient {
         const timeout = setTimeout(() => {
           controller.abort();
         }, timeoutMs);
-        const signal = requestOptions.signal ?? controller.signal;
+        const signal = mergeAbortSignals(requestOptions.signal, controller.signal);
 
         try {
           const initialContext: RequestContext = {
@@ -183,6 +261,49 @@ export class PortfolioClient {
       return { message: text };
     }
   }
+}
+
+export function createSdkClient(options: PortfolioClientOptions): PortfolioClient {
+  return new PortfolioClient(options);
+}
+
+function mergeAbortSignals(primary: AbortSignal | undefined, secondary: AbortSignal): AbortSignal {
+  if (!primary) {
+    return secondary;
+  }
+
+  const controller = new AbortController();
+  const abort = (signal: AbortSignal) => {
+    if (!controller.signal.aborted) {
+      controller.abort(signal.reason);
+    }
+  };
+
+  if (primary.aborted) {
+    abort(primary);
+  } else {
+    primary.addEventListener(
+      'abort',
+      () => {
+        abort(primary);
+      },
+      { once: true },
+    );
+  }
+
+  if (secondary.aborted) {
+    abort(secondary);
+  } else {
+    secondary.addEventListener(
+      'abort',
+      () => {
+        abort(secondary);
+      },
+      { once: true },
+    );
+  }
+
+  return controller.signal;
 }
 
 function isApiResponse(value: unknown): value is ApiResponse<unknown> {

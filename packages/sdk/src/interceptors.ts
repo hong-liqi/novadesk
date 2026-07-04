@@ -1,4 +1,14 @@
-import type { RequestContext, RequestInterceptor, ResponseContext, ResponseInterceptor } from './types';
+import type {
+  RequestContext,
+  RequestInterceptor,
+  ResponseContext,
+  ResponseInterceptor,
+} from './types';
+
+export type TokenProvider =
+  string | (() => string | Promise<string> | undefined | Promise<undefined>);
+export type RequestIdProvider =
+  string | (() => string | Promise<string> | undefined | Promise<undefined>);
 
 export async function applyRequestInterceptors(
   context: RequestContext,
@@ -22,22 +32,36 @@ export async function applyResponseInterceptors<T>(
   return current;
 }
 
-export function bearerTokenInterceptor(token: string): RequestInterceptor {
-  return (context) => ({
-    ...context,
-    headers: {
-      ...context.headers,
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export function bearerTokenInterceptor(token: TokenProvider): RequestInterceptor {
+  return async (context) => {
+    const value = typeof token === 'function' ? await token() : token;
+    if (!value) {
+      return context;
+    }
+
+    return {
+      ...context,
+      headers: {
+        ...context.headers,
+        Authorization: `Bearer ${value}`,
+      },
+    };
+  };
 }
 
-export function requestIdInterceptor(requestId: string): RequestInterceptor {
-  return (context) => ({
-    ...context,
-    headers: {
-      ...context.headers,
-      'X-Request-Id': requestId,
-    },
-  });
+export function requestIdInterceptor(requestId: RequestIdProvider): RequestInterceptor {
+  return async (context) => {
+    const value = typeof requestId === 'function' ? await requestId() : requestId;
+    if (!value) {
+      return context;
+    }
+
+    return {
+      ...context,
+      headers: {
+        ...context.headers,
+        'X-Request-Id': value,
+      },
+    };
+  };
 }

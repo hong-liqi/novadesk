@@ -1,10 +1,13 @@
 import 'reflect-metadata';
+import type { IncomingMessage } from 'http';
+import type { Socket } from 'net';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { LoggerInterceptor, LoggerService, createLogger } from '@portfolio/logger';
 import { createSwaggerConfig } from '@infrastructure/swagger/swagger.config';
+import { ProxyService } from '@infrastructure/proxy/proxy.service';
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
@@ -17,6 +20,7 @@ async function bootstrap(): Promise<void> {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);
   const loggerService = app.get(LoggerService);
+  const proxyService = app.get(ProxyService);
 
   const document = SwaggerModule.createDocument(
     app,
@@ -25,6 +29,25 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(port);
+
+  const server = app.getHttpServer() as {
+    on(
+      event: 'upgrade',
+      listener: (req: IncomingMessage, socket: Socket, head: Buffer) => void,
+    ): void;
+  };
+
+  server.on('upgrade', (request, socket, head) => {
+    const path = request.url?.split('?')[0] ?? '';
+    const route = proxyService.matchRoute(path);
+    if (!route?.ws) {
+      socket.destroy();
+      return;
+    }
+
+    proxyService.upgrade(route, request, socket, head);
+  });
+
   loggerService.getLogger().info({ port }, 'gateway started');
 }
 

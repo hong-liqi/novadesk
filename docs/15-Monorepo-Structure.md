@@ -21,11 +21,11 @@ portfolio/
 ├── .husky/                     # Git hooks
 ├── 00-governance/              # Políticas, licenças, CONTRIBUTING
 ├── docs/                       # Documentação de engenharia
-├── 02-packages/                # Pacotes compartilhados
-├── 03-services/                # Microsserviços backend
-├── 04-apps/                    # Aplicações frontend
-├── 05-infra/                   # Infraestrutura (Docker, Nginx, scripts)
-├── 06-tools/                   # Ferramentas internas, generators
+├── packages/                   # Pacotes compartilhados
+├── services/                   # Microsserviços backend
+├── apps/                       # Aplicações frontend
+├── infrastructure/             # Infraestrutura (Docker, Nginx, scripts)
+├── scripts/                    # Ferramentas internas, generators
 ├── 07-case-studies/            # Symlink → docs/case-studies
 ├── package.json                # Root workspace
 ├── pnpm-workspace.yaml         # Workspace config
@@ -44,26 +44,26 @@ portfolio/
 
 ### 3.1 Configuração
 
-O arquivo `pnpm-workspace.yaml` na raiz declara os globs `02-packages/*`, `03-services/*`, `04-apps/*` e `06-tools/*` como workspaces do monorepo.
+O arquivo `pnpm-workspace.yaml` na raiz declara os globs `packages/*`, `services/*`, `apps/*` e `website` como workspaces do monorepo.
 
 ### 3.2 Naming convention
 
-| Tipo | Pattern | Exemplo |
-|------|---------|---------|
-| Package | `@portfolio/{name}` | `@portfolio/ui` |
+| Tipo    | Pattern             | Exemplo                   |
+| ------- | ------------------- | ------------------------- |
+| Package | `@portfolio/{name}` | `@portfolio/ui`           |
 | Service | `@portfolio/{name}` | `@portfolio/auth-service` |
-| App | `@portfolio/{name}` | `@portfolio/helpdesk` |
+| App     | `@portfolio/{name}` | `@portfolio/helpdesk`     |
 
 ---
 
-## 4. Pacotes compartilhados (`02-packages/`)
+## 4. Pacotes compartilhados (`packages/`)
 
 ### 4.1 `@portfolio/typescript`
 
 Configurações base de TypeScript.
 
 ```
-02-packages/typescript/
+packages/tsconfig/
 ├── package.json
 ├── base.json              # strict, esModuleInterop, etc.
 ├── node.json              # extends base, Node.js targets
@@ -76,7 +76,7 @@ Configurações base de TypeScript.
 Configuração ESLint compartilhada (flat config).
 
 ```
-02-packages/eslint/
+packages/eslint-config/
 ├── package.json
 ├── base.js                # Regras base
 ├── node.js                # Backend rules
@@ -89,7 +89,7 @@ Configuração ESLint compartilhada (flat config).
 Schemas Zod para variáveis de ambiente.
 
 ```
-02-packages/config/
+packages/config/
 ├── package.json
 ├── src/
 │   ├── index.ts
@@ -106,7 +106,7 @@ Schemas Zod para variáveis de ambiente.
 Tipos, constantes, enums e utilitários puros compartilhados.
 
 ```
-02-packages/shared/
+packages/shared/
 ├── package.json
 ├── src/
 │   ├── index.ts
@@ -125,7 +125,7 @@ Tipos, constantes, enums e utilitários puros compartilhados.
 Wrapper Pino com context propagation.
 
 ```
-02-packages/logger/
+packages/logger/
 ├── package.json
 ├── src/
 │   ├── index.ts
@@ -141,7 +141,7 @@ Wrapper Pino com context propagation.
 Utilitários de autenticação compartilhados.
 
 ```
-02-packages/auth/
+packages/auth/
 ├── package.json
 ├── src/
 │   ├── index.ts
@@ -161,7 +161,7 @@ Utilitários de autenticação compartilhados.
 Client HTTP tipado para consumo de APIs.
 
 ```
-02-packages/sdk/
+packages/sdk/
 ├── package.json
 ├── src/
 │   ├── index.ts
@@ -179,7 +179,7 @@ Client HTTP tipado para consumo de APIs.
 Design system e componentes visuais.
 
 ```
-02-packages/ui/
+packages/ui/
 ├── package.json
 ├── tailwind.config.ts           # Design tokens
 ├── src/
@@ -194,12 +194,12 @@ Design system e componentes visuais.
 
 ---
 
-## 5. Microsserviços (`03-services/`)
+## 5. Microsserviços (`services/`)
 
 ### 5.1 Estrutura padrão de serviço
 
 ```
-03-services/{service-name}/
+services/{service-name}/
 ├── package.json
 ├── tsconfig.json
 ├── nest-cli.json
@@ -226,23 +226,23 @@ Design system e componentes visuais.
 
 ### 5.2 Serviços
 
-| Diretório | Package name | Porta | Banco |
-|-----------|-------------|-------|-------|
-| `auth-service/` | `@portfolio/auth-service` | 3001 | `auth_db` |
-| `api-gateway/` | `@portfolio/api-gateway` | 3000 | — |
-| `notification-service/` | `@portfolio/notification-service` | 3002 | `notification_db` |
-| `helpdesk-api/` | `@portfolio/helpdesk-api` | 3003 | `helpdesk_db` |
-| `analytics-api/` | `@portfolio/analytics-api` | 3004 | `analytics_db` |
-| `realtime-chat/` | `@portfolio/realtime-chat` | 3005 | `chat_db` |
+| Diretório               | Package name                      | Porta | Banco             |
+| ----------------------- | --------------------------------- | ----- | ----------------- |
+| `auth-service/`         | `@portfolio/auth-service`         | 3001  | `auth_db`         |
+| `api-gateway/`          | `@portfolio/api-gateway`          | 3000  | —                 |
+| `notification-service/` | `@portfolio/notification-service` | 3002  | `notification_db` |
+| `helpdesk-api/`         | `@portfolio/helpdesk-api`         | 3003  | `helpdesk_db`     |
+| `analytics-api/`        | `@portfolio/analytics-api`        | 3004  | `analytics_db`    |
+| `realtime-chat/`        | `@portfolio/realtime-chat`        | 3005  | `chat_db`         |
 
 ---
 
-## 6. Aplicações frontend (`04-apps/`)
+## 6. Aplicações frontend (`apps/`)
 
 ### 6.1 Estrutura padrão de app
 
 ```
-04-apps/{app-name}/
+apps/{app-name}/
 ├── package.json
 ├── tsconfig.json
 ├── next.config.js
@@ -266,12 +266,12 @@ Design system e componentes visuais.
 
 ### 6.2 Apps
 
-| Diretório | Package name | Porta | Rota Nginx |
-|-----------|-------------|-------|------------|
-| `helpdesk/` | `@portfolio/helpdesk` | 3010 | `/helpdesk/*` |
-| `analytics/` | `@portfolio/analytics` | 3011 | `/analytics/*` |
-| `admin-portal/` | `@portfolio/admin-portal` | 3012 | `/admin/*` |
-| `portfolio-website/` | `@portfolio/portfolio-website` | 3013 | `/*` |
+| Diretório            | Package name                   | Porta | Rota Nginx     |
+| -------------------- | ------------------------------ | ----- | -------------- |
+| `helpdesk/`          | `@portfolio/helpdesk`          | 3010  | `/helpdesk/*`  |
+| `analytics/`         | `@portfolio/analytics`         | 3011  | `/analytics/*` |
+| `admin-portal/`      | `@portfolio/admin-portal`      | 3012  | `/admin/*`     |
+| `portfolio-website/` | `@portfolio/portfolio-website` | 3013  | `/*`           |
 
 ---
 
@@ -303,10 +303,10 @@ Design system e componentes visuais.
 
 ---
 
-## 8. Ferramentas (`06-tools/`)
+## 8. Ferramentas (`scripts/`)
 
 ```
-06-tools/
+scripts/
 ├── cli/                         # CLI interna do monorepo
 │   ├── package.json
 │   └── src/
@@ -339,16 +339,16 @@ Design system e componentes visuais.
 
 ### 10.1 Regras
 
-| De | Pode depender de | Não pode depender de |
-|----|------------------|----------------------|
-| `04-apps/*` | packages/*, sdk, ui, auth, shared | services/*, outros apps |
-| `03-services/*` | packages/* | apps/*, outros services (HTTP only) |
-| `02-packages/ui` | shared | services, apps, auth |
-| `02-packages/sdk` | shared, auth | services, apps, ui |
-| `02-packages/auth` | shared, logger | services, apps, sdk, ui |
-| `02-packages/shared` | — (zero deps internas) | tudo |
-| `02-packages/logger` | shared | services, apps |
-| `02-packages/config` | shared | services, apps |
+| De                | Pode depender de                  | Não pode depender de                |
+| ----------------- | --------------------------------- | ----------------------------------- |
+| `apps/*`          | packages/*, sdk, ui, auth, shared | services/*, outros apps             |
+| `services/*`      | packages/*                        | apps/*, outros services (HTTP only) |
+| `packages/ui`     | shared                            | services, apps, auth                |
+| `packages/sdk`    | shared, auth                      | services, apps, ui                  |
+| `packages/auth`   | shared, logger                    | services, apps, sdk, ui             |
+| `packages/shared` | — (zero deps internas)            | tudo                                |
+| `packages/logger` | shared                            | services, apps                      |
+| `packages/config` | shared                            | services, apps                      |
 
 ### 10.2 Enforcement
 
@@ -378,10 +378,10 @@ O arquivo `turbo.json` na raiz define o pipeline com as tasks `build` (dependsOn
 
 ## 13. Referências cruzadas
 
-| Tópico | Documento |
-|--------|-----------|
-| Arquitetura | [01-Architecture.md](./01-Architecture.md) |
-| Tech stack | [02-Tech-Stack.md](./02-Tech-Stack.md) |
+| Tópico           | Documento                                          |
+| ---------------- | -------------------------------------------------- |
+| Arquitetura      | [01-Architecture.md](./01-Architecture.md)         |
+| Tech stack       | [02-Tech-Stack.md](./02-Tech-Stack.md)             |
 | Coding standards | [03-Coding-Standards.md](./03-Coding-Standards.md) |
-| Service catalog | [16-Service-Catalog.md](./16-Service-Catalog.md) |
-| DevOps | [06-DevOps.md](./06-DevOps.md) |
+| Service catalog  | [16-Service-Catalog.md](./16-Service-Catalog.md)   |
+| DevOps           | [06-DevOps.md](./06-DevOps.md)                     |

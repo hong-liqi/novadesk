@@ -1,5 +1,5 @@
 {
-  "extends": "@portfolio/tsconfig/react.json",
+  "extends": "../tsconfig/react.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
@@ -9,5 +9,12 @@
     "jsx": "react-jsx"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.tsx", "**/*.spec.tsx"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }

@@ -3,12 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Shared ESLint configurations for Portfolio OS",
+  "description": "Shared ESLint flat config presets for Portfolio OS",
+  "main": "./base.js",
   "exports": {
+    ".": "./base.js",
     "./base": "./base.js",
     "./node": "./node.js",
     "./react": "./react.js",
     "./nestjs": "./nestjs.js"
+  },
+  "scripts": {
+    "build": "node ./test/validate.mjs",
+    "lint": "node ./test/validate.mjs",
+    "test": "node --test ./test/config.test.mjs",
+    "typecheck": "node ./test/validate.mjs"
   },
   "dependencies": {
     "@eslint/js": "^9.17.0",

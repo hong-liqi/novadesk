@@ -1,41 +1,64 @@
 import { clsx } from 'clsx';
-import type { ButtonHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+export type ButtonSize = 'sm' | 'md' | 'lg';
+
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   loading?: boolean;
+  leadingIcon?: ReactNode;
+}
+
+const variantStyles: Record<ButtonVariant, string> = {
+  primary: 'ui-btn ui-btn--primary',
+  secondary: 'ui-btn ui-btn--secondary',
+  ghost: 'ui-btn ui-btn--ghost',
+  danger: 'ui-btn ui-btn--danger',
 };
 
-const variantStyles: Record<NonNullable<ButtonProps['variant']>, string> = {
-  primary: 'ui-btn-primary',
-  secondary: 'ui-btn-secondary',
-  ghost: 'ui-btn-ghost',
-};
-
-const sizeStyles: Record<NonNullable<ButtonProps['size']>, string> = {
-  sm: 'ui-btn-sm',
-  md: 'ui-btn-md',
-  lg: 'ui-btn-lg',
+const sizeStyles: Record<ButtonSize, string> = {
+  sm: 'ui-btn--sm',
+  md: 'ui-btn--md',
+  lg: 'ui-btn--lg',
 };
 
 export function Button({
   variant = 'primary',
   size = 'md',
   loading = false,
+  leadingIcon,
   disabled,
   className,
   children,
+  type = 'button',
   ...props
 }: ButtonProps) {
   return (
     <button
-      type="button"
-      className={clsx('ui-btn', variantStyles[variant], sizeStyles[size], className)}
+      type={type}
+      className={clsx(
+        variantStyles[variant],
+        sizeStyles[size],
+        'ui-focus-ring ui-inline-flex ui-items-center ui-gap-2 ui-rounded-full ui-font-medium',
+        className,
+      )}
       disabled={disabled ?? loading}
+      data-variant={variant}
+      data-size={size}
       {...props}
     >
-      {loading ? 'Loading...' : children}
+      {loading ? (
+        <span className="ui-btn__loading" aria-live="polite">
+          Loading...
+        </span>
+      ) : (
+        <>
+          {leadingIcon}
+          <span>{children}</span>
+        </>
+      )}
     </button>
   );
 }

@@ -52,6 +52,63 @@ services:
       timeout: 5s
       retries: 5
 
+  postgres-helpdesk:
+    image: postgres:16-alpine
+    container_name: portfolio-postgres-helpdesk
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: helpdesk_db
+    networks:
+      - data
+    ports:
+      - '5434:5432'
+    volumes:
+      - postgres_helpdesk_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U portfolio -d helpdesk_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-analytics:
+    image: postgres:16-alpine
+    container_name: portfolio-postgres-analytics
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: analytics_db
+    networks:
+      - data
+    ports:
+      - '5435:5432'
+    volumes:
+      - postgres_analytics_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U portfolio -d analytics_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-chat:
+    image: postgres:16-alpine
+    container_name: portfolio-postgres-chat
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: chat_db
+    networks:
+      - data
+    ports:
+      - '5436:5432'
+    volumes:
+      - postgres_chat_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U portfolio -d chat_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   mailpit:
     image: axllent/mailpit:latest
     container_name: portfolio-mailpit
@@ -107,6 +164,80 @@ services:
       mailpit:
         condition: service_started
 
+  helpdesk-api:
+    build:
+      context: ../..
+      dockerfile: services/helpdesk-api/Dockerfile
+    container_name: portfolio-helpdesk-api
+    env_file:
+      - ../../services/helpdesk-api/.env.example
+    environment:
+      SERVICE_NAME: helpdesk-api
+      PORT: 3003
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://portfolio:portfolio@postgres-helpdesk:5432/helpdesk_db
+    networks:
+      - backend
+      - data
+    ports:
+      - '3003:3003'
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres-helpdesk:
+        condition: service_healthy
+
+  analytics-api:
+    build:
+      context: ../..
+      dockerfile: services/analytics-api/Dockerfile
+    container_name: portfolio-analytics-api
+    env_file:
+      - ../../services/analytics-api/.env.example
+    environment:
+      SERVICE_NAME: analytics-api
+      PORT: 3004
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://portfolio:portfolio@postgres-analytics:5432/analytics_db
+    networks:
+      - backend
+      - data
+    ports:
+      - '3004:3004'
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres-analytics:
+        condition: service_healthy
+
+  realtime-chat-service:
+    # WebSocket: single replica is fine for local dev. Enable sticky sessions
+    # (ip_hash) on nginx/CapRover when scaling gateway or this service.
+    build:
+      context: ../..
+      dockerfile: services/realtime-chat/Dockerfile
+    container_name: portfolio-realtime-chat-service
+    env_file:
+      - ../../services/realtime-chat/.env.example
+    environment:
+      SERVICE_NAME: realtime-chat-service
+      PORT: 3005
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://portfolio:portfolio@postgres-chat:5432/chat_db
+      AUTH_JWKS_URL: http://auth-service:3001/.well-known/jwks.json
+    networks:
+      - backend
+      - data
+    ports:
+      - '3005:3005'
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres-chat:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+
   gateway:
     build:
       context: ../..
@@ -116,6 +247,17 @@ services:
       SERVICE_NAME: gateway
       PORT: 3000
       REDIS_URL: redis://redis:6379
+      AUTH_SERVICE_URL: http://auth-service:3001
+      NOTIFICATION_SERVICE_URL: http://notification-service:3002
+      HELPDESK_SERVICE_URL: http://helpdesk-api:3003
+      ANALYTICS_SERVICE_URL: http://analytics-api:3004
+      REALTIME_CHAT_SERVICE_URL: http://realtime-chat-service:3005
+      JWT_ISSUER: portfolio-os-auth
+      JWT_AUDIENCE: portfolio-os
+      AUTH_JWKS_URL: http://auth-service:3001/.well-known/jwks.json
+      THROTTLE_TTL: 60000
+      THROTTLE_LIMIT: 100
+      PROXY_TIMEOUT_MS: 10000
     networks:
       - backend
       - frontend
@@ -123,6 +265,9 @@ services:
     depends_on:
       - auth-service
       - notification-service
+      - helpdesk-api
+      - analytics-api
+      - realtime-chat-service
 
   helpdesk-saas:
     build:
@@ -204,3 +349,6 @@ volumes:
   redis_data:
   postgres_auth_data:
   postgres_notification_data:
+  postgres_helpdesk_data:
+  postgres_analytics_data:
+  postgres_chat_data:
