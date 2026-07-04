@@ -2,30 +2,36 @@
 
 Deploy de cada componente como **app separada** no CapRover, com build via **Git webhook** e `captain-definition`.
 
+## Guia completo
+
+Siga o passo a passo em **[DEPLOY-CAPROVER.md](../../DEPLOY-CAPROVER.md)** na raiz do projeto.
+
 ## Pré-requisitos
 
 - CapRover instalado com HTTPS (Let's Encrypt)
 - Repositório Git acessível pelo CapRover (GitHub/GitLab + deploy key ou token)
-- Apps de infraestrutura no CapRover (ou externas):
-  - **PostgreSQL** — um banco por serviço (`auth_db`, `notification_db`, `helpdesk_db`, `analytics_db`, `chat_db`)
-  - **Redis** — sessões, refresh tokens, rate limit
-  - **Mailpit/SMTP** — e-mails transacionais (produção: SendGrid, SES, etc.)
+- Apps de infraestrutura no CapRover (definidas em `infrastructure/caprover/`):
+  - **PostgreSQL** (`portfolio-postgres`) — instância única com 5 databases
+  - **Redis** (`portfolio-redis`) — sessões, refresh tokens, rate limit
+  - **SMTP** — e-mails transacionais (produção: SendGrid, SES, etc.)
 
 ## Mapa de apps CapRover
 
-| App CapRover              | Captain Definition Path                            | Porta | Domínio sugerido           |
-| ------------------------- | -------------------------------------------------- | ----- | -------------------------- |
-| `portfolio-gateway`       | `services/gateway/captain-definition`              | 3000  | `api.seudominio.com`       |
-| `portfolio-auth`          | `services/auth-service/captain-definition`         | 3001  | _(interno)_                |
-| `portfolio-notification`  | `services/notification-service/captain-definition` | 3002  | _(interno)_                |
-| `portfolio-helpdesk-api`  | `services/helpdesk-api/captain-definition`         | 3003  | _(interno)_                |
-| `portfolio-analytics-api` | `services/analytics-api/captain-definition`        | 3004  | _(interno)_                |
-| `portfolio-chat-api`      | `services/realtime-chat/captain-definition`        | 3005  | _(interno)_                |
-| `portfolio-helpdesk`      | `apps/helpdesk-saas/captain-definition`            | 3010  | `helpdesk.seudominio.com`  |
-| `portfolio-analytics`     | `apps/analytics-dashboard/captain-definition`      | 3011  | `analytics.seudominio.com` |
-| `portfolio-admin`         | `apps/admin-panel/captain-definition`              | 3012  | `admin.seudominio.com`     |
-| `portfolio-chat`          | `apps/realtime-chat/captain-definition`            | 3014  | `chat.seudominio.com`      |
-| `portfolio-website`       | `website/captain-definition`                       | 3013  | `seudominio.com`           |
+| App CapRover              | Captain Definition Path                               | Porta | Domínio sugerido           |
+| ------------------------- | ----------------------------------------------------- | ----- | -------------------------- |
+| `portfolio-postgres`      | `infrastructure/caprover/postgres/captain-definition` | 5432  | _(interno, persistente)_   |
+| `portfolio-redis`         | `infrastructure/caprover/redis/captain-definition`    | 6379  | _(interno, persistente)_   |
+| `portfolio-gateway`       | `services/gateway/captain-definition`                 | 3000  | `api.seudominio.com`       |
+| `portfolio-auth`          | `services/auth-service/captain-definition`            | 3001  | _(interno)_                |
+| `portfolio-notification`  | `services/notification-service/captain-definition`    | 3002  | _(interno)_                |
+| `portfolio-helpdesk-api`  | `services/helpdesk-api/captain-definition`            | 3003  | _(interno)_                |
+| `portfolio-analytics-api` | `services/analytics-api/captain-definition`           | 3004  | _(interno)_                |
+| `portfolio-chat-api`      | `services/realtime-chat/captain-definition`           | 3005  | _(interno)_                |
+| `portfolio-helpdesk`      | `apps/helpdesk-saas/captain-definition`               | 3010  | `helpdesk.seudominio.com`  |
+| `portfolio-analytics`     | `apps/analytics-dashboard/captain-definition`         | 3011  | `analytics.seudominio.com` |
+| `portfolio-admin`         | `apps/admin-panel/captain-definition`                 | 3012  | `admin.seudominio.com`     |
+| `portfolio-chat`          | `apps/realtime-chat/captain-definition`               | 3014  | `chat.seudominio.com`      |
+| `portfolio-website`       | `website/captain-definition`                          | 3013  | `seudominio.com`           |
 
 > Hostnames internos CapRover: `http://srv-captain--portfolio-auth:3001` (substitua pelo nome exato da app).
 
