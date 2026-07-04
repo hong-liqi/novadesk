@@ -22,9 +22,12 @@ RUN pnpm turbo run build --filter=@novadesk/auth-service
 FROM node:20-alpine AS production
 WORKDIR /app
 RUN apk add --no-cache openssl
-COPY --from=build --chown=node:node /app/services/auth-service/dist ./dist
-COPY --from=build --chown=node:node /app/services/auth-service/package.json ./package.json
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/packages ./packages
+COPY --from=build --chown=node:node /app/services/auth-service/dist ./services/auth-service/dist
+COPY --from=build --chown=node:node /app/services/auth-service/package.json ./services/auth-service/package.json
+COPY --from=build --chown=node:node /app/services/auth-service/node_modules ./services/auth-service/node_modules
+WORKDIR /app/services/auth-service
 USER node
 ENV NODE_ENV=production
 EXPOSE 3001

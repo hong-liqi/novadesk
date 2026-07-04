@@ -20,9 +20,12 @@ RUN pnpm turbo run build --filter=@novadesk/gateway
 
 FROM node:20-alpine AS production
 WORKDIR /app
-COPY --from=build --chown=node:node /app/services/gateway/dist ./dist
-COPY --from=build --chown=node:node /app/services/gateway/package.json ./package.json
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/packages ./packages
+COPY --from=build --chown=node:node /app/services/gateway/dist ./services/gateway/dist
+COPY --from=build --chown=node:node /app/services/gateway/package.json ./services/gateway/package.json
+COPY --from=build --chown=node:node /app/services/gateway/node_modules ./services/gateway/node_modules
+WORKDIR /app/services/gateway
 USER node
 ENV NODE_ENV=production
 EXPOSE 3000

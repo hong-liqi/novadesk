@@ -4,7 +4,7 @@
   "private": true,
   "description": "Notification delivery service for NovaDesk",
   "scripts": {
-    "build": "prisma generate && nest build && tsc-alias -p tsconfig.build.json",
+    "build": "prisma generate && nest build && tsc-alias -p tsconfig.build.json && mkdir -p dist/generated && cp -r src/generated/prisma dist/generated/prisma",
     "dev": "nest start --watch",
     "lint": "eslint \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",

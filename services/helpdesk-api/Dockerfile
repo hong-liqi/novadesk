@@ -23,9 +23,12 @@ RUN pnpm turbo run build --filter=@novadesk/helpdesk-api
 FROM node:20-alpine AS production
 WORKDIR /app
 RUN apk add --no-cache openssl
-COPY --from=build --chown=node:node /app/services/helpdesk-api/dist ./dist
-COPY --from=build --chown=node:node /app/services/helpdesk-api/package.json ./package.json
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/packages ./packages
+COPY --from=build --chown=node:node /app/services/helpdesk-api/dist ./services/helpdesk-api/dist
+COPY --from=build --chown=node:node /app/services/helpdesk-api/package.json ./services/helpdesk-api/package.json
+COPY --from=build --chown=node:node /app/services/helpdesk-api/node_modules ./services/helpdesk-api/node_modules
+WORKDIR /app/services/helpdesk-api
 USER node
 ENV NODE_ENV=production
 EXPOSE 3003

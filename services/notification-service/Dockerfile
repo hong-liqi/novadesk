@@ -22,9 +22,12 @@ RUN pnpm turbo run build --filter=@novadesk/notification-service
 FROM node:20-alpine AS production
 WORKDIR /app
 RUN apk add --no-cache openssl
-COPY --from=build --chown=node:node /app/services/notification-service/dist ./dist
-COPY --from=build --chown=node:node /app/services/notification-service/package.json ./package.json
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/packages ./packages
+COPY --from=build --chown=node:node /app/services/notification-service/dist ./services/notification-service/dist
+COPY --from=build --chown=node:node /app/services/notification-service/package.json ./services/notification-service/package.json
+COPY --from=build --chown=node:node /app/services/notification-service/node_modules ./services/notification-service/node_modules
+WORKDIR /app/services/notification-service
 USER node
 ENV NODE_ENV=production
 EXPOSE 3002
