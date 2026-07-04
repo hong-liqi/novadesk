@@ -165,7 +165,7 @@ CapRover app "novadesk-auth"
 
 | Camada                      | O que define                               | Exemplo (gateway)                             |
 | --------------------------- | ------------------------------------------ | --------------------------------------------- |
-| **Captain Definition Path** | Qual Dockerfile do monorepo usar           | `services/gateway/captain-definition`         |
+| **Captain Definition Path** | Qual app buildar (arquivo na raiz do repo) | `captain-definition.novadesk-gateway`         |
 | **Dockerfile**              | Dependências, build e binário final        | `pnpm turbo build --filter=@novadesk/gateway` |
 | **EXPOSE + CMD**            | Porta e processo que sobe no container     | `EXPOSE 3000` + `node dist/main.js`           |
 | **Env `PORT`**              | Porta em que o processo escuta             | `PORT=3000` (Passo 5)                         |
@@ -260,7 +260,7 @@ Para **cada uma das 11 apps de aplicação**, repita:
    - **Repository:** `https://github.com/hong-liqi/portifolio.git` (ou HTTPS)
    - **Branch:** `main`
    - **Chave SSH:** mesma deploy key
-4. **Captain Definition Path:** caminho da tabela do Passo 2 (ex.: `services/gateway/captain-definition`)
+4. **Captain Definition Path:** caminho da tabela do Passo 2 (ex.: `captain-definition.novadesk-gateway`)
 5. **Salvar & Reiniciar**
 
 Depois do build, configure as **env vars** (Passo 5) e, para gateway/frontends, **HTTP Settings** com domínio e HTTPS.
