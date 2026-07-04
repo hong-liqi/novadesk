@@ -20,13 +20,12 @@ RUN pnpm turbo run build --filter=@novadesk/helpdesk-saas
 
 FROM node:20-alpine AS production
 WORKDIR /app
-RUN addgroup -g 1001 -S nodejs && adduser -S node -u 1001 -G nodejs
 ENV NODE_ENV=production
 ENV PORT=3010
 ENV HOSTNAME=0.0.0.0
 COPY --from=build /app/apps/helpdesk-saas/public ./apps/helpdesk-saas/public
-COPY --from=build --chown=node:nodejs /app/apps/helpdesk-saas/.next/standalone ./
-COPY --from=build --chown=node:nodejs /app/apps/helpdesk-saas/.next/static ./apps/helpdesk-saas/.next/static
+COPY --from=build --chown=node:node /app/apps/helpdesk-saas/.next/standalone ./
+COPY --from=build --chown=node:node /app/apps/helpdesk-saas/.next/static ./apps/helpdesk-saas/.next/static
 USER node
 EXPOSE 3010
 CMD ["node", "apps/helpdesk-saas/server.js"]

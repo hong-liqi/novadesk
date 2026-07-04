@@ -20,10 +20,9 @@ RUN pnpm turbo run build --filter=@novadesk/gateway
 
 FROM node:20-alpine AS production
 WORKDIR /app
-RUN addgroup -g 1001 -S nodejs && adduser -S node -u 1001 -G nodejs
-COPY --from=build --chown=node:nodejs /app/services/gateway/dist ./dist
-COPY --from=build --chown=node:nodejs /app/services/gateway/package.json ./package.json
-COPY --from=build --chown=node:nodejs /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/services/gateway/dist ./dist
+COPY --from=build --chown=node:node /app/services/gateway/package.json ./package.json
+COPY --from=build --chown=node:node /app/node_modules ./node_modules
 USER node
 ENV NODE_ENV=production
 EXPOSE 3000

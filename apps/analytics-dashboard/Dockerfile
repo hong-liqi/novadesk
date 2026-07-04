@@ -20,13 +20,12 @@ RUN pnpm turbo run build --filter=@novadesk/analytics-dashboard
 
 FROM node:20-alpine AS production
 WORKDIR /app
-RUN addgroup -g 1001 -S nodejs && adduser -S node -u 1001 -G nodejs
 ENV NODE_ENV=production
 ENV PORT=3011
 ENV HOSTNAME=0.0.0.0
 COPY --from=build /app/apps/analytics-dashboard/public ./apps/analytics-dashboard/public
-COPY --from=build --chown=node:nodejs /app/apps/analytics-dashboard/.next/standalone ./
-COPY --from=build --chown=node:nodejs /app/apps/analytics-dashboard/.next/static ./apps/analytics-dashboard/.next/static
+COPY --from=build --chown=node:node /app/apps/analytics-dashboard/.next/standalone ./
+COPY --from=build --chown=node:node /app/apps/analytics-dashboard/.next/static ./apps/analytics-dashboard/.next/static
 USER node
 EXPOSE 3011
 CMD ["node", "apps/analytics-dashboard/server.js"]

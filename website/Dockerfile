@@ -21,13 +21,12 @@ RUN pnpm turbo run build --filter=@novadesk/website
 
 FROM node:20-alpine AS production
 WORKDIR /app
-RUN addgroup -g 1001 -S nodejs && adduser -S node -u 1001 -G nodejs
 ENV NODE_ENV=production
 ENV PORT=3013
 ENV HOSTNAME=0.0.0.0
 COPY --from=build /app/website/public ./website/public
-COPY --from=build --chown=node:nodejs /app/website/.next/standalone ./
-COPY --from=build --chown=node:nodejs /app/website/.next/static ./website/.next/static
+COPY --from=build --chown=node:node /app/website/.next/standalone ./
+COPY --from=build --chown=node:node /app/website/.next/static ./website/.next/static
 USER node
 EXPOSE 3013
 CMD ["node", "website/server.js"]
