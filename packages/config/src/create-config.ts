@@ -9,10 +9,13 @@ export function createConfig<TSchema extends ZodTypeAny>(
 ): ConfigOf<TSchema> {
   const parsed = schema.safeParse(env);
   if (!parsed.success) {
+    const issueSummary = parsed.error.issues
+      .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
+      .join('; ');
     throw new ConfigValidationError(
       options.sourceName
-        ? `Invalid configuration for ${options.sourceName}`
-        : 'Invalid configuration',
+        ? `Invalid configuration for ${options.sourceName}: ${issueSummary}`
+        : `Invalid configuration: ${issueSummary}`,
       {
         issues: parsed.error.issues.map((issue) => ({
           path: issue.path.join('.'),

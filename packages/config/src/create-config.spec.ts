@@ -87,7 +87,7 @@ describe('config package', () => {
       createConfig(baseEnvSchema, { PORT: 'invalid' } as NodeJS.ProcessEnv, {
         sourceName: 'gateway',
       }),
-    ).toThrow(ConfigValidationError);
+    ).toThrow(/Invalid configuration for gateway: PORT:/);
   });
 
   it('loads config from process env by default', () => {
