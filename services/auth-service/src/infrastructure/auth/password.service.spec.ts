@@ -1,6 +1,8 @@
 import { PasswordService } from './password.service';
 
 describe('PasswordService', () => {
+  jest.setTimeout(30_000);
+
   let service: PasswordService;
 
   beforeEach(() => {

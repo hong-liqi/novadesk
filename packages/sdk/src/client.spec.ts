@@ -202,6 +202,137 @@ describe('PortfolioClient', () => {
     expect(result.data.ok).toBe(true);
     expect(fetchFn).toHaveBeenCalledTimes(2);
   });
+
+  it('returns plain text from getText', async () => {
+    const fetchFn = jest.fn().mockResolvedValue(
+      new Response('col1,col2\n1,2', {
+        status: 200,
+        headers: { 'Content-Type': 'text/csv' },
+      }),
+    );
+
+    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+    const result = await client.getText('/analytics/export', { params: { workspaceId: 'ws-1' } });
+
+    expect(result).toBe('col1,col2\n1,2');
+    expect(fetchFn).toHaveBeenCalledWith(
+      'https://api.example.com/analytics/export?workspaceId=ws-1',
+      expect.objectContaining({
+        method: 'GET',
+        headers: expect.objectContaining({
+          Accept: 'text/csv,text/plain,*/*',
+        }),
+      }),
+    );
+  });
+
+  it('maps getText API errors to SdkError', async () => {
+    const fetchFn = jest.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          error: {
+            code: 'FORBIDDEN',
+            message: 'Denied',
+            status: 403,
+            requestId: 'req-text',
+            timestamp: new Date().toISOString(),
+          },
+        }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } },
+      ),
+    );
+
+    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+
+    await expect(client.getText('/export')).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+      status: 403,
+    });
+  });
+
+  it('maps getText HTTP failures without envelope to SdkError', async () => {
+    const fetchFn = jest.fn().mockResolvedValue(new Response('bad gateway', { status: 502 }));
+    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+
+    await expect(client.getText('/export')).rejects.toMatchObject({
+      code: 'HTTP_ERROR',
+      status: 502,
+    });
+  });
+
+  it('times out getText requests', async () => {
+    const fetchFn = jest.fn(
+      (_url: string | URL | Request, init?: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener(
+            'abort',
+            () => {
+              reject(new DOMException('Aborted', 'AbortError'));
+            },
+            { once: true },
+          );
+        }),
+    );
+
+    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0, timeoutMs: 1 });
+
+    await expect(client.getText('/slow-export')).rejects.toMatchObject({
+      code: 'TIMEOUT',
+      status: 408,
+    });
+  });
+
+  it('maps getText network failures to SdkError', async () => {
+    const fetchFn = jest.fn().mockRejectedValue(new Error('connection reset'));
+    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0 });
+
+    await expect(client.getText('/export')).rejects.toMatchObject({
+      code: 'NETWORK_ERROR',
+    });
+  });
+
+  it('retries getText server errors before succeeding', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockResolvedValueOnce(new Response('unavailable', { status: 503 }))
+      .mockResolvedValueOnce(
+        new Response('ticketId,status\n1,open', {
+          status: 200,
+          headers: { 'Content-Type': 'text/csv' },
+        }),
+      );
+
+    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 1, retryDelayMs: 0 });
+    const result = await client.getText('/export');
+
+    expect(result).toBe('ticketId,status\n1,open');
+    expect(fetchFn).toHaveBeenCalledTimes(2);
+  });
+
+  it('rejects requests when the caller signal is already aborted', async () => {
+    const controller = new AbortController();
+    controller.abort();
+
+    const fetchFn = jest.fn((_url: string | URL | Request, init?: RequestInit) => {
+      if (init?.signal?.aborted) {
+        return Promise.reject(new DOMException('Aborted', 'AbortError'));
+      }
+
+      return Promise.resolve(
+        new Response(JSON.stringify({ data: {}, meta: { requestId: 'req-abort' } }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+      );
+    });
+
+    const client = new PortfolioClient({ baseUrl, fetchFn, retries: 0, timeoutMs: 60_000 });
+
+    await expect(client.get('/abort-early', { signal: controller.signal })).rejects.toMatchObject({
+      code: 'TIMEOUT',
+      status: 408,
+    });
+  });
 });
 
 describe('SdkError', () => {

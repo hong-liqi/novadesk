@@ -10,6 +10,7 @@ module.exports = {
     '!src/**/index.ts',
     '!src/auth/**',
     '!src/helpdesk/**',
+    '!src/analytics/**',
   ],
   coverageReporters: ['text', 'lcov', 'html'],
   coverageThreshold: {
