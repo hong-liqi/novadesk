@@ -1,10 +1,24 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+
+vi.mock('@portfolio/auth/client', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@portfolio/auth/client')>();
+  return {
+    ...actual,
+    useAuth: () => ({
+      accessToken: null,
+      user: null,
+      isAuthenticated: false,
+      isLoading: false,
+    }),
+  };
+});
+
 import HomePage from './page';
 
 describe('HomePage', () => {
-  it('shows foundation ready message', () => {
+  it('shows sign in required when unauthenticated', () => {
     render(<HomePage />);
-    expect(screen.getByText('Foundation ready')).toBeInTheDocument();
+    expect(screen.getByText('Sign in required')).toBeInTheDocument();
   });
 });
