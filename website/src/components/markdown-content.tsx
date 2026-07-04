@@ -77,7 +77,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
       }
       elements.push(
         <pre
-          key={`code-${index}`}
+          key={`code-${String(index)}`}
           className="my-4 overflow-x-auto rounded-lg border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
         >
           <code>{codeLines.join('\n')}</code>
@@ -95,7 +95,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
       }
       const rows = tableLines.filter((row) => !row.includes('---'));
       elements.push(
-        <div key={`table-${index}`} className="my-4 overflow-x-auto">
+        <div key={`table-${String(index)}`} className="my-4 overflow-x-auto">
           <table className="w-full min-w-[480px] border-collapse text-sm">
             <tbody>
               {rows.map((row, rowIndex) => {
@@ -135,7 +135,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         index += 1;
       }
       elements.push(
-        <ul key={`list-${index}`} className="my-4 list-disc space-y-2 pl-6 text-slate-400">
+        <ul key={`list-${String(index)}`} className="my-4 list-disc space-y-2 pl-6 text-slate-400">
           {items.map((item, itemIndex) => (
             <li key={itemIndex}>{renderInline(item)}</li>
           ))}

@@ -158,7 +158,9 @@ export function ChatRoom() {
         <input
           type="text"
           value={ticketId}
-          onChange={(event) => setTicketId(event.target.value)}
+          onChange={(event) => {
+            setTicketId(event.target.value);
+          }}
           placeholder="Ticket room ID (UUID)"
           className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
         />
@@ -191,7 +193,9 @@ export function ChatRoom() {
             <input
               type="text"
               value={draft}
-              onChange={(event) => handleDraftChange(event.target.value)}
+              onChange={(event) => {
+                handleDraftChange(event.target.value);
+              }}
               placeholder="Type a message"
               className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
               disabled={status !== 'connected'}

@@ -33,7 +33,7 @@ export function ContactForm() {
       });
 
       if (!response.ok) {
-        throw new Error(`Request failed (${response.status})`);
+        throw new Error(`Request failed (${String(response.status)})`);
       }
 
       setStatus('success');
@@ -61,13 +61,19 @@ export function ContactForm() {
         </Stack>
 
         <Surface variant="outline" padding="lg" className="border-slate-800 bg-slate-900/50">
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={(event) => {
+              void handleSubmit(event);
+            }}
+          >
             <Stack gap="md">
               <Input
                 label="Name"
                 name="name"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => {
+                  setName(event.target.value);
+                }}
                 required
                 autoComplete="name"
                 placeholder="Your name"
@@ -77,7 +83,9 @@ export function ContactForm() {
                 name="email"
                 type="email"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
                 required
                 autoComplete="email"
                 placeholder="you@example.com"
@@ -87,7 +95,9 @@ export function ContactForm() {
                 <textarea
                   name="message"
                   value={message}
-                  onChange={(event) => setMessage(event.target.value)}
+                  onChange={(event) => {
+                    setMessage(event.target.value);
+                  }}
                   required
                   rows={5}
                   placeholder="Tell me about your project..."

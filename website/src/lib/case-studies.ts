@@ -57,7 +57,7 @@ function resolveContentDir(): string {
       return dir;
     }
   }
-  return CONTENT_DIR_CANDIDATES[0]!;
+  return CONTENT_DIR_CANDIDATES[0] ?? path.join(process.cwd(), 'docs', 'case-studies');
 }
 
 export function getCaseStudyMarkdown(slug: string): string | null {
