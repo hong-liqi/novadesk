@@ -426,7 +426,9 @@ NOVADESK_API_URL=https://novadesk-gateway.<SEU_DOMINIO>/api/v1
 NEXT_PUBLIC_API_URL=https://novadesk-gateway.<SEU_DOMINIO>/api/v1
 ```
 
-> `NOVADESK_API_URL` é lida em runtime (Salvar & Reiniciar basta). `NEXT_PUBLIC_API_URL` é fallback no build.
+> **Obrigatório em cada frontend** (helpdesk, analytics, admin, chat). Sem isso o login chama `/api/v1` no subdomínio do app → **404**.
+>
+> `NOVADESK_API_URL` é lida em runtime (Salvar & Reiniciar basta após rebuild com `force-dynamic`). Alternativa: `NOVADESK_GATEWAY_URL=https://novadesk-gateway.<SEU_DOMINIO>`.
 
 Mais a porta de cada app:
 

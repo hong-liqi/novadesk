@@ -18,6 +18,18 @@ function getInjectedApiUrl(): string | undefined {
   return readNonEmpty(globalThis.__NOVADESK_API_URL__);
 }
 
+function resolveGatewayApiUrl(): string | undefined {
+  const gateway =
+    readNonEmpty(process.env.NOVADESK_GATEWAY_URL) ??
+    readNonEmpty(process.env.NEXT_PUBLIC_GATEWAY_URL);
+
+  if (!gateway) {
+    return undefined;
+  }
+
+  return `${gateway.replace(/\/$/, '')}/api/v1`;
+}
+
 /** Resolves API base URL from runtime injection, server env, or local default. */
 export function getApiBaseUrl(): string {
   const injected = getInjectedApiUrl();
@@ -28,6 +40,7 @@ export function getApiBaseUrl(): string {
   return (
     readNonEmpty(process.env.NOVADESK_API_URL) ??
     readNonEmpty(process.env.NEXT_PUBLIC_API_URL) ??
+    resolveGatewayApiUrl() ??
     '/api/v1'
   );
 }

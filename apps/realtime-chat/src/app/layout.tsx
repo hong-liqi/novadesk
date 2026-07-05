@@ -3,6 +3,8 @@ import { AppProviders } from '@/shared/providers/app-providers';
 import { RuntimeConfigScript } from '@/shared/components/runtime-config-script';
 import './globals.css';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Realtime Chat',
   description: 'NovaDesk — Realtime ticket chat',

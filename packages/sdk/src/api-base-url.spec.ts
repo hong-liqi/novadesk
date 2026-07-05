@@ -26,6 +26,14 @@ describe('api-base-url', () => {
     expect(getApiBaseUrl()).toBe('https://gateway.example.com/api/v1');
   });
 
+  it('derives API URL from gateway env', () => {
+    process.env.NOVADESK_GATEWAY_URL = 'https://gateway.example.com';
+    delete process.env.NOVADESK_API_URL;
+    delete process.env.NEXT_PUBLIC_API_URL;
+
+    expect(getApiBaseUrl()).toBe('https://gateway.example.com/api/v1');
+  });
+
   it('defaults to /api/v1 when unset', () => {
     delete process.env.NOVADESK_API_URL;
     delete process.env.NEXT_PUBLIC_API_URL;
