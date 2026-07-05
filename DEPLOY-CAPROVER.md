@@ -498,33 +498,25 @@ Aguarde cada app ficar **Running** antes da próxima que depende dela. Postgres 
 
 ## Passo 7 — Migrations do banco
 
-Após os backends estarem no ar, aplique os schemas Prisma.
+Os backends com Prisma (**auth**, **notification**, **helpdesk-api**, **analytics-api**, **chat-api**) aplicam o schema **automaticamente ao iniciar o container** (entrypoint roda `prisma migrate deploy` ou `db push` antes do `node`).
 
-### Opção A — Da sua máquina (mais simples)
+Requisitos:
 
-Exponha temporariamente a porta 5432 do Postgres (Port Mapping no CapRover) ou use túnel SSH, depois:
+- `DATABASE_URL` configurada em cada app (já documentado no Passo 5)
+- Postgres **Running** antes do primeiro deploy dos backends
+
+Ao fazer **Forçar build** / redeploy de um backend, o schema daquele banco é atualizado se o `schema.prisma` mudou.
+
+### Aplicar manualmente (opcional)
+
+Útil para debug local ou se o container falhar antes de subir:
 
 ```bash
-# Ajuste as URLs para apontar ao Postgres de produção
 export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/auth_db"
-cd services/auth-service && pnpm db:push
-
-export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/notification_db"
-cd services/notification-service && pnpm db:push
-
-export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/helpdesk_db"
-cd services/helpdesk-api && pnpm db:push
-
-export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/analytics_db"
-cd services/analytics-api && pnpm db:push
-
-export DATABASE_URL="postgresql://novadesk:<POSTGRES_PASSWORD>@<IP_SERVIDOR>:5432/chat_db"
-cd services/realtime-chat && pnpm db:push
+cd services/auth-service && pnpm db:deploy
 ```
 
-### Opção B — Script local (se tiver acesso de rede ao Postgres)
-
-Edite temporariamente as `DATABASE_URL` no `.env` de cada serviço e rode:
+Ou todos de uma vez (com `DATABASE_URL` correta em cada serviço ou via script):
 
 ```bash
 ./infrastructure/scripts/migrate-all.sh
@@ -579,6 +571,7 @@ Apps internas se comunicam pelo hostname `srv-captain--<nome-da-app>:<porta>`.
 | Login `Failed to fetch` / CORS | Configure `CORS_ORIGINS` no **`novadesk-gateway`** com os domínios dos frontends e do website. **Forçar build** do gateway após atualizar o código.                                          |
 | Login `Request timed out`      | POSTs antigos não repassavam o body ao auth (timeout ~10s / 502). **Forçar build** do `novadesk-gateway`. Confirme `novadesk-auth` Running.                                                  |
 | Login 502 + CORS no browser    | Gateway sem `bodyParser: false` quebra POSTs (nginx 502 sem headers CORS). **Forçar build** do `novadesk-gateway` com o código mais recente.                                                 |
+| Login **500**                  | Schema ausente ou migration falhou no startup. **Forçar build** do `novadesk-auth` (e demais backends). Veja logs: `[prisma-deploy]`. Confirme `DATABASE_URL` e Postgres Running.            |
 | Frontend no subdomínio → 404   | Com `basePath` vazio, use a raiz do subdomínio. `/helpdesk` no subdomínio só funciona em builds antigos.                                                                                     |
 | E-mail não envia               | Configure SMTP real no `novadesk-notification`.                                                                                                                                              |
 

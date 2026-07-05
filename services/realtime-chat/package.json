@@ -13,7 +13,8 @@
     "clean": "rm -rf dist",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "sh ../../infrastructure/scripts/prisma-deploy.sh"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.15",
