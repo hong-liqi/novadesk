@@ -405,7 +405,10 @@ JWT_ISSUER=novadesk-auth
 JWT_AUDIENCE=novadesk
 THROTTLE_TTL=60000
 THROTTLE_LIMIT=100
+CORS_ORIGINS=https://novadesk-helpdesk.<SEU_DOMINIO>,https://novadesk-analytics.<SEU_DOMINIO>,https://novadesk-admin.<SEU_DOMINIO>,https://novadesk-chat.<SEU_DOMINIO>,https://novadesk.<SEU_DOMINIO>
 ```
+
+> **Obrigatório em produção.** Sem `CORS_ORIGINS`, o browser bloqueia chamadas dos frontends ao gateway (`Failed to fetch` / CORS policy).
 
 **HTTP Settings do gateway:**
 
@@ -564,17 +567,18 @@ Apps internas se comunicam pelo hostname `srv-captain--<nome-da-app>:<porta>`.
 
 ## Troubleshooting
 
-| Problema                      | Solução                                                                                                                                                                                      |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Build falha no monorepo       | Verifique se o **Captain Definition Path** está correto. O contexto de build é a raiz do repo.                                                                                               |
-| 502 Bad Gateway               | Em **HTTP Settings**, defina **Container HTTP Port** = `PORT` da app (`3000` gateway, `3010`–`3014` frontends). Confira env `PORT` e logs. Gateway: teste `/api/v1/health/live`, não `/`.    |
-| Postgres perdeu dados         | Confirme diretório persistente `/var/lib/postgresql/data` **antes** do primeiro deploy.                                                                                                      |
-| `database "X" does not exist` | Recrie o Postgres (só se vazio) ou crie o DB manualmente via `psql`. O init script roda só na primeira inicialização.                                                                        |
-| JWT inválido                  | `JWT_ISSUER`, `JWT_AUDIENCE` e chaves devem ser iguais em auth e gateway.                                                                                                                    |
-| WebSocket do chat cai         | Habilite **WebSocket Support** no gateway.                                                                                                                                                   |
-| Links do site → 404           | URLs devem apontar para a **raiz** do subdomínio (`https://novadesk-helpdesk.<domínio>`, sem `/helpdesk`). Configure `NOVADESK_*_URL` no website e **Forçar build** após atualizar o código. |
-| Frontend no subdomínio → 404  | Com `basePath` vazio, use a raiz do subdomínio. `/helpdesk` no subdomínio só funciona em builds antigos.                                                                                     |
-| E-mail não envia              | Configure SMTP real no `novadesk-notification`.                                                                                                                                              |
+| Problema                       | Solução                                                                                                                                                                                      |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build falha no monorepo        | Verifique se o **Captain Definition Path** está correto. O contexto de build é a raiz do repo.                                                                                               |
+| 502 Bad Gateway                | Em **HTTP Settings**, defina **Container HTTP Port** = `PORT` da app (`3000` gateway, `3010`–`3014` frontends). Confira env `PORT` e logs. Gateway: teste `/api/v1/health/live`, não `/`.    |
+| Postgres perdeu dados          | Confirme diretório persistente `/var/lib/postgresql/data` **antes** do primeiro deploy.                                                                                                      |
+| `database "X" does not exist`  | Recrie o Postgres (só se vazio) ou crie o DB manualmente via `psql`. O init script roda só na primeira inicialização.                                                                        |
+| JWT inválido                   | `JWT_ISSUER`, `JWT_AUDIENCE` e chaves devem ser iguais em auth e gateway.                                                                                                                    |
+| WebSocket do chat cai          | Habilite **WebSocket Support** no gateway.                                                                                                                                                   |
+| Links do site → 404            | URLs devem apontar para a **raiz** do subdomínio (`https://novadesk-helpdesk.<domínio>`, sem `/helpdesk`). Configure `NOVADESK_*_URL` no website e **Forçar build** após atualizar o código. |
+| Login `Failed to fetch` / CORS | Configure `CORS_ORIGINS` no **`novadesk-gateway`** com os domínios dos frontends e do website. **Forçar build** do gateway após atualizar o código.                                          |
+| Frontend no subdomínio → 404   | Com `basePath` vazio, use a raiz do subdomínio. `/helpdesk` no subdomínio só funciona em builds antigos.                                                                                     |
+| E-mail não envia               | Configure SMTP real no `novadesk-notification`.                                                                                                                                              |
 
 ---
 

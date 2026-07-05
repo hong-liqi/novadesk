@@ -7,17 +7,20 @@ import { SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { LoggerInterceptor, LoggerService, createLogger } from '@novadesk/logger';
 import { createSwaggerConfig } from '@infrastructure/swagger/swagger.config';
+import { configureGatewayCors } from '@infrastructure/cors/configure-gateway-cors';
 import { ProxyService } from '@infrastructure/proxy/proxy.service';
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
+  const configService = app.get(ConfigService);
+  configureGatewayCors(app, configService);
+
   app.use(helmet());
   app.setGlobalPrefix('api/v1');
   app.useGlobalInterceptors(app.get(LoggerInterceptor));
 
-  const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);
   const loggerService = app.get(LoggerService);
   const proxyService = app.get(ProxyService);

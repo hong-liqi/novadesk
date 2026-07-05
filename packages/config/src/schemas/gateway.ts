@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { commaSeparatedList } from '../create-config';
 
 export const gatewayEnvSchema = z.object({
   AUTH_SERVICE_URL: z.string().url().default('http://localhost:3001'),
@@ -9,6 +10,16 @@ export const gatewayEnvSchema = z.object({
   THROTTLE_TTL: z.coerce.number().int().positive().default(60_000),
   THROTTLE_LIMIT: z.coerce.number().int().positive().default(100),
   PROXY_TIMEOUT_MS: z.coerce.number().int().positive().default(10_000),
+  CORS_ORIGINS: z
+    .union([z.string(), z.array(z.string())])
+    .optional()
+    .transform((value) => {
+      if (Array.isArray(value)) {
+        return value;
+      }
+
+      return commaSeparatedList(value) ?? [];
+    }),
 });
 
 export type GatewayEnv = z.infer<typeof gatewayEnvSchema>;
