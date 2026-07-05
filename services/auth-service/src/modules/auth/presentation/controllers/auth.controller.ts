@@ -11,8 +11,10 @@ import type {
   MeResponse,
   RefreshDto,
   RegisterDto,
+  SetupStatusResponse,
 } from '../../application/dto/auth.dto';
 import { GetMeUseCase } from '../../application/use-cases/get-me.use-case';
+import { GetSetupStatusUseCase } from '../../application/use-cases/get-setup-status.use-case';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { LogoutUseCase } from '../../application/use-cases/logout.use-case';
 import { RefreshUseCase } from '../../application/use-cases/refresh.use-case';
@@ -55,7 +57,15 @@ export class AuthController {
     private readonly refreshUseCase: RefreshUseCase,
     private readonly logoutUseCase: LogoutUseCase,
     private readonly getMeUseCase: GetMeUseCase,
+    private readonly getSetupStatusUseCase: GetSetupStatusUseCase,
   ) {}
+
+  @Public()
+  @Get('setup')
+  @ApiOperation({ summary: 'Check whether the platform still needs its first administrator' })
+  async setup(): Promise<SetupStatusResponse> {
+    return this.getSetupStatusUseCase.execute();
+  }
 
   @Public()
   @Throttle({ auth: { limit: 20, ttl: 900_000 } })

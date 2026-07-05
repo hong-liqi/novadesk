@@ -12,5 +12,6 @@ export const routes = {
   search: '/search',
   notifications: '/notifications',
   login: '/login',
+  register: '/register',
   ticketDetail: (id: string) => `/tickets/${id}`,
 } as const;

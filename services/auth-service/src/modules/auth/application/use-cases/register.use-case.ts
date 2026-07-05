@@ -34,13 +34,14 @@ export class RegisterUseCase {
       throw new ConflictException('Email already registered');
     }
 
+    const isFirstUser = (await this.users.count()) === 0;
     const passwordHash = await this.passwordService.hash(dto.password);
     const user = await this.users.create({
       email: dto.email.toLowerCase(),
       passwordHash,
       name: dto.name,
       tenantId: undefined,
-      role: 'user',
+      role: isFirstUser ? 'super_admin' : 'user',
     });
 
     const primaryTenant = user.memberships[0];

@@ -5,4 +5,5 @@ export const routes = {
   users: '/users',
   audit: '/audit',
   login: '/login',
+  register: '/register',
 } as const;

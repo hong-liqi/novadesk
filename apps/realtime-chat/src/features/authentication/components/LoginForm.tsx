@@ -6,9 +6,9 @@ import { Button, Input, Stack } from '@novadesk/ui';
 import { AuthLayout } from '@novadesk/ui/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { routes } from '@/shared/lib/routes';
-import { authClient } from '@/shared/services';
+import { authClient } from '@/shared/services/api-client';
 
 export function LoginForm() {
   const { login } = useAuth();
@@ -17,18 +17,6 @@ export function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [needsBootstrap, setNeedsBootstrap] = useState(false);
-
-  useEffect(() => {
-    void authClient
-      .getSetupStatus()
-      .then((status) => {
-        setNeedsBootstrap(status.needsBootstrap);
-      })
-      .catch(() => {
-        setNeedsBootstrap(false);
-      });
-  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,7 +26,7 @@ export function LoginForm() {
     try {
       const tokens = await authClient.login({ email, password });
       await login(tokens);
-      router.replace(routes.dashboard);
+      router.replace(routes.home);
     } catch (err) {
       setError(formatAuthError(err, 'Sign in failed'));
     } finally {
@@ -47,7 +35,7 @@ export function LoginForm() {
   }
 
   return (
-    <AuthLayout title="Admin sign in" subtitle="Super admin and admin access only">
+    <AuthLayout title="Sign in" subtitle="Join ticket chat rooms with your NovaDesk account">
       <form
         onSubmit={(event) => {
           void handleSubmit(event);
@@ -78,14 +66,12 @@ export function LoginForm() {
           <Button type="submit" loading={loading} className="w-full">
             Sign in
           </Button>
-          {needsBootstrap ? (
-            <p className="text-center text-sm text-neutral-600">
-              First deployment?{' '}
-              <Link href={routes.register} className="font-medium text-violet-700 hover:underline">
-                Create the platform administrator
-              </Link>
-            </p>
-          ) : null}
+          <p className="text-center text-sm text-neutral-600">
+            New to NovaDesk?{' '}
+            <Link href={routes.register} className="font-medium text-violet-700 hover:underline">
+              Create an account
+            </Link>
+          </p>
         </Stack>
       </form>
     </AuthLayout>

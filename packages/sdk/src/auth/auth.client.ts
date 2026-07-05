@@ -36,6 +36,10 @@ export interface MeResponse {
   tenants: UserTenantMembership[];
 }
 
+export interface SetupStatus {
+  needsBootstrap: boolean;
+}
+
 export class AuthClient {
   constructor(private readonly client: NovaDeskClient) {}
 
@@ -45,6 +49,10 @@ export class AuthClient {
 
   register(input: RegisterInput): Promise<AuthTokens> {
     return this.client.post<AuthTokens>('/auth/register', input).then((response) => response.data);
+  }
+
+  getSetupStatus(): Promise<SetupStatus> {
+    return this.client.get<SetupStatus>('/auth/setup').then((response) => response.data);
   }
 
   refresh(input: RefreshInput): Promise<AuthTokens> {

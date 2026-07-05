@@ -10,9 +10,12 @@ export default function HomePage() {
         Platform administration for NovaDesk — manage tenants, monitor service health, and review
         audit activity.
       </p>
-      <div className="flex gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
+        <Link href={routes.register}>
+          <Button variant="primary">Set up administrator</Button>
+        </Link>
         <Link href={routes.dashboard}>
-          <Button variant="primary">Open dashboard</Button>
+          <Button variant="secondary">Open dashboard</Button>
         </Link>
         <Link href={routes.login}>
           <Button variant="secondary">Sign in</Button>

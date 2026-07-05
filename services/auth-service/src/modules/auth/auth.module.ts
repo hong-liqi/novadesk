@@ -4,6 +4,7 @@ import { RolesGuard } from '@novadesk/auth';
 import { AuthServicesModule } from '@infrastructure/auth/auth-services.module';
 import { USER_REPOSITORY } from './application/ports/user.repository.port';
 import { GetMeUseCase } from './application/use-cases/get-me.use-case';
+import { GetSetupStatusUseCase } from './application/use-cases/get-setup-status.use-case';
 import { LoginUseCase } from './application/use-cases/login.use-case';
 import { LogoutUseCase } from './application/use-cases/logout.use-case';
 import { RefreshUseCase } from './application/use-cases/refresh.use-case';
@@ -21,6 +22,7 @@ import { LocalJwtAuthGuard } from './presentation/guards/local-jwt-auth.guard';
     RefreshUseCase,
     LogoutUseCase,
     GetMeUseCase,
+    GetSetupStatusUseCase,
     {
       provide: USER_REPOSITORY,
       useClass: UserRepository,

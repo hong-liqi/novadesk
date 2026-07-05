@@ -26,6 +26,10 @@ export interface AuthTokensResponse {
   tokenType: 'Bearer';
 }
 
+export interface SetupStatusResponse {
+  needsBootstrap: boolean;
+}
+
 export interface MeResponse {
   id: string;
   email: string;

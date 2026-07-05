@@ -9,9 +9,12 @@ export default function HomePage() {
       <p className="max-w-md text-center text-neutral-600">
         Modern customer support platform — architecture scaffold ready for implementation.
       </p>
-      <div className="flex gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
+        <Link href={routes.register}>
+          <Button variant="primary">Create account</Button>
+        </Link>
         <Link href={routes.dashboard}>
-          <Button variant="primary">Open dashboard</Button>
+          <Button variant="secondary">Open dashboard</Button>
         </Link>
         <Link href={routes.login}>
           <Button variant="secondary">Sign in</Button>

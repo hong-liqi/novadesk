@@ -20,5 +20,6 @@ describe('HomePage', () => {
   it('shows sign in required when unauthenticated', () => {
     render(<HomePage />);
     expect(screen.getByText('Sign in required')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Create account' })).toBeInTheDocument();
   });
 });

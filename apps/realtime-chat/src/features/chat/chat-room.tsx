@@ -2,9 +2,11 @@
 
 import { useAuth } from '@novadesk/auth/client';
 import { Button } from '@novadesk/ui';
+import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
 import { fetchChatHistory, getGatewayOrigin, type ChatMessage } from '@/shared/services/api-client';
+import { routes } from '@/shared/lib/routes';
 
 export function ChatRoom() {
   const { accessToken, user, isAuthenticated, isLoading } = useAuth();
@@ -139,8 +141,16 @@ export function ChatRoom() {
       <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-medium">Sign in required</h2>
         <p className="mt-2 text-sm text-slate-600">
-          Authenticate via NovaDesk (auth tokens in local storage) to join a ticket room.
+          Sign in or create a NovaDesk account to join ticket chat rooms.
         </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link href={routes.login}>
+            <Button variant="primary">Sign in</Button>
+          </Link>
+          <Link href={routes.register}>
+            <Button variant="secondary">Create account</Button>
+          </Link>
+        </div>
       </div>
     );
   }

@@ -2,6 +2,7 @@ export { NovaDeskClient, createSdkClient } from './client';
 export { createLazyClient } from './lazy-client';
 export { getApiBaseUrl, resolveRequestOrigin, serializeRuntimeApiUrlScript } from './api-base-url';
 export { AuthClient, createAuthClient } from './auth/auth.client';
+export { formatAuthError } from './auth/format-auth-error';
 export { HelpdeskClient, createHelpdeskClient } from './helpdesk/helpdesk.client';
 export { AnalyticsClient, createAnalyticsClient } from './analytics/analytics.client';
 export { SdkError } from './errors';
@@ -20,6 +21,7 @@ export type {
   MeResponse,
   RefreshInput,
   RegisterInput,
+  SetupStatus,
 } from './auth/auth.client';
 export type {
   CreateCustomerInput,

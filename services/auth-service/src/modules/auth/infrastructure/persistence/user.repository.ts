@@ -50,6 +50,10 @@ export class UserRepository implements UserRepositoryPort {
     return count > 0;
   }
 
+  async count(): Promise<number> {
+    return this.prisma.user.count();
+  }
+
   async create(input: CreateUserInput): Promise<UserWithMemberships> {
     const emailLocalPart = input.email.split('@')[0] ?? 'user';
     const tenantSlug = slugify(emailLocalPart) || `tenant-${String(Date.now())}`;

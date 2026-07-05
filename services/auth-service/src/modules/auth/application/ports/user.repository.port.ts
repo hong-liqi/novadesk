@@ -15,4 +15,5 @@ export interface UserRepositoryPort {
   findById(id: string): Promise<UserWithMemberships | null>;
   create(input: CreateUserInput): Promise<UserWithMemberships>;
   emailExists(email: string): Promise<boolean>;
+  count(): Promise<number>;
 }

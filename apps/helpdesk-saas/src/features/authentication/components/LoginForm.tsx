@@ -1,8 +1,10 @@
 'use client';
 
 import { useAuth } from '@novadesk/auth/client';
+import { formatAuthError } from '@novadesk/sdk';
 import { Button, Input, Stack } from '@novadesk/ui';
 import { AuthLayout } from '@novadesk/ui/client';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 import { authClient } from '@/shared/services';
@@ -26,7 +28,7 @@ export function LoginForm() {
       await login(tokens);
       router.replace(routes.dashboard);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Sign in failed');
+      setError(formatAuthError(err, 'Sign in failed'));
     } finally {
       setLoading(false);
     }
@@ -64,6 +66,12 @@ export function LoginForm() {
           <Button type="submit" loading={loading} className="w-full">
             Sign in
           </Button>
+          <p className="text-center text-sm text-neutral-600">
+            New to NovaDesk?{' '}
+            <Link href={routes.register} className="font-medium text-violet-700 hover:underline">
+              Create an account
+            </Link>
+          </p>
         </Stack>
       </form>
     </AuthLayout>
