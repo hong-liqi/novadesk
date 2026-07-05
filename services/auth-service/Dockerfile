@@ -22,7 +22,6 @@ RUN pnpm turbo run build --filter=@novadesk/auth-service
 FROM node:20-alpine AS production
 WORKDIR /app
 RUN apk add --no-cache openssl
-RUN npm install -g prisma@5.22.0
 COPY infrastructure/scripts/prisma-deploy.sh infrastructure/scripts/service-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/prisma-deploy.sh /usr/local/bin/service-entrypoint.sh
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
@@ -34,6 +33,7 @@ COPY --from=build --chown=node:node /app/services/auth-service/prisma ./services
 WORKDIR /app/services/auth-service
 USER node
 ENV NODE_ENV=production
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x
 EXPOSE 3001
 ENTRYPOINT ["service-entrypoint.sh"]
 CMD ["node", "dist/main.js"]
