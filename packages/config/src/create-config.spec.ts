@@ -8,7 +8,7 @@ import {
   stringToBoolean,
   withDefaults,
 } from './index';
-import { ConfigValidationError } from './errors';
+import { z } from 'zod';
 
 describe('config package', () => {
   it('parses the base config with defaults', () => {
@@ -90,6 +90,20 @@ describe('config package', () => {
     ).toThrow(/Invalid configuration for gateway: PORT:/);
   });
 
+  it('throws ConfigValidationError without source context', () => {
+    expect(() => createConfig(baseEnvSchema, { PORT: 'invalid' } as NodeJS.ProcessEnv)).toThrow(
+      /Invalid configuration: PORT:/,
+    );
+  });
+
+  it('includes root-level issues in validation errors', () => {
+    const schema = z.object({}).refine(() => false, { message: 'root fail' });
+
+    expect(() => createConfig(schema, {} as NodeJS.ProcessEnv, { sourceName: 'worker' })).toThrow(
+      /Invalid configuration for worker: \(root\): root fail/,
+    );
+  });
+
   it('loads config from process env by default', () => {
     const previous = process.env.APP_NAME;
     process.env.APP_NAME = 'loaded-service';
@@ -113,6 +127,23 @@ describe('config package', () => {
     const config = createConfig(schema, {} as NodeJS.ProcessEnv);
 
     expect(config.SERVICE_NAME).toBe('worker-service');
+  });
+
+  it('applies withDefaults when parsed value is not an object', () => {
+    const schema = withDefaults(z.string(), { fallback: 'default' });
+    const config = createConfig(schema, 'raw' as unknown as NodeJS.ProcessEnv);
+
+    expect(config).toEqual({ fallback: 'default' });
+  });
+
+  it('accepts boolean ENABLE_REQUEST_LOGGING', () => {
+    const config = createConfig(serviceEnvSchema, {
+      DATABASE_URL: 'postgresql://db.example.com:5432/novadesk',
+      REDIS_URL: 'redis://redis.example.com:6379',
+      ENABLE_REQUEST_LOGGING: true,
+    } as unknown as NodeJS.ProcessEnv);
+
+    expect(config.ENABLE_REQUEST_LOGGING).toBe(true);
   });
 
   it('keeps auth schema optional for key material', () => {
