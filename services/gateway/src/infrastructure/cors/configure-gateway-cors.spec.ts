@@ -1,5 +1,12 @@
 import type { ConfigService } from '@nestjs/config';
+import { TENANT_ID_HEADER } from '@novadesk/shared';
 import { configureGatewayCors, resolveCorsOrigins } from './configure-gateway-cors';
+
+interface GatewayCorsOptions {
+  origin: string[];
+  credentials: boolean;
+  allowedHeaders: string[];
+}
 
 function createConfigService(values: Record<string, unknown>): ConfigService {
   return {
@@ -41,7 +48,7 @@ describe('resolveCorsOrigins', () => {
 
 describe('configureGatewayCors', () => {
   it('enables cors when origins are configured', () => {
-    const enableCors = jest.fn();
+    const enableCors = jest.fn<void, [GatewayCorsOptions]>();
     const app = { enableCors } as never;
     const configService = createConfigService({
       CORS_ORIGINS: ['https://helpdesk.example.com'],
@@ -51,16 +58,13 @@ describe('configureGatewayCors', () => {
     configureGatewayCors(app, configService);
 
     expect(enableCors).toHaveBeenCalledTimes(1);
-    const corsOptions = enableCors.mock.calls[0]?.[0] as {
-      origin: string[];
-      credentials: boolean;
-      allowedHeaders: string[];
-    };
+    const corsOptions = enableCors.mock.calls[0]?.[0];
+    expect(corsOptions).toBeDefined();
 
-    expect(corsOptions.origin).toEqual(['https://helpdesk.example.com']);
-    expect(corsOptions.credentials).toBe(true);
-    expect(corsOptions.allowedHeaders).toEqual(
-      expect.arrayContaining(['x-tenant-id', 'Authorization']),
+    expect(corsOptions?.origin).toEqual(['https://helpdesk.example.com']);
+    expect(corsOptions?.credentials).toBe(true);
+    expect(corsOptions?.allowedHeaders).toEqual(
+      expect.arrayContaining([TENANT_ID_HEADER, 'Authorization']),
     );
   });
 
