@@ -422,8 +422,11 @@ Todos precisam de:
 
 ```env
 NODE_ENV=production
-NEXT_PUBLIC_API_URL=https://api.<SEU_DOMINIO>/api/v1
+NOVADESK_API_URL=https://novadesk-gateway.<SEU_DOMINIO>/api/v1
+NEXT_PUBLIC_API_URL=https://novadesk-gateway.<SEU_DOMINIO>/api/v1
 ```
+
+> `NOVADESK_API_URL` é lida em runtime (Salvar & Reiniciar basta). `NEXT_PUBLIC_API_URL` é fallback no build.
 
 Mais a porta de cada app:
 

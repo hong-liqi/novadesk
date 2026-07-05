@@ -1,15 +1,17 @@
-import { TENANT_ID_HEADER } from '@novadesk/shared';
 import {
+  createAnalyticsClient,
   createAuthClient,
   createHelpdeskClient,
   createSdkClient,
+  getApiBaseUrl,
+  type AnalyticsClient,
   type AuthClient,
   type HelpdeskClient,
+  type NovaDeskClient,
   type RequestInterceptor,
 } from '@novadesk/sdk';
+import { TENANT_ID_HEADER } from '@novadesk/shared';
 import { createTokenManager, type TokenManager } from '@novadesk/auth/client';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '/api/v1';
 
 let tenantId: string | null = null;
 
@@ -20,6 +22,10 @@ export function setApiTenantId(id: string | null): void {
 export function getApiTenantId(): string | null {
   return tenantId;
 }
+
+export const tokenManager: TokenManager = createTokenManager({
+  storageKey: 'helpdesk.auth.tokens',
+});
 
 function tenantIdInterceptor(): RequestInterceptor {
   return (context) => {
@@ -36,10 +42,6 @@ function tenantIdInterceptor(): RequestInterceptor {
     };
   };
 }
-
-export const tokenManager: TokenManager = createTokenManager({
-  storageKey: 'helpdesk.auth.tokens',
-});
 
 function authTokenInterceptor(): RequestInterceptor {
   return async (context) => {
@@ -58,12 +60,44 @@ function authTokenInterceptor(): RequestInterceptor {
   };
 }
 
-const novadeskClient = createSdkClient({
-  baseUrl: API_BASE_URL,
-  requestInterceptors: [authTokenInterceptor(), tenantIdInterceptor()],
+let novadeskClient: NovaDeskClient | undefined;
+let authClientInstance: AuthClient | undefined;
+let helpdeskClientInstance: HelpdeskClient | undefined;
+
+function getNovadeskClient(): NovaDeskClient {
+  novadeskClient ??= createSdkClient({
+    baseUrl: getApiBaseUrl(),
+    requestInterceptors: [authTokenInterceptor(), tenantIdInterceptor()],
+  });
+  return novadeskClient;
+}
+
+function getAuthClient(): AuthClient {
+  authClientInstance ??= createAuthClient(getNovadeskClient());
+  return authClientInstance;
+}
+
+function getHelpdeskClient(): HelpdeskClient {
+  helpdeskClientInstance ??= createHelpdeskClient(getNovadeskClient());
+  return helpdeskClientInstance;
+}
+
+export const authClient: AuthClient = new Proxy({} as AuthClient, {
+  get(_target, property, receiver) {
+    const client = getAuthClient();
+    const value = Reflect.get(client, property, client);
+    return typeof value === 'function' ? value.bind(client) : value;
+  },
 });
 
-export const authClient: AuthClient = createAuthClient(novadeskClient);
-export const helpdeskClient: HelpdeskClient = createHelpdeskClient(novadeskClient);
+export const helpdeskClient: HelpdeskClient = new Proxy({} as HelpdeskClient, {
+  get(_target, property, receiver) {
+    const client = getHelpdeskClient();
+    const value = Reflect.get(client, property, client);
+    return typeof value === 'function' ? value.bind(client) : value;
+  },
+});
 
-export { API_BASE_URL };
+export function getConfiguredApiBaseUrl(): string {
+  return getApiBaseUrl();
+}

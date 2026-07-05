@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '@novadesk/ui/styles/components.css';
+
 body {
   margin: 0;
 }

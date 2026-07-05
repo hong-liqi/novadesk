@@ -1,12 +1,12 @@
 import {
   createAuthClient,
   createSdkClient,
+  getApiBaseUrl,
   type AuthClient,
+  type NovaDeskClient,
   type RequestInterceptor,
 } from '@novadesk/sdk';
 import { createTokenManager, type TokenManager } from '@novadesk/auth/client';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '/api/v1';
 
 export const tokenManager: TokenManager = createTokenManager({
   storageKey: 'chat.auth.tokens',
@@ -29,14 +29,29 @@ function authTokenInterceptor(): RequestInterceptor {
   };
 }
 
-const novadeskClient = createSdkClient({
-  baseUrl: API_BASE_URL,
-  requestInterceptors: [authTokenInterceptor()],
+let novadeskClient: NovaDeskClient | undefined;
+let authClientInstance: AuthClient | undefined;
+
+function getNovadeskClient(): NovaDeskClient {
+  novadeskClient ??= createSdkClient({
+    baseUrl: getApiBaseUrl(),
+    requestInterceptors: [authTokenInterceptor()],
+  });
+  return novadeskClient;
+}
+
+function getAuthClient(): AuthClient {
+  authClientInstance ??= createAuthClient(getNovadeskClient());
+  return authClientInstance;
+}
+
+export const authClient: AuthClient = new Proxy({} as AuthClient, {
+  get(_target, property) {
+    const client = getAuthClient();
+    const value = Reflect.get(client, property, client);
+    return typeof value === 'function' ? value.bind(client) : value;
+  },
 });
-
-export const authClient: AuthClient = createAuthClient(novadeskClient);
-
-export { API_BASE_URL };
 
 export function getGatewayOrigin(): string {
   if (typeof window !== 'undefined') {
@@ -56,7 +71,7 @@ export interface ChatMessage {
 
 export async function fetchChatHistory(ticketId: string): Promise<ChatMessage[]> {
   const token = await tokenManager.ensureAccessToken();
-  const response = await fetch(`${API_BASE_URL}/chat/rooms/${ticketId}/messages`, {
+  const response = await fetch(`${getApiBaseUrl()}/chat/rooms/${ticketId}/messages`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
@@ -65,4 +80,8 @@ export async function fetchChatHistory(ticketId: string): Promise<ChatMessage[]>
   }
 
   return response.json() as Promise<ChatMessage[]>;
+}
+
+export function getConfiguredApiBaseUrl(): string {
+  return getApiBaseUrl();
 }

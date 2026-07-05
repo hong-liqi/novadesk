@@ -102,6 +102,23 @@ describe('NovaDeskClient', () => {
     expect(client).toBeInstanceOf(NovaDeskClient);
   });
 
+  it('supports relative API base URLs', async () => {
+    const fetchFn = jest.fn().mockResolvedValue(
+      new Response(JSON.stringify({ data: { ok: true }, meta: { requestId: 'req-rel' } }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+
+    const client = new NovaDeskClient({ baseUrl: '/api/v1', fetchFn, retries: 0 });
+    await client.get('/health');
+
+    expect(fetchFn).toHaveBeenCalledWith(
+      'http://localhost/api/v1/health',
+      expect.objectContaining({ method: 'GET' }),
+    );
+  });
+
   it('supports write methods and query params', async () => {
     const fetchFn = jest.fn().mockImplementation(() =>
       Promise.resolve(

@@ -1,4 +1,5 @@
 import type { ApiError, ApiResponse } from '@novadesk/shared';
+import { resolveRequestOrigin } from './api-base-url';
 import { SdkError } from './errors';
 import { applyRequestInterceptors, applyResponseInterceptors } from './interceptors';
 import { withRetry } from './retry';
@@ -234,9 +235,14 @@ export class NovaDeskClient {
     path: string,
     params?: Record<string, string | number | boolean | undefined>,
   ): string {
-    const base = this.options.baseUrl.replace(/\/$/, '');
+    const base = (this.options.baseUrl || '/api/v1').replace(/\/$/, '');
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-    const url = new URL(`${base}${normalizedPath}`);
+    const target = `${base}${normalizedPath}`;
+
+    const url =
+      target.startsWith('http://') || target.startsWith('https://')
+        ? new URL(target)
+        : new URL(target, resolveRequestOrigin());
 
     if (params) {
       for (const [key, value] of Object.entries(params)) {

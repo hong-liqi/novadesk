@@ -29,7 +29,8 @@
     "./icons": {
       "types": "./dist/icons/index.d.ts",
       "default": "./dist/icons/index.js"
-    }
+    },
+    "./styles/components.css": "./src/styles/components.css"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

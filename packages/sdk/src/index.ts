@@ -1,4 +1,5 @@
 export { NovaDeskClient, createSdkClient } from './client';
+export { getApiBaseUrl, resolveRequestOrigin, serializeRuntimeApiUrlScript } from './api-base-url';
 export { AuthClient, createAuthClient } from './auth/auth.client';
 export { HelpdeskClient, createHelpdeskClient } from './helpdesk/helpdesk.client';
 export { AnalyticsClient, createAnalyticsClient } from './analytics/analytics.client';
