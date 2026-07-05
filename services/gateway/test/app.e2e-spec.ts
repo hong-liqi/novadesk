@@ -58,4 +58,15 @@ describe('Gateway (e2e)', () => {
       .expect(204)
       .expect('Access-Control-Allow-Origin', 'https://helpdesk.example.com');
   });
+
+  it('OPTIONS allows NovaDesk identity headers in preflight', () => {
+    return request(app.getHttpServer())
+      .options('/api/v1/helpdesk/customers')
+      .set('Origin', 'https://helpdesk.example.com')
+      .set('Access-Control-Request-Method', 'GET')
+      .set('Access-Control-Request-Headers', 'authorization,x-tenant-id')
+      .expect(204)
+      .expect('Access-Control-Allow-Origin', 'https://helpdesk.example.com')
+      .expect('Access-Control-Allow-Headers', /x-tenant-id/i);
+  });
 });

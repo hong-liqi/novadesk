@@ -1,5 +1,13 @@
 import type { INestApplication } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
+import {
+  PERMISSIONS_HEADER,
+  REQUEST_ID_HEADER,
+  ROLES_HEADER,
+  TENANT_ID_HEADER,
+  USER_EMAIL_HEADER,
+  USER_ID_HEADER,
+} from '@novadesk/shared';
 
 const LOCAL_FRONTEND_ORIGINS = [
   'http://localhost:3010',
@@ -33,8 +41,19 @@ export function configureGatewayCors(app: INestApplication, configService: Confi
     origin: origins,
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Request-Id', 'X-Requested-With'],
-    exposedHeaders: ['X-Request-Id'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'X-Requested-With',
+      REQUEST_ID_HEADER,
+      USER_ID_HEADER,
+      USER_EMAIL_HEADER,
+      TENANT_ID_HEADER,
+      ROLES_HEADER,
+      PERMISSIONS_HEADER,
+    ],
+    exposedHeaders: [REQUEST_ID_HEADER],
     maxAge: 86_400,
   });
 }

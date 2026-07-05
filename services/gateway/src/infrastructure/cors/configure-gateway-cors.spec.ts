@@ -54,6 +54,7 @@ describe('configureGatewayCors', () => {
       expect.objectContaining({
         origin: ['https://helpdesk.example.com'],
         credentials: true,
+        allowedHeaders: expect.arrayContaining(['x-tenant-id', 'Authorization']),
       }),
     );
   });
