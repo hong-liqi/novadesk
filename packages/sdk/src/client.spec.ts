@@ -27,6 +27,31 @@ describe('NovaDeskClient', () => {
     );
   });
 
+  it('wraps bare JSON payloads into ApiResponse', async () => {
+    const fetchFn = jest.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          accessToken: 'token-abc',
+          expiresIn: 3600,
+          tokenType: 'Bearer',
+        }),
+        {
+          status: 201,
+          headers: {
+            'Content-Type': 'application/json',
+            'x-request-id': 'req-bare',
+          },
+        },
+      ),
+    );
+
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
+    const result = await client.post<{ accessToken: string }>('/auth/register', {});
+
+    expect(result.data.accessToken).toBe('token-abc');
+    expect(result.meta.requestId).toBe('req-bare');
+  });
+
   it('maps API errors to SdkError', async () => {
     const fetchFn = jest.fn().mockResolvedValue(
       new Response(
@@ -182,7 +207,7 @@ describe('NovaDeskClient', () => {
     const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
     const result = await client.get('/empty');
 
-    expect(result).toEqual({});
+    expect(result).toEqual({ data: {}, meta: { requestId: 'unknown' } });
   });
 
   it('retries server errors before succeeding', async () => {

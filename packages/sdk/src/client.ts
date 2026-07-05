@@ -203,11 +203,13 @@ export class NovaDeskClient {
             );
           }
 
+          const normalized = normalizeApiResponse<T>(responseBody, requestId);
+
           const responseContext: ResponseContext<ApiResponse<T>> = {
             status: response.status,
             headers: response.headers,
-            data: responseBody as ApiResponse<T>,
-            requestId,
+            data: normalized,
+            requestId: normalized.meta.requestId,
           };
 
           const finalContext = await applyResponseInterceptors(
@@ -325,6 +327,17 @@ function isApiResponse(value: unknown): value is ApiResponse<unknown> {
     'meta' in value &&
     typeof (value as ApiResponse<unknown>).meta === 'object'
   );
+}
+
+function normalizeApiResponse<T>(body: unknown, requestId?: string): ApiResponse<T> {
+  if (isApiResponse(body)) {
+    return body as ApiResponse<T>;
+  }
+
+  return {
+    data: body as T,
+    meta: { requestId: requestId ?? 'unknown' },
+  };
 }
 
 function isApiError(value: unknown): value is ApiError {
