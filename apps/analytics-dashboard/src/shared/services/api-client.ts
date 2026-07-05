@@ -2,6 +2,7 @@ import {
   createAnalyticsClient,
   createAuthClient,
   createHelpdeskClient,
+  createLazyClient,
   createSdkClient,
   getApiBaseUrl,
   type AnalyticsClient,
@@ -88,29 +89,11 @@ function getAnalyticsClient(): AnalyticsClient {
   return analyticsClientInstance;
 }
 
-export const authClient: AuthClient = new Proxy({} as AuthClient, {
-  get(_target, property) {
-    const client = getAuthClient();
-    const value = Reflect.get(client, property, client);
-    return typeof value === 'function' ? value.bind(client) : value;
-  },
-});
+export const authClient: AuthClient = createLazyClient(getAuthClient);
 
-export const helpdeskClient: HelpdeskClient = new Proxy({} as HelpdeskClient, {
-  get(_target, property) {
-    const client = getHelpdeskClient();
-    const value = Reflect.get(client, property, client);
-    return typeof value === 'function' ? value.bind(client) : value;
-  },
-});
+export const helpdeskClient: HelpdeskClient = createLazyClient(getHelpdeskClient);
 
-export const analyticsClient: AnalyticsClient = new Proxy({} as AnalyticsClient, {
-  get(_target, property) {
-    const client = getAnalyticsClient();
-    const value = Reflect.get(client, property, client);
-    return typeof value === 'function' ? value.bind(client) : value;
-  },
-});
+export const analyticsClient: AnalyticsClient = createLazyClient(getAnalyticsClient);
 
 export function getConfiguredApiBaseUrl(): string {
   return getApiBaseUrl();

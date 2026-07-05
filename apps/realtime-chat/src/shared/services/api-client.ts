@@ -1,5 +1,6 @@
 import {
   createAuthClient,
+  createLazyClient,
   createSdkClient,
   getApiBaseUrl,
   type AuthClient,
@@ -45,13 +46,7 @@ function getAuthClient(): AuthClient {
   return authClientInstance;
 }
 
-export const authClient: AuthClient = new Proxy({} as AuthClient, {
-  get(_target, property) {
-    const client = getAuthClient();
-    const value = Reflect.get(client, property, client);
-    return typeof value === 'function' ? value.bind(client) : value;
-  },
-});
+export const authClient: AuthClient = createLazyClient(getAuthClient);
 
 export function getGatewayOrigin(): string {
   if (typeof window !== 'undefined') {

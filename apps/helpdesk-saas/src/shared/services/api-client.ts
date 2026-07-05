@@ -1,10 +1,9 @@
 import {
-  createAnalyticsClient,
   createAuthClient,
   createHelpdeskClient,
+  createLazyClient,
   createSdkClient,
   getApiBaseUrl,
-  type AnalyticsClient,
   type AuthClient,
   type HelpdeskClient,
   type NovaDeskClient,
@@ -82,21 +81,9 @@ function getHelpdeskClient(): HelpdeskClient {
   return helpdeskClientInstance;
 }
 
-export const authClient: AuthClient = new Proxy({} as AuthClient, {
-  get(_target, property, receiver) {
-    const client = getAuthClient();
-    const value = Reflect.get(client, property, client);
-    return typeof value === 'function' ? value.bind(client) : value;
-  },
-});
+export const authClient: AuthClient = createLazyClient(getAuthClient);
 
-export const helpdeskClient: HelpdeskClient = new Proxy({} as HelpdeskClient, {
-  get(_target, property, receiver) {
-    const client = getHelpdeskClient();
-    const value = Reflect.get(client, property, client);
-    return typeof value === 'function' ? value.bind(client) : value;
-  },
-});
+export const helpdeskClient: HelpdeskClient = createLazyClient(getHelpdeskClient);
 
 export function getConfiguredApiBaseUrl(): string {
   return getApiBaseUrl();
