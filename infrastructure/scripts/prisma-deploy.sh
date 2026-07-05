@@ -19,6 +19,11 @@ fi
 
 export PRISMA_CLI_BINARY_TARGETS="${PRISMA_CLI_BINARY_TARGETS:-linux-musl-openssl-3.0.x}"
 
+log_database_target() {
+  db_name=$(printf '%s' "$DATABASE_URL" | sed -n 's|.*/\([^?]*\).*|\1|p')
+  echo "[prisma-deploy] Target database: ${db_name:-unknown}"
+}
+
 has_migrations() {
   [ -d "prisma/migrations" ] && find prisma/migrations -name 'migration.sql' -print -quit | grep -q .
 }
@@ -41,12 +46,12 @@ run_migrate_deploy() {
     return 0
   fi
 
-  if printf '%s\n' "$deploy_output" | grep -q 'P3005'; then
+  if printf '%s\n' "$deploy_output" | grep -qE 'P3005|P3009'; then
     if [ "${PRISMA_DEPLOY_ALLOW_SCHEMA_RESET:-true}" = "false" ]; then
-      echo "[prisma-deploy] P3005 and PRISMA_DEPLOY_ALLOW_SCHEMA_RESET=false — cannot auto-reset." >&2
+      echo "[prisma-deploy] Migration conflict (P3005/P3009) and PRISMA_DEPLOY_ALLOW_SCHEMA_RESET=false — cannot auto-reset." >&2
       return 1
     fi
-    echo "[prisma-deploy] P3005: non-empty schema without migration history — resetting and retrying..."
+    echo "[prisma-deploy] P3005/P3009: migration conflict — resetting public schema and retrying..."
     reset_public_schema
     $PRISMA migrate deploy
     return $?
@@ -69,6 +74,8 @@ run_deploy() {
 attempt=1
 max_attempts=10
 delay_seconds=3
+
+log_database_target
 
 while [ "$attempt" -le "$max_attempts" ]; do
   echo "[prisma-deploy] Applying schema (attempt ${attempt}/${max_attempts})..."
