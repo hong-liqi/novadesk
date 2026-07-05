@@ -1,7 +1,7 @@
 export {
-  API_BASE_URL,
   authClient,
   getApiTenantId,
+  getConfiguredApiBaseUrl,
   helpdeskClient,
   setApiTenantId,
   tokenManager,

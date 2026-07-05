@@ -3,7 +3,7 @@ export {
   authClient,
   helpdeskClient,
   tokenManager,
-  API_BASE_URL,
+  getConfiguredApiBaseUrl,
   getApiTenantId,
   setApiTenantId,
 } from './api-client';
