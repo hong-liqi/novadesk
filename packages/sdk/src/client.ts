@@ -15,6 +15,11 @@ const DEFAULT_TIMEOUT_MS = 10_000;
 const DEFAULT_RETRIES = 2;
 const DEFAULT_RETRY_DELAY_MS = 300;
 
+/** Native fetch must not be passed unbound — browsers throw "Illegal invocation". */
+function bindFetch(fetchImpl: typeof fetch = globalThis.fetch.bind(globalThis)): typeof fetch {
+  return (input, init) => fetchImpl(input, init);
+}
+
 export class NovaDeskClient {
   private readonly options: Required<
     Pick<NovaDeskClientOptions, 'timeoutMs' | 'retries' | 'retryDelayMs'>
@@ -29,8 +34,8 @@ export class NovaDeskClient {
       defaultHeaders: {},
       requestInterceptors: [],
       responseInterceptors: [],
-      fetchFn: fetch,
       ...options,
+      fetchFn: bindFetch(options.fetchFn),
     };
   }
 
