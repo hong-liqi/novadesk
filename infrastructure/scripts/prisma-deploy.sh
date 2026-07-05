@@ -23,11 +23,43 @@ has_migrations() {
   [ -d "prisma/migrations" ] && find prisma/migrations -name 'migration.sql' -print -quit | grep -q .
 }
 
+reset_public_schema() {
+  echo "[prisma-deploy] Resetting public schema (orphan objects without migration history)..."
+  $PRISMA db execute --stdin <<'SQL'
+DROP SCHEMA IF EXISTS public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO public;
+SQL
+}
+
+run_migrate_deploy() {
+  deploy_status=0
+  deploy_output=$($PRISMA migrate deploy 2>&1) || deploy_status=$?
+  printf '%s\n' "$deploy_output"
+
+  if [ "$deploy_status" -eq 0 ]; then
+    return 0
+  fi
+
+  if printf '%s\n' "$deploy_output" | grep -q 'P3005'; then
+    if [ "${PRISMA_DEPLOY_ALLOW_SCHEMA_RESET:-true}" = "false" ]; then
+      echo "[prisma-deploy] P3005 and PRISMA_DEPLOY_ALLOW_SCHEMA_RESET=false — cannot auto-reset." >&2
+      return 1
+    fi
+    echo "[prisma-deploy] P3005: non-empty schema without migration history — resetting and retrying..."
+    reset_public_schema
+    $PRISMA migrate deploy
+    return $?
+  fi
+
+  return 1
+}
+
 run_deploy() {
   if has_migrations; then
     echo "[prisma-deploy] Running prisma migrate deploy..."
-    $PRISMA migrate deploy
-    return
+    run_migrate_deploy
+    return $?
   fi
 
   echo "[prisma-deploy] Running prisma db push..."
