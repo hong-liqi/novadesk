@@ -15,6 +15,12 @@ describe('proxy routes', () => {
     expect(route?.target).toBe('http://localhost:3001');
   });
 
+  it('routes tenant admin paths to auth service', () => {
+    const route = matchProxyRoute(routes, '/api/v1/tenants');
+    expect(route?.name).toBe('tenants');
+    expect(route?.target).toBe('http://localhost:3001');
+  });
+
   it('routes notifications paths to notification service', () => {
     const route = matchProxyRoute(routes, '/api/v1/notifications/inbox');
     expect(route?.name).toBe('notifications');

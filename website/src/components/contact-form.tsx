@@ -107,7 +107,8 @@ export function ContactForm() {
 
               {status === 'success' ? (
                 <Text as="p" size="sm" className="!text-emerald-400" role="status">
-                  Message sent successfully. Thank you!
+                  Message sent successfully. It was delivered by email — check the inbox for{' '}
+                  {CONTACT_EMAIL}.
                 </Text>
               ) : null}
 

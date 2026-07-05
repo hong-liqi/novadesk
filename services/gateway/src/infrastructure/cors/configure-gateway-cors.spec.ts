@@ -8,6 +8,15 @@ interface GatewayCorsOptions {
   allowedHeaders: string[];
 }
 
+function firstMockCallArg<T>(mock: jest.MockedFunction<(arg: T) => void>): T {
+  const call = mock.mock.calls[0];
+  if (!call) {
+    throw new Error('Expected mock to be called');
+  }
+
+  return call[0];
+}
+
 function createConfigService(values: Record<string, unknown>): ConfigService {
   return {
     get: <T>(key: string, defaultValue?: T) => {
@@ -48,7 +57,7 @@ describe('resolveCorsOrigins', () => {
 
 describe('configureGatewayCors', () => {
   it('enables cors when origins are configured', () => {
-    const enableCors = jest.fn<(options: GatewayCorsOptions) => void>();
+    const enableCors: jest.MockedFunction<(options: GatewayCorsOptions) => void> = jest.fn();
     const app = { enableCors } as never;
     const configService = createConfigService({
       CORS_ORIGINS: ['https://helpdesk.example.com'],
@@ -58,12 +67,11 @@ describe('configureGatewayCors', () => {
     configureGatewayCors(app, configService);
 
     expect(enableCors).toHaveBeenCalledTimes(1);
-    const corsOptions = enableCors.mock.calls[0]?.[0];
-    expect(corsOptions).toBeDefined();
+    const corsOptions = firstMockCallArg(enableCors);
 
-    expect(corsOptions?.origin).toEqual(['https://helpdesk.example.com']);
-    expect(corsOptions?.credentials).toBe(true);
-    expect(corsOptions?.allowedHeaders).toEqual(
+    expect(corsOptions.origin).toEqual(['https://helpdesk.example.com']);
+    expect(corsOptions.credentials).toBe(true);
+    expect(corsOptions.allowedHeaders).toEqual(
       expect.arrayContaining([TENANT_ID_HEADER, 'Authorization']),
     );
   });
