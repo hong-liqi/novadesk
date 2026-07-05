@@ -19,7 +19,7 @@ function readInjectedApiUrl(): string | undefined {
   }
 
   const value = globalThis.__NOVADESK_API_URL__?.trim();
-  return value || undefined;
+  return value?.length ? value : undefined;
 }
 
 function resolveGatewayApiUrl(): string | undefined {
