@@ -50,12 +50,17 @@ describe('configureGatewayCors', () => {
 
     configureGatewayCors(app, configService);
 
-    expect(enableCors).toHaveBeenCalledWith(
-      expect.objectContaining({
-        origin: ['https://helpdesk.example.com'],
-        credentials: true,
-        allowedHeaders: expect.arrayContaining(['x-tenant-id', 'Authorization']),
-      }),
+    expect(enableCors).toHaveBeenCalledTimes(1);
+    const corsOptions = enableCors.mock.calls[0]?.[0] as {
+      origin: string[];
+      credentials: boolean;
+      allowedHeaders: string[];
+    };
+
+    expect(corsOptions.origin).toEqual(['https://helpdesk.example.com']);
+    expect(corsOptions.credentials).toBe(true);
+    expect(corsOptions.allowedHeaders).toEqual(
+      expect.arrayContaining(['x-tenant-id', 'Authorization']),
     );
   });
 
