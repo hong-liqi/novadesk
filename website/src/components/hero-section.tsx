@@ -1,5 +1,5 @@
 import { Stack, Text } from '@novadesk/ui';
-import Link from 'next/link';
+import { AppLink } from '@/components/app-link';
 import { getAppUrls } from '@/lib/app-urls';
 
 export function HeroSection() {
@@ -41,18 +41,18 @@ export function HeroSection() {
         <Stack gap="md" className="mx-auto mt-10 max-w-2xl">
           <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap">
             {ctaLinks.map((link) => (
-              <Link
-                key={link.href}
+              <AppLink
+                key={link.label}
                 href={link.href}
                 className="inline-flex flex-1 items-center justify-center rounded-full bg-blue-600 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-blue-500 sm:flex-initial"
               >
                 {link.label}
-              </Link>
+              </AppLink>
             ))}
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-500">
             {ctaLinks.map((link) => (
-              <span key={link.href}>
+              <span key={link.label}>
                 <span className="font-medium text-slate-400">{link.label}</span>
                 {' — '}
                 {link.description}

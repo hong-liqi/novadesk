@@ -1,5 +1,5 @@
 import { Text } from '@novadesk/ui';
-import Link from 'next/link';
+import { AppLink } from '@/components/app-link';
 import { getAppUrls } from '@/lib/app-urls';
 
 export function SiteFooter() {
@@ -24,13 +24,13 @@ export function SiteFooter() {
 
         <nav className="flex flex-wrap gap-4" aria-label="Footer">
           {footerLinks.map((link) => (
-            <Link
-              key={link.href}
+            <AppLink
+              key={link.label}
               href={link.href}
               className="text-sm text-slate-400 transition-colors hover:text-white"
             >
               {link.label}
-            </Link>
+            </AppLink>
           ))}
         </nav>
 

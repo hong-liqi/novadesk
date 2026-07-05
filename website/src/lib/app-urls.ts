@@ -12,21 +12,30 @@ const LOCAL_DEFAULTS: AppUrls = {
   chat: '/chat',
 };
 
+function readEnv(...keys: string[]): string | undefined {
+  for (const key of keys) {
+    const value = process.env[key]?.trim();
+    if (value) {
+      return value;
+    }
+  }
+  return undefined;
+}
+
 /** Read at request time so CapRover env changes apply after restart (no rebuild). */
 export function getAppUrls(): AppUrls {
   return {
     helpdesk:
-      process.env.NOVADESK_HELPDESK_URL ??
-      process.env.NEXT_PUBLIC_HELPDESK_URL ??
-      LOCAL_DEFAULTS.helpdesk,
+      readEnv('NOVADESK_HELPDESK_URL', 'NEXT_PUBLIC_HELPDESK_URL') ?? LOCAL_DEFAULTS.helpdesk,
     analytics:
-      process.env.NOVADESK_ANALYTICS_URL ??
-      process.env.NEXT_PUBLIC_ANALYTICS_URL ??
-      LOCAL_DEFAULTS.analytics,
-    admin:
-      process.env.NOVADESK_ADMIN_URL ?? process.env.NEXT_PUBLIC_ADMIN_URL ?? LOCAL_DEFAULTS.admin,
-    chat: process.env.NOVADESK_CHAT_URL ?? process.env.NEXT_PUBLIC_CHAT_URL ?? LOCAL_DEFAULTS.chat,
+      readEnv('NOVADESK_ANALYTICS_URL', 'NEXT_PUBLIC_ANALYTICS_URL') ?? LOCAL_DEFAULTS.analytics,
+    admin: readEnv('NOVADESK_ADMIN_URL', 'NEXT_PUBLIC_ADMIN_URL') ?? LOCAL_DEFAULTS.admin,
+    chat: readEnv('NOVADESK_CHAT_URL', 'NEXT_PUBLIC_CHAT_URL') ?? LOCAL_DEFAULTS.chat,
   };
+}
+
+export function getSiteUrl(): string {
+  return readEnv('NEXT_PUBLIC_SITE_URL', 'NOVADESK_SITE_URL') ?? 'https://novadesk.local';
 }
 
 export function isExternalAppUrl(href: string): boolean {

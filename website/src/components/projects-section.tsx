@@ -1,5 +1,5 @@
 import { Badge, Stack, Surface, Text } from '@novadesk/ui';
-import Link from 'next/link';
+import { AppLink } from '@/components/app-link';
 import { getNovaDeskModules } from '@/lib/projects';
 
 export function ProjectsSection() {
@@ -43,12 +43,12 @@ export function ProjectsSection() {
                 ))}
               </div>
               {module.href ? (
-                <Link
+                <AppLink
                   href={module.href}
                   className="text-sm font-medium text-blue-400 transition-colors hover:text-blue-300"
                 >
                   Open app →
-                </Link>
+                </AppLink>
               ) : (
                 <Text as="span" size="sm" tone="muted" className="!text-slate-500">
                   Backend service

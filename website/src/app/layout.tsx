@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 import { Providers } from '@/components/providers';
+import { getSiteUrl } from '@/lib/app-urls';
 import './globals.css';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://novadesk.local';
+export const dynamic = 'force-dynamic';
+
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

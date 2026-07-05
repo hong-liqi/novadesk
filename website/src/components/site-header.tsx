@@ -1,5 +1,6 @@
 import { Text } from '@novadesk/ui';
 import Link from 'next/link';
+import { AppLink } from '@/components/app-link';
 import { getAppUrls } from '@/lib/app-urls';
 
 const NAV_LINKS = [
@@ -41,18 +42,18 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
+          <AppLink
             href={urls.helpdesk}
             className="hidden rounded-full px-3 py-1.5 text-sm font-medium text-slate-300 transition-colors hover:text-white sm:inline-flex"
           >
             HelpDesk
-          </Link>
-          <Link
+          </AppLink>
+          <AppLink
             href={urls.admin}
             className="inline-flex rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
           >
             Open Admin
-          </Link>
+          </AppLink>
         </div>
       </div>
     </header>
