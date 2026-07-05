@@ -1,3 +1,5 @@
+import { APP_URLS } from '@/lib/app-urls';
+
 export interface NovaDeskModule {
   id: string;
   name: string;
@@ -13,7 +15,7 @@ export const NOVADESK_MODULES: NovaDeskModule[] = [
     name: 'HelpDesk SaaS',
     description:
       'Multi-tenant ticket management with SLA policies, agent workflows, and real-time collaboration.',
-    href: '/helpdesk',
+    href: APP_URLS.helpdesk,
     tags: ['NestJS', 'Next.js', 'PostgreSQL', 'BullMQ'],
     type: 'app',
   },
@@ -22,7 +24,7 @@ export const NOVADESK_MODULES: NovaDeskModule[] = [
     name: 'Analytics Dashboard',
     description:
       'Business intelligence views with KPI tracking, exportable reports, and role-based dashboards.',
-    href: '/analytics',
+    href: APP_URLS.analytics,
     tags: ['NestJS', 'Next.js', 'Charts', 'CSV/PDF'],
     type: 'app',
   },
@@ -31,7 +33,7 @@ export const NOVADESK_MODULES: NovaDeskModule[] = [
     name: 'Admin Portal',
     description:
       'Central control plane for users, tenants, service health, and platform-wide configuration.',
-    href: '/admin',
+    href: APP_URLS.admin,
     tags: ['Next.js', 'RBAC', 'SDK'],
     type: 'app',
   },

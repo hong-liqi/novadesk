@@ -1,10 +1,11 @@
 import { Stack, Text } from '@novadesk/ui';
 import Link from 'next/link';
+import { APP_URLS } from '@/lib/app-urls';
 
 const CTA_LINKS = [
-  { href: '/helpdesk', label: 'HelpDesk SaaS', description: 'Ticket management & SLA' },
-  { href: '/analytics', label: 'Analytics', description: 'KPIs & reports' },
-  { href: '/admin', label: 'Admin Portal', description: 'Platform control' },
+  { href: APP_URLS.helpdesk, label: 'HelpDesk SaaS', description: 'Ticket management & SLA' },
+  { href: APP_URLS.analytics, label: 'Analytics', description: 'KPIs & reports' },
+  { href: APP_URLS.admin, label: 'Admin Portal', description: 'Platform control' },
 ];
 
 export function HeroSection() {

@@ -1,10 +1,11 @@
 import { Text } from '@novadesk/ui';
 import Link from 'next/link';
+import { APP_URLS } from '@/lib/app-urls';
 
 const FOOTER_LINKS = [
-  { href: '/helpdesk', label: 'HelpDesk' },
-  { href: '/analytics', label: 'Analytics' },
-  { href: '/admin', label: 'Admin' },
+  { href: APP_URLS.helpdesk, label: 'HelpDesk' },
+  { href: APP_URLS.analytics, label: 'Analytics' },
+  { href: APP_URLS.admin, label: 'Admin' },
 ];
 
 export function SiteFooter() {
