@@ -1,8 +1,10 @@
 import { Badge, Stack, Surface, Text } from '@novadesk/ui';
 import Link from 'next/link';
-import { NOVADESK_MODULES } from '@/lib/projects';
+import { getNovaDeskModules } from '@/lib/projects';
 
 export function ProjectsSection() {
+  const modules = getNovaDeskModules();
+
   return (
     <section id="projects" className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
@@ -17,7 +19,7 @@ export function ProjectsSection() {
         </Stack>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {NOVADESK_MODULES.map((module) => (
+          {modules.map((module) => (
             <Surface
               key={module.id}
               variant="outline"

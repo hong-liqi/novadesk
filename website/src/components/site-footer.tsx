@@ -1,14 +1,15 @@
 import { Text } from '@novadesk/ui';
 import Link from 'next/link';
-import { APP_URLS } from '@/lib/app-urls';
-
-const FOOTER_LINKS = [
-  { href: APP_URLS.helpdesk, label: 'HelpDesk' },
-  { href: APP_URLS.analytics, label: 'Analytics' },
-  { href: APP_URLS.admin, label: 'Admin' },
-];
+import { getAppUrls } from '@/lib/app-urls';
 
 export function SiteFooter() {
+  const urls = getAppUrls();
+  const footerLinks = [
+    { href: urls.helpdesk, label: 'HelpDesk' },
+    { href: urls.analytics, label: 'Analytics' },
+    { href: urls.admin, label: 'Admin' },
+  ];
+
   return (
     <footer className="border-t border-slate-800 bg-slate-950">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
@@ -22,7 +23,7 @@ export function SiteFooter() {
         </div>
 
         <nav className="flex flex-wrap gap-4" aria-label="Footer">
-          {FOOTER_LINKS.map((link) => (
+          {footerLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}

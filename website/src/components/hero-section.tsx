@@ -1,14 +1,15 @@
 import { Stack, Text } from '@novadesk/ui';
 import Link from 'next/link';
-import { APP_URLS } from '@/lib/app-urls';
-
-const CTA_LINKS = [
-  { href: APP_URLS.helpdesk, label: 'HelpDesk SaaS', description: 'Ticket management & SLA' },
-  { href: APP_URLS.analytics, label: 'Analytics', description: 'KPIs & reports' },
-  { href: APP_URLS.admin, label: 'Admin Portal', description: 'Platform control' },
-];
+import { getAppUrls } from '@/lib/app-urls';
 
 export function HeroSection() {
+  const urls = getAppUrls();
+  const ctaLinks = [
+    { href: urls.helpdesk, label: 'HelpDesk SaaS', description: 'Ticket management & SLA' },
+    { href: urls.analytics, label: 'Analytics', description: 'KPIs & reports' },
+    { href: urls.admin, label: 'Admin Portal', description: 'Platform control' },
+  ];
+
   return (
     <section className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
       <div
@@ -39,7 +40,7 @@ export function HeroSection() {
 
         <Stack gap="md" className="mx-auto mt-10 max-w-2xl">
           <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap">
-            {CTA_LINKS.map((link) => (
+            {ctaLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -50,7 +51,7 @@ export function HeroSection() {
             ))}
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-500">
-            {CTA_LINKS.map((link) => (
+            {ctaLinks.map((link) => (
               <span key={link.href}>
                 <span className="font-medium text-slate-400">{link.label}</span>
                 {' — '}

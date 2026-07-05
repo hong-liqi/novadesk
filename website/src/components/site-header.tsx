@@ -1,6 +1,6 @@
 import { Text } from '@novadesk/ui';
 import Link from 'next/link';
-import { APP_URLS } from '@/lib/app-urls';
+import { getAppUrls } from '@/lib/app-urls';
 
 const NAV_LINKS = [
   { href: '#projects', label: 'Projects' },
@@ -9,6 +9,8 @@ const NAV_LINKS = [
 ];
 
 export function SiteHeader() {
+  const urls = getAppUrls();
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -40,13 +42,13 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <Link
-            href={APP_URLS.helpdesk}
+            href={urls.helpdesk}
             className="hidden rounded-full px-3 py-1.5 text-sm font-medium text-slate-300 transition-colors hover:text-white sm:inline-flex"
           >
             HelpDesk
           </Link>
           <Link
-            href={APP_URLS.admin}
+            href={urls.admin}
             className="inline-flex rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
           >
             Open Admin

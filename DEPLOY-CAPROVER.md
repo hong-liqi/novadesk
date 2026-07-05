@@ -427,13 +427,13 @@ NEXT_PUBLIC_API_URL=https://api.<SEU_DOMINIO>/api/v1
 
 Mais a porta de cada app:
 
-| App                  | PORT | Container HTTP Port | Domínio sugerido          | Variáveis extras                                                                                                                                                                                           |
-| -------------------- | ---- | ------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `novadesk-helpdesk`  | 3010 | **3010**            | `helpdesk.<SEU_DOMINIO>`  | `NEXT_PUBLIC_APP_URL=https://helpdesk.<SEU_DOMINIO>`                                                                                                                                                       |
-| `novadesk-analytics` | 3011 | **3011**            | `analytics.<SEU_DOMINIO>` | `NEXT_PUBLIC_APP_URL=https://analytics.<SEU_DOMINIO>`                                                                                                                                                      |
-| `novadesk-admin`     | 3012 | **3012**            | `admin.<SEU_DOMINIO>`     | `NEXT_PUBLIC_APP_URL=https://admin.<SEU_DOMINIO>`                                                                                                                                                          |
-| `novadesk-website`   | 3013 | **3013**            | `<SEU_DOMINIO>`           | `NEXT_PUBLIC_SITE_URL=https://<SEU_DOMINIO>`, `NEXT_PUBLIC_CONTACT_EMAIL=contato@<SEU_DOMINIO>`, **`NEXT_PUBLIC_HELPDESK_URL`**, **`NEXT_PUBLIC_ANALYTICS_URL`**, **`NEXT_PUBLIC_ADMIN_URL`** (ver abaixo) |
-| `novadesk-chat`      | 3014 | **3014**            | `chat.<SEU_DOMINIO>`      | `NEXT_PUBLIC_APP_URL=https://chat.<SEU_DOMINIO>`                                                                                                                                                           |
+| App                  | PORT | Container HTTP Port | Domínio sugerido          | Variáveis extras                                      |
+| -------------------- | ---- | ------------------- | ------------------------- | ----------------------------------------------------- |
+| `novadesk-helpdesk`  | 3010 | **3010**            | `helpdesk.<SEU_DOMINIO>`  | `NEXT_PUBLIC_APP_URL=https://helpdesk.<SEU_DOMINIO>`  |
+| `novadesk-analytics` | 3011 | **3011**            | `analytics.<SEU_DOMINIO>` | `NEXT_PUBLIC_APP_URL=https://analytics.<SEU_DOMINIO>` |
+| `novadesk-admin`     | 3012 | **3012**            | `admin.<SEU_DOMINIO>`     | `NEXT_PUBLIC_APP_URL=https://admin.<SEU_DOMINIO>`     |
+| `novadesk-website`   | 3013 | **3013**            | `<SEU_DOMINIO>`           | `NEXT_PUBLIC_SITE_URL`, `NOVADESK_*_URL` (ver abaixo) |
+| `novadesk-chat`      | 3014 | **3014**            | `chat.<SEU_DOMINIO>`      | `NEXT_PUBLIC_APP_URL=https://chat.<SEU_DOMINIO>`      |
 
 **HTTP Settings de cada frontend** (em **HTTP Settings** da app, não só env vars):
 
@@ -444,18 +444,20 @@ Mais a porta de cada app:
 
 > **502 Bad Gateway?** Quase sempre é `Container HTTP Port` errado (80 em vez de 3010/3000…). A env `PORT` sozinha não basta — o Nginx do CapRover precisa saber para qual porta encaminhar.
 >
-> **Builds antigos dos frontends:** até o rebuild com `NEXT_PUBLIC_BASE_PATH` vazio no Docker, acesse temporariamente `https://<domínio>/helpdesk`, `/admin`, `/analytics`, `/chat` (cada app tem `basePath` no build atual).
+> **Links do website quebrados?** No CapRover cada frontend tem **subdomínio próprio**. Os frontends atuais usam `basePath` vazio — acesse a **raiz** do subdomínio (sem `/helpdesk`).
 >
-> **Links do website quebrados?** O site aponta para `/helpdesk` etc. no mesmo domínio — isso só funciona com nginx local. No CapRover, configure no **`novadesk-website`** (rebuild obrigatório após salvar):
+> No **`novadesk-website`**, use `NOVADESK_*_URL` (lidas em runtime; **Salvar & Reiniciar** basta após o deploy deste código):
 >
 > ```env
-> NEXT_PUBLIC_HELPDESK_URL=https://novadesk-helpdesk.<SEU_DOMINIO>/helpdesk
-> NEXT_PUBLIC_ANALYTICS_URL=https://novadesk-analytics.<SEU_DOMINIO>/analytics
-> NEXT_PUBLIC_ADMIN_URL=https://novadesk-admin.<SEU_DOMINIO>/admin
-> NEXT_PUBLIC_CHAT_URL=https://novadesk-chat.<SEU_DOMINIO>/chat
+> NOVADESK_HELPDESK_URL=https://novadesk-helpdesk.<SEU_DOMINIO>
+> NOVADESK_ANALYTICS_URL=https://novadesk-analytics.<SEU_DOMINIO>
+> NOVADESK_ADMIN_URL=https://novadesk-admin.<SEU_DOMINIO>
+> NOVADESK_CHAT_URL=https://novadesk-chat.<SEU_DOMINIO>
+> NEXT_PUBLIC_SITE_URL=https://<SEU_DOMINIO>
+> NEXT_PUBLIC_CONTACT_EMAIL=contato@<SEU_DOMINIO>
 > ```
 >
-> Depois de rebuild dos frontends com `basePath` vazio, remova o sufixo `/helpdesk`, `/analytics`, etc. das URLs acima.
+> **Não** inclua `/helpdesk`, `/admin`, etc. no final das URLs. **Salvar & Reiniciar** não rebuilfa — após mudar código, use **Forçar build** uma vez.
 
 ---
 
@@ -565,8 +567,8 @@ Apps internas se comunicam pelo hostname `srv-captain--<nome-da-app>:<porta>`.
 | `database "X" does not exist` | Recrie o Postgres (só se vazio) ou crie o DB manualmente via `psql`. O init script roda só na primeira inicialização.                                                                        |
 | JWT inválido                  | `JWT_ISSUER`, `JWT_AUDIENCE` e chaves devem ser iguais em auth e gateway.                                                                                                                    |
 | WebSocket do chat cai         | Habilite **WebSocket Support** no gateway.                                                                                                                                                   |
-| Links do site → 404           | No CapRover cada frontend tem **subdomínio próprio**; `/helpdesk` no domínio do website não existe. Use URLs corretas ou configure `NEXT_PUBLIC_*_URL` no `novadesk-website` e faça rebuild. |
-| Frontend no subdomínio → 404  | Builds com `basePath`: acesse `https://novadesk-helpdesk.<domínio>/helpdesk` (não a raiz). Rebuild com `NEXT_PUBLIC_BASE_PATH` vazio para servir na raiz do subdomínio.                      |
+| Links do site → 404           | URLs devem apontar para a **raiz** do subdomínio (`https://novadesk-helpdesk.<domínio>`, sem `/helpdesk`). Configure `NOVADESK_*_URL` no website e **Forçar build** após atualizar o código. |
+| Frontend no subdomínio → 404  | Com `basePath` vazio, use a raiz do subdomínio. `/helpdesk` no subdomínio só funciona em builds antigos.                                                                                     |
 | E-mail não envia              | Configure SMTP real no `novadesk-notification`.                                                                                                                                              |
 
 ---
