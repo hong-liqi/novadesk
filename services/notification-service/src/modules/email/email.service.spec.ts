@@ -74,6 +74,11 @@ describe('EmailService', () => {
       host: 'localhost',
       port: 1025,
       secure: false,
+      requireTLS: false,
+      auth: undefined,
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 15_000,
     });
     expect(sendMail).toHaveBeenCalledWith({
       from: 'noreply@novadesk.dev',
@@ -93,6 +98,42 @@ describe('EmailService', () => {
     );
     expect(result.status).toBe('SENT');
     expect(result.messageId).toBe('msg-123');
+  });
+
+  it('uses SMTP auth and STARTTLS on port 587 when credentials are configured', async () => {
+    const configService = {
+      get: jest.fn((key: string, fallback?: string | number) => {
+        const values: Record<string, string | number> = {
+          SMTP_HOST: 'smtp.example.com',
+          SMTP_PORT: 587,
+          SMTP_FROM: 'noreply@example.com',
+          SMTP_USER: 'noreply@example.com',
+          SMTP_PASSWORD: 'secret',
+        };
+        return values[key] ?? fallback;
+      }),
+    } as unknown as ConfigService;
+
+    const authenticatedService = new EmailService(
+      configService,
+      prisma as unknown as PrismaService,
+    );
+
+    await authenticatedService.send({
+      to: 'user@example.com',
+      subject: 'Hello',
+      body: 'Welcome',
+    });
+
+    expect(nodemailer.createTransport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        host: 'smtp.example.com',
+        port: 587,
+        secure: false,
+        requireTLS: true,
+        auth: { user: 'noreply@example.com', pass: 'secret' },
+      }),
+    );
   });
 
   it('marks email log as FAILED when SMTP send fails', async () => {

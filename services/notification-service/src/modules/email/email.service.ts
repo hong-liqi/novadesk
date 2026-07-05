@@ -23,10 +23,20 @@ export class EmailService {
     });
 
     try {
+      const host = this.configService.get<string>('SMTP_HOST', 'localhost');
+      const port = this.configService.get<number>('SMTP_PORT', 1025);
+      const user = this.configService.get<string>('SMTP_USER');
+      const pass = this.configService.get<string>('SMTP_PASSWORD');
+
       const transporter = nodemailer.createTransport({
-        host: this.configService.get<string>('SMTP_HOST', 'localhost'),
-        port: this.configService.get<number>('SMTP_PORT', 1025),
-        secure: false,
+        host,
+        port,
+        secure: port === 465,
+        requireTLS: port === 587,
+        auth: user && pass ? { user, pass } : undefined,
+        connectionTimeout: 10_000,
+        greetingTimeout: 10_000,
+        socketTimeout: 15_000,
       });
 
       const result = await transporter.sendMail({
