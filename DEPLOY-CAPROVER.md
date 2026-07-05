@@ -577,6 +577,7 @@ Apps internas se comunicam pelo hostname `srv-captain--<nome-da-app>:<porta>`.
 | WebSocket do chat cai          | Habilite **WebSocket Support** no gateway.                                                                                                                                                   |
 | Links do site → 404            | URLs devem apontar para a **raiz** do subdomínio (`https://novadesk-helpdesk.<domínio>`, sem `/helpdesk`). Configure `NOVADESK_*_URL` no website e **Forçar build** após atualizar o código. |
 | Login `Failed to fetch` / CORS | Configure `CORS_ORIGINS` no **`novadesk-gateway`** com os domínios dos frontends e do website. **Forçar build** do gateway após atualizar o código.                                          |
+| Login `Request timed out`      | POSTs antigos não repassavam o body ao auth (timeout ~10s / 502). **Forçar build** do `novadesk-gateway`. Confirme `novadesk-auth` Running.                                                  |
 | Frontend no subdomínio → 404   | Com `basePath` vazio, use a raiz do subdomínio. `/helpdesk` no subdomínio só funciona em builds antigos.                                                                                     |
 | E-mail não envia               | Configure SMTP real no `novadesk-notification`.                                                                                                                                              |
 

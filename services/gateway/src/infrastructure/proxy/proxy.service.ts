@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { RequestHandler } from 'express';
-import { createProxyMiddleware, type Options } from 'http-proxy-middleware';
+import { createProxyMiddleware, fixRequestBody, type Options } from 'http-proxy-middleware';
 import {
   REQUEST_ID_HEADER,
   ROLES_HEADER,
@@ -72,6 +72,8 @@ export class ProxyService {
       timeout: this.timeoutMs,
       on: {
         proxyReq: (proxyReq, req) => {
+          fixRequestBody(proxyReq, req);
+
           for (const header of PROPAGATED_HEADERS) {
             const value = req.headers[header];
             if (value === undefined) {
