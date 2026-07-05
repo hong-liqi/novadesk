@@ -12,7 +12,11 @@ import { ProxyService } from '@infrastructure/proxy/proxy.service';
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+    // Gateway only proxies API traffic — keep the request stream intact for POST/PUT/PATCH.
+    bodyParser: false,
+  });
 
   const configService = app.get(ConfigService);
   configureGatewayCors(app, configService);

@@ -79,6 +79,10 @@ describe('config package', () => {
     expect(stringToBoolean(true)).toBeUndefined();
     expect(stringToBoolean('maybe')).toBeUndefined();
     expect(commaSeparatedList('a, b ,c')).toEqual(['a', 'b', 'c']);
+    expect(commaSeparatedList('https://a.example.com\nhttps://b.example.com')).toEqual([
+      'https://a.example.com',
+      'https://b.example.com',
+    ]);
     expect(commaSeparatedList('')).toBeUndefined();
   });
 

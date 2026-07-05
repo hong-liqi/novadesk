@@ -69,7 +69,7 @@ export function commaSeparatedList(value: unknown): string[] | undefined {
   }
 
   return value
-    .split(',')
+    .split(/[,\n]+/)
     .map((entry) => entry.trim())
     .filter(Boolean);
 }
