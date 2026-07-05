@@ -48,7 +48,7 @@ describe('resolveCorsOrigins', () => {
 
 describe('configureGatewayCors', () => {
   it('enables cors when origins are configured', () => {
-    const enableCors = jest.fn<void, [GatewayCorsOptions]>();
+    const enableCors = jest.fn<(options: GatewayCorsOptions) => void>();
     const app = { enableCors } as never;
     const configService = createConfigService({
       CORS_ORIGINS: ['https://helpdesk.example.com'],
