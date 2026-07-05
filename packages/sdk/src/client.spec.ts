@@ -52,6 +52,26 @@ describe('NovaDeskClient', () => {
     expect(result.meta.requestId).toBe('req-bare');
   });
 
+  it('maps NestJS HTTP exceptions to SdkError with message', async () => {
+    const fetchFn = jest.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          statusCode: 409,
+          message: 'Email already registered',
+          error: 'Conflict',
+        }),
+        { status: 409, headers: { 'Content-Type': 'application/json' } },
+      ),
+    );
+
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
+
+    await expect(client.post('/auth/register', {})).rejects.toMatchObject({
+      message: 'Email already registered',
+      status: 409,
+    });
+  });
+
   it('maps API errors to SdkError', async () => {
     const fetchFn = jest.fn().mockResolvedValue(
       new Response(

@@ -1,6 +1,17 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '@presentation/decorators/current-user.decorator';
+import type { HelpdeskRequest } from '@presentation/types/request-context';
 import { parseBody } from '@presentation/validators/parse-body';
 import type { WorkspaceResponseDto } from '../../application/dto/workspace.dto';
 import {
@@ -25,8 +36,15 @@ export class WorkspaceController {
 
   @Get()
   @ApiOperation({ summary: 'List workspaces for the current user' })
-  findAll(@CurrentUser() userId?: string): Promise<WorkspaceResponseDto[]> {
-    return this.listWorkspaces.execute(userId);
+  findAll(
+    @CurrentUser() userId: string | undefined,
+    @Req() request: HelpdeskRequest,
+  ): Promise<WorkspaceResponseDto[]> {
+    return this.listWorkspaces.execute({
+      userId,
+      tenantId: request.helpdesk?.workspaceId,
+      email: request.helpdesk?.email,
+    });
   }
 
   @Get(':id')

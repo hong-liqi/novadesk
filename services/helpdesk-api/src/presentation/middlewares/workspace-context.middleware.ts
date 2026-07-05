@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { TENANT_ID_HEADER, USER_ID_HEADER } from '@novadesk/shared';
+import { TENANT_ID_HEADER, USER_EMAIL_HEADER, USER_ID_HEADER } from '@novadesk/shared';
 import type { NextFunction, Response } from 'express';
 import type { HelpdeskRequest } from '../types/request-context';
 
@@ -17,8 +17,11 @@ export class WorkspaceContextMiddleware implements NestMiddleware {
       normalizeHeader(req.headers[USER_ID_HEADER]) ?? normalizeHeader(req.headers['x-user-id']);
     const workspaceId =
       normalizeHeader(req.headers[TENANT_ID_HEADER]) ?? normalizeHeader(req.headers['x-tenant-id']);
+    const email =
+      normalizeHeader(req.headers[USER_EMAIL_HEADER]) ??
+      normalizeHeader(req.headers['x-user-email']);
 
-    req.helpdesk = { userId, workspaceId };
+    req.helpdesk = { userId, workspaceId, email };
     next();
   }
 }

@@ -195,6 +195,9 @@ export class NovaDeskClient {
             if (isApiError(responseBody)) {
               throw SdkError.fromApiError(responseBody);
             }
+            if (isNestHttpException(responseBody)) {
+              throw nestHttpExceptionToSdkError(responseBody, requestId);
+            }
             throw new SdkError(
               `Request failed with status ${String(response.status)}`,
               'HTTP_ERROR',
@@ -338,6 +341,27 @@ function normalizeApiResponse<T>(body: unknown, requestId?: string): ApiResponse
     data: body as T,
     meta: { requestId: requestId ?? 'unknown' },
   };
+}
+
+interface NestHttpExceptionBody {
+  statusCode: number;
+  message: string | string[];
+  error?: string;
+}
+
+function isNestHttpException(body: unknown): body is NestHttpExceptionBody {
+  return (
+    typeof body === 'object' &&
+    body !== null &&
+    'statusCode' in body &&
+    'message' in body &&
+    typeof (body as NestHttpExceptionBody).statusCode === 'number'
+  );
+}
+
+function nestHttpExceptionToSdkError(body: NestHttpExceptionBody, requestId?: string): SdkError {
+  const message = Array.isArray(body.message) ? body.message.join(', ') : body.message;
+  return new SdkError(message, body.error ?? 'HTTP_ERROR', body.statusCode, requestId);
 }
 
 function isApiError(value: unknown): value is ApiError {

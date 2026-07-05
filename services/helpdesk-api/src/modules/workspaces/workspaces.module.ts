@@ -9,10 +9,12 @@ import {
   ListWorkspacesUseCase,
   UpdateWorkspaceUseCase,
 } from './application/use-cases/workspace.use-cases';
+import { ProvisionTenantWorkspaceUseCase } from './application/use-cases/provision-tenant-workspace.use-case';
 
 @Module({
   controllers: [WorkspaceController],
   providers: [
+    ProvisionTenantWorkspaceUseCase,
     ListWorkspacesUseCase,
     GetWorkspaceUseCase,
     CreateWorkspaceUseCase,

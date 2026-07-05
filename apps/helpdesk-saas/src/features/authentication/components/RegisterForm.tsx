@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@novadesk/auth/client';
-import { formatAuthError } from '@novadesk/sdk';
+import { formatAuthError, SdkError } from '@novadesk/sdk';
 import { Button, Input, Stack } from '@novadesk/ui';
 import { AuthLayout } from '@novadesk/ui/client';
 import Link from 'next/link';
@@ -43,6 +43,10 @@ export function RegisterForm() {
       await login(tokens);
       router.replace(routes.dashboard);
     } catch (err) {
+      if (err instanceof SdkError && err.status === 409) {
+        setError('This email is already registered. Sign in instead.');
+        return;
+      }
       setError(formatAuthError(err, 'Account creation failed'));
     } finally {
       setLoading(false);

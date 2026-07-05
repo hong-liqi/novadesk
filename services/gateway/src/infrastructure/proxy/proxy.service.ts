@@ -6,6 +6,7 @@ import {
   REQUEST_ID_HEADER,
   ROLES_HEADER,
   TENANT_ID_HEADER,
+  USER_EMAIL_HEADER,
   USER_ID_HEADER,
 } from '@novadesk/shared';
 import { buildProxyRoutes, matchProxyRoute, type ProxyRoute } from './proxy.routes';
@@ -13,6 +14,7 @@ import { buildProxyRoutes, matchProxyRoute, type ProxyRoute } from './proxy.rout
 const PROPAGATED_HEADERS = [
   REQUEST_ID_HEADER,
   USER_ID_HEADER,
+  USER_EMAIL_HEADER,
   TENANT_ID_HEADER,
   ROLES_HEADER,
 ] as const;

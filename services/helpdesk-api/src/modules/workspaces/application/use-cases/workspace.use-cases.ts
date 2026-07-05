@@ -15,19 +15,40 @@ import {
   type WorkspaceRepositoryPort,
 } from '../ports/workspace.repository.port';
 import type { WorkspaceEntity } from '../../domain/entities/workspace.entity';
+import { ProvisionTenantWorkspaceUseCase } from './provision-tenant-workspace.use-case';
+
+export interface ListWorkspacesInput {
+  userId?: string;
+  tenantId?: string;
+  email?: string;
+}
 
 @Injectable()
 export class ListWorkspacesUseCase {
   constructor(
     @Inject(WORKSPACE_REPOSITORY)
     private readonly repository: WorkspaceRepositoryPort,
+    private readonly provisionTenantWorkspace: ProvisionTenantWorkspaceUseCase,
   ) {}
 
-  async execute(userId?: string): Promise<WorkspaceResponseDto[]> {
+  async execute(input: ListWorkspacesInput): Promise<WorkspaceResponseDto[]> {
+    const { userId, tenantId, email } = input;
+
     if (!userId) {
       throw new BadRequestException('X-User-Id header is required');
     }
-    const items = await this.repository.findByUserId(userId);
+
+    let items = await this.repository.findByUserId(userId);
+
+    if (items.length === 0 && tenantId && email) {
+      const workspace = await this.provisionTenantWorkspace.execute({
+        userId,
+        tenantId,
+        email,
+      });
+      items = [workspace];
+    }
+
     return items.map(mapWorkspace);
   }
 }
