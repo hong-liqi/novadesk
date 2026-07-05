@@ -54,6 +54,7 @@ export interface HelpdeskCustomer {
 
 export interface ListTicketsParams {
   status?: string;
+  statuses?: string[];
   page?: number;
   limit?: number;
 }
@@ -96,7 +97,8 @@ export class HelpdeskClient {
     return this.client
       .get<PaginatedResult<HelpdeskTicket>>('/helpdesk/tickets', {
         params: {
-          status: params.status,
+          status: params.statuses?.length ? undefined : params.status,
+          statuses: params.statuses?.length ? params.statuses.join(',') : undefined,
           page: params.page,
           limit: params.limit,
         },

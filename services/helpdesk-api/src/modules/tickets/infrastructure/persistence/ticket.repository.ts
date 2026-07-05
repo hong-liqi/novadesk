@@ -16,9 +16,15 @@ export class TicketRepository implements TicketRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
   async findMany(input: ListTicketsInput): Promise<PaginatedResult<TicketEntity>> {
+    const statusFilter = input.statuses?.length
+      ? { status: { in: input.statuses } }
+      : input.status
+        ? { status: input.status }
+        : {};
+
     const where = {
       workspaceId: input.workspaceId,
-      ...(input.status ? { status: input.status } : {}),
+      ...statusFilter,
     };
     const skip = (input.page - 1) * input.limit;
 

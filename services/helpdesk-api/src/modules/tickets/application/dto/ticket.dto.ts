@@ -28,6 +28,7 @@ export interface ListTicketsQueryDto {
   page?: number;
   limit?: number;
   status?: TicketStatus;
+  statuses?: TicketStatus[];
 }
 
 export interface TicketResponseDto {

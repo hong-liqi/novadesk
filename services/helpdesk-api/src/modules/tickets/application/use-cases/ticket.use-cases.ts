@@ -26,7 +26,8 @@ export class ListTicketsUseCase {
       workspaceId,
       page: query.page ?? 1,
       limit: query.limit ?? 20,
-      status: query.status,
+      status: query.statuses?.length ? undefined : query.status,
+      statuses: query.statuses,
     });
     return {
       ...result,

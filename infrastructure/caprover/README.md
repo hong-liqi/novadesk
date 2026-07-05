@@ -155,13 +155,14 @@ Ou rode `pnpm db:push` por serviço contra as URLs de produção.
 
 ## Troubleshooting
 
-| Problema                | Solução                                                             |
-| ----------------------- | ------------------------------------------------------------------- |
-| Build falha no monorepo | Verifique se o Dockerfile copia `packages/` e `pnpm-workspace.yaml` |
-| 502 no gateway          | Confirme URLs internas `srv-captain--*` e portas                    |
-| JWT inválido            | `JWT_ISSUER`/`JWT_AUDIENCE` iguais em auth e gateway                |
-| Contact form 401        | Rota `/api/v1/notifications/send` deve ser pública no gateway       |
-| WebSocket cai           | WebSocket Support ON; uma réplica ou sticky session                 |
+| Problema                | Solução                                                                 |
+| ----------------------- | ----------------------------------------------------------------------- |
+| Build falha no monorepo | Verifique se o Dockerfile copia `packages/` e `pnpm-workspace.yaml`     |
+| 502 no gateway          | Confirme URLs internas `srv-captain--*` e portas                        |
+| JWT inválido            | `JWT_ISSUER`/`JWT_AUDIENCE` iguais em auth e gateway                    |
+| Contact form 404        | Configure `NOTIFICATION_SERVICE_URL` no website (rede interna CapRover) |
+| Contact form 401        | Rota `/api/v1/notifications/send` deve ser pública no gateway           |
+| WebSocket cai           | WebSocket Support ON; uma réplica ou sticky session                     |
 
 ## Referências
 

@@ -29,14 +29,20 @@ const PAGE_SIZE = 10;
 
 interface TicketsListViewProps {
   statusFilter?: string;
+  statusFilters?: string[];
   title?: string;
   description?: string;
+  allowCreate?: boolean;
+  emptyHint?: string;
 }
 
 export function TicketsListView({
   statusFilter,
+  statusFilters,
   title = 'Tickets',
   description = 'Manage support requests',
+  allowCreate = true,
+  emptyHint,
 }: TicketsListViewProps) {
   const { workspaceId, isLoading: workspaceLoading } = useWorkspace();
   const createModal = useDisclosure();
@@ -61,7 +67,8 @@ export function TicketsListView({
       const data = await helpdeskClient.listTickets({
         page,
         limit: PAGE_SIZE,
-        status: statusFilter,
+        status: statusFilters?.length ? undefined : statusFilter,
+        statuses: statusFilters,
       });
       setResult(data);
     } catch (err) {
@@ -69,7 +76,7 @@ export function TicketsListView({
     } finally {
       setLoading(false);
     }
-  }, [workspaceId, page, statusFilter]);
+  }, [workspaceId, page, statusFilter, statusFilters]);
 
   const loadCustomers = useCallback(async () => {
     if (!workspaceId) {
@@ -89,8 +96,12 @@ export function TicketsListView({
   }, [loadTickets]);
 
   useEffect(() => {
+    if (!allowCreate) {
+      return;
+    }
+
     void loadCustomers();
-  }, [loadCustomers]);
+  }, [allowCreate, loadCustomers]);
 
   async function handleCreateTicket() {
     if (!subject.trim()) {
@@ -128,7 +139,7 @@ export function TicketsListView({
           <h1 className="text-2xl font-semibold text-neutral-900">{title}</h1>
           <p className="text-sm text-neutral-500">{description}</p>
         </div>
-        <Button onClick={createModal.open}>New ticket</Button>
+        {allowCreate ? <Button onClick={createModal.open}>New ticket</Button> : null}
       </div>
 
       {error ? <p className="text-red-600">{error}</p> : null}
@@ -167,7 +178,7 @@ export function TicketsListView({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={4}>No tickets found.</TableCell>
+              <TableCell colSpan={4}>{emptyHint ?? 'No tickets found.'}</TableCell>
             </TableRow>
           )}
         </TableBody>
@@ -203,49 +214,51 @@ export function TicketsListView({
         </div>
       ) : null}
 
-      <Modal
-        isOpen={createModal.isOpen}
-        onClose={createModal.close}
-        title="Create ticket"
-        footer={
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" onClick={createModal.close}>
-              Cancel
-            </Button>
-            <Button loading={creating} onClick={() => void handleCreateTicket()}>
-              Create
-            </Button>
-          </div>
-        }
-      >
-        <Stack gap="md">
-          <Input
-            label="Subject"
-            value={subject}
-            onChange={(event) => {
-              setSubject(event.target.value);
-            }}
-            required
-          />
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="font-medium text-neutral-700">Customer (optional)</span>
-            <select
-              className="rounded-lg border border-neutral-200 px-3 py-2"
-              value={customerId}
+      {allowCreate ? (
+        <Modal
+          isOpen={createModal.isOpen}
+          onClose={createModal.close}
+          title="Create ticket"
+          footer={
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={createModal.close}>
+                Cancel
+              </Button>
+              <Button loading={creating} onClick={() => void handleCreateTicket()}>
+                Create
+              </Button>
+            </div>
+          }
+        >
+          <Stack gap="md">
+            <Input
+              label="Subject"
+              value={subject}
               onChange={(event) => {
-                setCustomerId(event.target.value);
+                setSubject(event.target.value);
               }}
-            >
-              <option value="">None</option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        </Stack>
-      </Modal>
+              required
+            />
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="font-medium text-neutral-700">Customer (optional)</span>
+              <select
+                className="rounded-lg border border-neutral-200 px-3 py-2"
+                value={customerId}
+                onChange={(event) => {
+                  setCustomerId(event.target.value);
+                }}
+              >
+                <option value="">None</option>
+                {customers.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </Stack>
+        </Modal>
+      ) : null}
     </div>
   );
 }

@@ -457,6 +457,7 @@ Mais a porta de cada app:
 > No **`novadesk-website`**, use `NOVADESK_*_URL` (lidas em runtime; **Salvar & Reiniciar** basta após o deploy deste código):
 >
 > ```env
+> NOTIFICATION_SERVICE_URL=http://srv-captain--novadesk-notification:3002
 > NOVADESK_HELPDESK_URL=https://novadesk-helpdesk.<SEU_DOMINIO>
 > NOVADESK_ANALYTICS_URL=https://novadesk-analytics.<SEU_DOMINIO>
 > NOVADESK_ADMIN_URL=https://novadesk-admin.<SEU_DOMINIO>

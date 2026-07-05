@@ -25,6 +25,7 @@ export interface ListTicketsInput {
   page: number;
   limit: number;
   status?: TicketStatus;
+  statuses?: TicketStatus[];
 }
 
 export interface AssignTicketInput {

@@ -33,4 +33,19 @@ export const listTicketsQuerySchema = z.object({
   page: z.coerce.number().int().min(1).optional().default(1),
   limit: z.coerce.number().int().min(1).max(100).optional().default(20),
   status: z.nativeEnum(TicketStatus).optional(),
+  statuses: z
+    .string()
+    .optional()
+    .transform((value) => {
+      if (!value) {
+        return undefined;
+      }
+
+      const parsed = value
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      return parsed.length > 0 ? z.array(z.nativeEnum(TicketStatus)).parse(parsed) : undefined;
+    }),
 });

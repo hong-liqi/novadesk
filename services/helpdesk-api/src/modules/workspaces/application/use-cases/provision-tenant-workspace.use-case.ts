@@ -15,7 +15,8 @@ export class ProvisionTenantWorkspaceUseCase {
 
   async execute(input: ProvisionTenantWorkspaceInput): Promise<WorkspaceEntity> {
     const emailLocalPart = input.email.split('@')[0] ?? 'user';
-    const displayName = input.name?.trim() || emailLocalPart;
+    const trimmedName = input.name?.trim();
+    const displayName = trimmedName?.length ? trimmedName : emailLocalPart;
     const orgSlug = `org-${input.tenantId}`;
 
     return this.prisma.$transaction(async (tx) => {
