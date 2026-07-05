@@ -45,8 +45,9 @@ export function getNovaDeskModules(): NovaDeskModule[] {
       name: 'Realtime Chat',
       description:
         'WebSocket-powered messaging integrated with HelpDesk for agent and customer conversations.',
+      href: urls.chat,
       tags: ['WebSocket', 'Redis Pub/Sub', 'NestJS'],
-      type: 'service',
+      type: 'app',
     },
     {
       id: 'auth',

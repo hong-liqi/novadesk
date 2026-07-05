@@ -49,6 +49,12 @@ export function SiteHeader() {
             HelpDesk
           </AppLink>
           <AppLink
+            href={urls.chat}
+            className="hidden rounded-full px-3 py-1.5 text-sm font-medium text-slate-300 transition-colors hover:text-white md:inline-flex"
+          >
+            Chat
+          </AppLink>
+          <AppLink
             href={urls.admin}
             className="inline-flex rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
           >
