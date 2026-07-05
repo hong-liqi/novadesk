@@ -410,8 +410,11 @@ THROTTLE_LIMIT=100
 **HTTP Settings do gateway:**
 
 - Enable HTTPS + Force HTTPS
-- Domínio: `api.<SEU_DOMINIO>`
+- Domínio: `api.<SEU_DOMINIO>` (ou `novadesk-gateway.<SEU_DOMINIO>`)
+- **Container HTTP Port: `3000`** ← obrigatório (padrão do CapRover é 80; sem isso → 502)
 - **WebSocket Support: ON** (necessário para chat via `/socket.io`)
+
+Teste: `https://api.<SEU_DOMINIO>/api/v1/health/live` → `{ "status": "ok" }`
 
 ### Frontends
 
@@ -424,13 +427,24 @@ NEXT_PUBLIC_API_URL=https://api.<SEU_DOMINIO>/api/v1
 
 Mais a porta de cada app:
 
-| App                  | PORT | Domínio sugerido          | Variáveis extras                                                                                |
-| -------------------- | ---- | ------------------------- | ----------------------------------------------------------------------------------------------- |
-| `novadesk-helpdesk`  | 3010 | `helpdesk.<SEU_DOMINIO>`  | `NEXT_PUBLIC_APP_URL=https://helpdesk.<SEU_DOMINIO>`                                            |
-| `novadesk-analytics` | 3011 | `analytics.<SEU_DOMINIO>` | `NEXT_PUBLIC_APP_URL=https://analytics.<SEU_DOMINIO>`                                           |
-| `novadesk-admin`     | 3012 | `admin.<SEU_DOMINIO>`     | `NEXT_PUBLIC_APP_URL=https://admin.<SEU_DOMINIO>`                                               |
-| `novadesk-website`   | 3013 | `<SEU_DOMINIO>`           | `NEXT_PUBLIC_SITE_URL=https://<SEU_DOMINIO>`, `NEXT_PUBLIC_CONTACT_EMAIL=contato@<SEU_DOMINIO>` |
-| `novadesk-chat`      | 3014 | `chat.<SEU_DOMINIO>`      | `NEXT_PUBLIC_APP_URL=https://chat.<SEU_DOMINIO>`                                                |
+| App                  | PORT | Container HTTP Port | Domínio sugerido          | Variáveis extras                                                                                |
+| -------------------- | ---- | ------------------- | ------------------------- | ----------------------------------------------------------------------------------------------- |
+| `novadesk-helpdesk`  | 3010 | **3010**            | `helpdesk.<SEU_DOMINIO>`  | `NEXT_PUBLIC_APP_URL=https://helpdesk.<SEU_DOMINIO>`                                            |
+| `novadesk-analytics` | 3011 | **3011**            | `analytics.<SEU_DOMINIO>` | `NEXT_PUBLIC_APP_URL=https://analytics.<SEU_DOMINIO>`                                           |
+| `novadesk-admin`     | 3012 | **3012**            | `admin.<SEU_DOMINIO>`     | `NEXT_PUBLIC_APP_URL=https://admin.<SEU_DOMINIO>`                                               |
+| `novadesk-website`   | 3013 | **3013**            | `<SEU_DOMINIO>`           | `NEXT_PUBLIC_SITE_URL=https://<SEU_DOMINIO>`, `NEXT_PUBLIC_CONTACT_EMAIL=contato@<SEU_DOMINIO>` |
+| `novadesk-chat`      | 3014 | **3014**            | `chat.<SEU_DOMINIO>`      | `NEXT_PUBLIC_APP_URL=https://chat.<SEU_DOMINIO>`                                                |
+
+**HTTP Settings de cada frontend** (em **HTTP Settings** da app, não só env vars):
+
+1. Enable HTTPS + Force HTTPS
+2. Domínio (ex.: `novadesk-helpdesk.li.magicsoft.site`)
+3. **Container HTTP Port** = mesma porta da coluna acima (`3010`, `3011`…)
+4. **Não** marque "Não expor como app web"
+
+> **502 Bad Gateway?** Quase sempre é `Container HTTP Port` errado (80 em vez de 3010/3000…). A env `PORT` sozinha não basta — o Nginx do CapRover precisa saber para qual porta encaminhar.
+>
+> **Builds antigos dos frontends:** até o rebuild com `NEXT_PUBLIC_BASE_PATH` vazio no Docker, acesse temporariamente `https://<domínio>/helpdesk`, `/admin`, `/analytics`, `/chat` (cada app tem `basePath` no build atual).
 
 ---
 
@@ -532,15 +546,15 @@ Apps internas se comunicam pelo hostname `srv-captain--<nome-da-app>:<porta>`.
 
 ## Troubleshooting
 
-| Problema                      | Solução                                                                                                               |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Build falha no monorepo       | Verifique se o **Captain Definition Path** está correto. O contexto de build é a raiz do repo.                        |
-| 502 Bad Gateway               | Confira `PORT` nas env vars e se a app está Running. Veja logs no CapRover.                                           |
-| Postgres perdeu dados         | Confirme diretório persistente `/var/lib/postgresql/data` **antes** do primeiro deploy.                               |
-| `database "X" does not exist` | Recrie o Postgres (só se vazio) ou crie o DB manualmente via `psql`. O init script roda só na primeira inicialização. |
-| JWT inválido                  | `JWT_ISSUER`, `JWT_AUDIENCE` e chaves devem ser iguais em auth e gateway.                                             |
-| WebSocket do chat cai         | Habilite **WebSocket Support** no gateway.                                                                            |
-| E-mail não envia              | Configure SMTP real no `novadesk-notification`.                                                                       |
+| Problema                      | Solução                                                                                                                                                                                   |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build falha no monorepo       | Verifique se o **Captain Definition Path** está correto. O contexto de build é a raiz do repo.                                                                                            |
+| 502 Bad Gateway               | Em **HTTP Settings**, defina **Container HTTP Port** = `PORT` da app (`3000` gateway, `3010`–`3014` frontends). Confira env `PORT` e logs. Gateway: teste `/api/v1/health/live`, não `/`. |
+| Postgres perdeu dados         | Confirme diretório persistente `/var/lib/postgresql/data` **antes** do primeiro deploy.                                                                                                   |
+| `database "X" does not exist` | Recrie o Postgres (só se vazio) ou crie o DB manualmente via `psql`. O init script roda só na primeira inicialização.                                                                     |
+| JWT inválido                  | `JWT_ISSUER`, `JWT_AUDIENCE` e chaves devem ser iguais em auth e gateway.                                                                                                                 |
+| WebSocket do chat cai         | Habilite **WebSocket Support** no gateway.                                                                                                                                                |
+| E-mail não envia              | Configure SMTP real no `novadesk-notification`.                                                                                                                                           |
 
 ---
 

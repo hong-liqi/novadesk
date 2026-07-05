@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/chat',
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '/chat',
   transpilePackages: ['@novadesk/ui', '@novadesk/auth', '@novadesk/sdk'],
   output: 'standalone',
 };

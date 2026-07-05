@@ -11,6 +11,8 @@ RUN pnpm install --frozen-lockfile --filter @novadesk/analytics-dashboard...
 FROM node:20-alpine AS build
 WORKDIR /app
 RUN corepack enable
+ARG NEXT_PUBLIC_BASE_PATH=
+ENV NEXT_PUBLIC_BASE_PATH=$NEXT_PUBLIC_BASE_PATH
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./

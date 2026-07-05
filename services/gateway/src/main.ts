@@ -28,7 +28,7 @@ async function bootstrap(): Promise<void> {
   );
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 
   const server = app.getHttpServer() as {
     on(

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/analytics',
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '/analytics',
   transpilePackages: ['@novadesk/ui', '@novadesk/auth', '@novadesk/sdk'],
   output: 'standalone',
 };
