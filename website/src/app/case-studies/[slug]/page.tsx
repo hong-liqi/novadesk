@@ -1,4 +1,5 @@
 import { Text } from '@novadesk/ui';
+import { getOpenGraphImages } from '@/lib/site-metadata';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MarkdownContent } from '@/components/markdown-content';
@@ -29,6 +30,7 @@ export async function generateMetadata({ params }: CaseStudyPageProps) {
       title: `${meta.title} — NovaDesk Case Study`,
       description: meta.summary,
       type: 'article',
+      images: getOpenGraphImages(),
     },
   };
 }
