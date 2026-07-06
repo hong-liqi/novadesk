@@ -5,10 +5,11 @@ describe('isPublicRoute', () => {
     expect(isPublicRoute('/.well-known/jwks.json')).toBe(true);
   });
 
-  it('marks auth login and register as public', () => {
+  it('marks auth login, register, setup, and refresh as public', () => {
     expect(isPublicRoute('/api/v1/auth/login')).toBe(true);
     expect(isPublicRoute('/api/v1/auth/register')).toBe(true);
     expect(isPublicRoute('/api/v1/auth/setup')).toBe(true);
+    expect(isPublicRoute('/api/v1/auth/refresh')).toBe(true);
   });
 
   it('marks gateway health and status as public', () => {

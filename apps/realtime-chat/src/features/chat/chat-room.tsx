@@ -11,12 +11,13 @@ import {
   getGatewayOrigin,
   isTicketUuid,
   loadOpenTickets,
+  tokenManager,
   type ChatMessage,
 } from '@/shared/services/api-client';
 import { routes } from '@/shared/lib/routes';
 
 export function ChatRoom() {
-  const { accessToken, user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const [ticketId, setTicketId] = useState('');
   const [activeTicketId, setActiveTicketId] = useState<string | null>(null);
   const [openTickets, setOpenTickets] = useState<HelpdeskTicket[]>([]);
@@ -55,7 +56,10 @@ export function ChatRoom() {
 
   const joinRoom = useCallback(
     async (roomTicketId: string) => {
-      if (!accessToken) {
+      const token = await tokenManager.ensureAccessToken();
+      if (!token) {
+        setStatus('error');
+        setErrorMessage('Session expired. Sign out and sign in again.');
         return;
       }
 
@@ -84,7 +88,7 @@ export function ChatRoom() {
 
       const socket = io(getGatewayOrigin(), {
         path: '/socket.io',
-        auth: { token: accessToken },
+        auth: { token },
         transports: ['websocket', 'polling'],
       });
 
@@ -119,7 +123,7 @@ export function ChatRoom() {
         });
       });
     },
-    [accessToken, disconnectSocket],
+    [disconnectSocket],
   );
 
   useEffect(() => {
