@@ -5,7 +5,7 @@ import './globals.css';
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata(): Promise<Metadata> {
+export function generateMetadata(): Metadata {
   return buildRootMetadata();
 }
 

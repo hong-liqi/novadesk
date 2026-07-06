@@ -71,7 +71,9 @@ export function SiteHeader() {
             className="inline-flex rounded-md p-2 text-slate-400 hover:bg-slate-900 hover:text-white lg:hidden"
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
-            onClick={() => setMobileOpen((open) => !open)}
+            onClick={() => {
+              setMobileOpen((open) => !open);
+            }}
           >
             <span className="sr-only">Toggle menu</span>
             <svg
@@ -113,7 +115,9 @@ export function SiteHeader() {
                 <Link
                   href={link.href}
                   className="block rounded-md px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-900 hover:text-white"
-                  onClick={() => setMobileOpen(false)}
+                  onClick={() => {
+                    setMobileOpen(false);
+                  }}
                 >
                   {link.label}
                 </Link>
@@ -123,7 +127,9 @@ export function SiteHeader() {
               <Link
                 href="/about"
                 className="block rounded-md px-3 py-2 text-sm font-medium text-blue-400 hover:bg-slate-900"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => {
+                  setMobileOpen(false);
+                }}
               >
                 About the Engineer
               </Link>

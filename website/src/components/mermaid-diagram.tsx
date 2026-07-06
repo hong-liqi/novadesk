@@ -8,10 +8,11 @@ interface MermaidDiagramProps {
 
 export function MermaidDiagram({ chart }: MermaidDiagramProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const cancelledRef = useRef(false);
   const id = useId().replace(/:/g, '');
 
   useEffect(() => {
-    let cancelled = false;
+    cancelledRef.current = false;
 
     async function render() {
       const mermaid = (await import('mermaid')).default;
@@ -22,20 +23,25 @@ export function MermaidDiagram({ chart }: MermaidDiagramProps) {
         fontFamily: 'ui-sans-serif, system-ui, sans-serif',
       });
 
-      if (!containerRef.current || cancelled) {
+      const container = containerRef.current;
+      if (!container || cancelledRef.current) {
         return;
       }
 
       const { svg } = await mermaid.render(`mermaid-${id}`, chart.trim());
-      if (!cancelled && containerRef.current) {
-        containerRef.current.innerHTML = svg;
+      // Effect may unmount while mermaid.render is in flight.
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- cleanup runs during await
+      if (cancelledRef.current) {
+        return;
       }
+
+      container.innerHTML = svg;
     }
 
     void render();
 
     return () => {
-      cancelled = true;
+      cancelledRef.current = true;
     };
   }, [chart, id]);
 
