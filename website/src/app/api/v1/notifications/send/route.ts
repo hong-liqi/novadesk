@@ -30,18 +30,25 @@ function resolveNotificationSendUrl(): string {
 }
 
 async function resolveContactEmail(): Promise<string> {
-  const response = await fetch(`${getApiBaseUrl()}/settings/contact-email`);
-  if (!response.ok) {
-    throw new Error('Contact destination is not configured');
+  try {
+    const response = await fetch(`${getApiBaseUrl()}/settings/contact-email`);
+    if (response.ok) {
+      const payload = (await response.json()) as { contactEmail?: string | null };
+      const contactEmail = payload.contactEmail?.trim();
+      if (contactEmail) {
+        return contactEmail;
+      }
+    }
+  } catch {
+    // Fall back to env when settings API is unavailable.
   }
 
-  const payload = (await response.json()) as { contactEmail?: string | null };
-  const contactEmail = payload.contactEmail?.trim();
-  if (!contactEmail) {
-    throw new Error('Contact destination is not configured in Admin → Settings');
+  const fromEnv = readEnv('CONTACT_EMAIL', 'DEFAULT_CONTACT_EMAIL');
+  if (fromEnv) {
+    return fromEnv;
   }
 
-  return contactEmail;
+  throw new Error('Unable to send message right now. Please try again later.');
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
