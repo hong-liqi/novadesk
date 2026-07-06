@@ -15,6 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY website ./website
+COPY docs ./docs
 COPY docs/case-studies ./website/content/case-studies
 COPY --from=deps /app/website/node_modules ./website/node_modules
 RUN pnpm turbo run build --filter=@novadesk/website
@@ -25,6 +26,8 @@ ENV NODE_ENV=production
 ENV PORT=3013
 ENV HOSTNAME=0.0.0.0
 COPY --from=build /app/website/public ./website/public
+COPY --from=build /app/docs ./docs
+COPY --from=build /app/website/content ./website/content
 COPY --from=build --chown=node:node /app/website/.next/standalone ./
 COPY --from=build --chown=node:node /app/website/.next/static ./website/.next/static
 USER node

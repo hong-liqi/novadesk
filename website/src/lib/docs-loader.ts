@@ -84,9 +84,16 @@ export function loadAdrMarkdown(slug: string): string | null {
 }
 
 export function loadEngineeringContent(filename: string): string | null {
-  const websiteContent = path.join(process.cwd(), 'content', 'engineering', filename);
-  if (fs.existsSync(websiteContent)) {
-    return fs.readFileSync(websiteContent, 'utf8');
+  const candidates = [
+    path.join(process.cwd(), 'website', 'content', 'engineering', filename),
+    path.join(process.cwd(), 'content', 'engineering', filename),
+  ];
+
+  for (const filePath of candidates) {
+    if (fs.existsSync(filePath)) {
+      return fs.readFileSync(filePath, 'utf8');
+    }
   }
+
   return null;
 }
