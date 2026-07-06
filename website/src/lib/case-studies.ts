@@ -14,25 +14,25 @@ export const CASE_STUDIES: CaseStudyMeta[] = [
     slug: 'spell',
     title: 'Spell',
     summary:
-      'Vocabulary learning app using spaced repetition (SRS) to maximize long-term retention with personalized study sessions.',
-    tags: ['Node.js', 'React', 'PostgreSQL', 'Redis', 'SRS'],
-    highlight: '78% retention after 30 days',
+      'Multi-tenant SaaS for WhatsApp and Instagram customer service with RAG-grounded AI, human handoff, visual flows, and billing.',
+    tags: ['Fastify', 'React', 'PostgreSQL', 'pgvector', 'OpenAI'],
+    highlight: 'In production at spelltalk.com.br',
   },
   {
     slug: 'broom',
     title: 'Broom',
     summary:
-      'Automated repository analysis pipeline that surfaces technical debt, vulnerabilities, and dead code with prioritized findings.',
-    tags: ['Python', 'FastAPI', 'Celery', 'Docker', 'CI'],
-    highlight: '40% tech debt reduction in pilot teams',
+      'White-label ride-hailing platform powering regional mobility brands with passenger/driver apps, admin panel, and WhatsApp booking.',
+    tags: ['GraphQL', 'React Native', 'PostgreSQL', 'Firebase', 'WhatsApp'],
+    highlight: '20+ franchise brands on one platform',
   },
   {
     slug: 'teste-de-perfil',
     title: 'Teste de Perfil',
     summary:
-      'Adaptive professional profiling platform combining psychometric questionnaires with technical competency analysis.',
-    tags: ['NestJS', 'React', 'PostgreSQL', 'IRT', 'PDF'],
-    highlight: '71% fit accuracy validated at 6 months',
+      'Behavioral profile assessment platform for Paulo Odorico — online courses, corporate training events, and investor profiling.',
+    tags: ['Next.js', 'PostgreSQL', 'Prisma', 'Puppeteer', 'Chart.js'],
+    highlight: '3 assessment flows in production',
   },
 ];
 
