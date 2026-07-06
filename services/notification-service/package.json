@@ -24,7 +24,7 @@
     "@nestjs/platform-express": "^10.4.15",
     "@nestjs/swagger": "^8.1.0",
     "@nestjs/terminus": "^10.2.3",
-    "@opentelemetry/auto-instrumentations-node": "^0.52.1",
+    "@opentelemetry/auto-instrumentations-node": "^0.78.0",
     "@opentelemetry/sdk-node": "^0.57.1",
     "@novadesk/auth": "workspace:*",
     "@novadesk/config": "workspace:*",
