@@ -112,14 +112,17 @@ export async function fetchChatHistory(ticketId: string): Promise<ChatMessage[]>
 }
 
 export async function loadOpenTickets(): Promise<HelpdeskTicket[]> {
-  const profile = await authClient.me();
+  const profile = await getAuthClient().me();
   const primaryTenant = profile.tenants[0];
   if (!primaryTenant) {
     return [];
   }
 
   setApiTenantId(primaryTenant.id);
-  const result = await helpdeskClient.listTickets({ limit: 20, statuses: ['OPEN', 'PENDING'] });
+  const result = await getHelpdeskClient().listTickets({
+    limit: 20,
+    statuses: ['OPEN', 'PENDING'],
+  });
   return result.items;
 }
 
