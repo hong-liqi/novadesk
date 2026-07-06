@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@novadesk/shared": "workspace:*",
-    "jose": "^5.9.6"
+    "jose": "^6.2.3"
   },
   "devDependencies": {
     "@nestjs/common": "^10.4.15",
