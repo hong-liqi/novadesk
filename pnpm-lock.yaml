@@ -54,15 +54,15 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
-      '@playwright/test':
-        specifier: ^1.49.1
-        version: 1.61.1
       '@novadesk/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@novadesk/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      '@playwright/test':
+        specifier: ^1.49.1
+        version: 1.61.1
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.9.1
@@ -127,15 +127,15 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
-      '@playwright/test':
-        specifier: ^1.49.1
-        version: 1.61.1
       '@novadesk/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@novadesk/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      '@playwright/test':
+        specifier: ^1.49.1
+        version: 1.61.1
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.9.1
@@ -200,15 +200,15 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
-      '@playwright/test':
-        specifier: ^1.49.1
-        version: 1.61.1
       '@novadesk/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@novadesk/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      '@playwright/test':
+        specifier: ^1.49.1
+        version: 1.61.1
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.9.1
@@ -276,15 +276,15 @@ importers:
         specifier: ^4.8.1
         version: 4.8.3
     devDependencies:
-      '@playwright/test':
-        specifier: ^1.49.1
-        version: 1.61.1
       '@novadesk/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@novadesk/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      '@playwright/test':
+        specifier: ^1.49.1
+        version: 1.61.1
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.9.1
@@ -331,8 +331,8 @@ importers:
         specifier: workspace:*
         version: link:../shared
       jose:
-        specifier: ^5.9.6
-        version: 5.10.0
+        specifier: ^6.2.3
+        version: 6.2.3
     devDependencies:
       '@nestjs/common':
         specifier: ^10.4.15
@@ -611,12 +611,6 @@ importers:
       '@nestjs/terminus':
         specifier: ^10.2.3
         version: 10.3.0(@grpc/grpc-js@1.14.4)(@grpc/proto-loader@0.8.1)(@nestjs/common@10.4.22(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(@prisma/client@5.22.0(prisma@5.22.0))(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@opentelemetry/auto-instrumentations-node':
-        specifier: ^0.52.1
-        version: 0.52.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-node':
-        specifier: ^0.57.1
-        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@novadesk/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -629,6 +623,12 @@ importers:
       '@novadesk/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@opentelemetry/auto-instrumentations-node':
+        specifier: ^0.52.1
+        version: 0.52.1(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-node':
+        specifier: ^0.57.1
+        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@prisma/client':
         specifier: ^5.22.0
         version: 5.22.0(prisma@5.22.0)
@@ -723,12 +723,6 @@ importers:
       '@nestjs/throttler':
         specifier: ^6.4.0
         version: 6.5.0(@nestjs/common@10.4.22(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(reflect-metadata@0.2.2)
-      '@opentelemetry/auto-instrumentations-node':
-        specifier: ^0.52.1
-        version: 0.52.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-node':
-        specifier: ^0.57.1
-        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@novadesk/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -741,6 +735,12 @@ importers:
       '@novadesk/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@opentelemetry/auto-instrumentations-node':
+        specifier: ^0.52.1
+        version: 0.52.1(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-node':
+        specifier: ^0.57.1
+        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@prisma/client':
         specifier: ^5.22.0
         version: 5.22.0(prisma@5.22.0)
@@ -760,8 +760,8 @@ importers:
         specifier: ^5.4.2
         version: 5.11.1
       jose:
-        specifier: ^5.9.6
-        version: 5.10.0
+        specifier: ^6.2.3
+        version: 6.2.3
       prom-client:
         specifier: ^15.1.3
         version: 15.1.3
@@ -850,12 +850,6 @@ importers:
       '@nestjs/throttler':
         specifier: ^6.4.0
         version: 6.5.0(@nestjs/common@10.4.22(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(reflect-metadata@0.2.2)
-      '@opentelemetry/auto-instrumentations-node':
-        specifier: ^0.52.1
-        version: 0.52.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-node':
-        specifier: ^0.57.1
-        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@novadesk/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -868,6 +862,12 @@ importers:
       '@novadesk/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@opentelemetry/auto-instrumentations-node':
+        specifier: ^0.52.1
+        version: 0.52.1(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-node':
+        specifier: ^0.57.1
+        version: 0.57.2(@opentelemetry/api@1.9.1)
       helmet:
         specifier: ^8.0.0
         version: 8.2.0
@@ -878,8 +878,8 @@ importers:
         specifier: ^5.4.2
         version: 5.11.1
       jose:
-        specifier: ^5.9.6
-        version: 5.10.0
+        specifier: ^6.2.3
+        version: 6.2.3
       prom-client:
         specifier: ^15.1.3
         version: 15.1.3
@@ -962,12 +962,6 @@ importers:
       '@nestjs/terminus':
         specifier: ^10.2.3
         version: 10.3.0(@grpc/grpc-js@1.14.4)(@grpc/proto-loader@0.8.1)(@nestjs/common@10.4.22(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(@prisma/client@5.22.0(prisma@5.22.0))(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@opentelemetry/auto-instrumentations-node':
-        specifier: ^0.52.1
-        version: 0.52.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-node':
-        specifier: ^0.57.1
-        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@novadesk/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -980,6 +974,12 @@ importers:
       '@novadesk/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@opentelemetry/auto-instrumentations-node':
+        specifier: ^0.52.1
+        version: 0.52.1(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-node':
+        specifier: ^0.57.1
+        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@prisma/client':
         specifier: ^5.22.0
         version: 5.22.0(prisma@5.22.0)
@@ -1074,12 +1074,6 @@ importers:
       '@nestjs/terminus':
         specifier: ^10.2.3
         version: 10.3.0(@grpc/grpc-js@1.14.4)(@grpc/proto-loader@0.8.1)(@nestjs/common@10.4.22(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(@prisma/client@5.22.0(prisma@5.22.0))(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@opentelemetry/auto-instrumentations-node':
-        specifier: ^0.52.1
-        version: 0.52.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-node':
-        specifier: ^0.57.1
-        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@novadesk/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -1092,6 +1086,12 @@ importers:
       '@novadesk/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@opentelemetry/auto-instrumentations-node':
+        specifier: ^0.52.1
+        version: 0.52.1(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-node':
+        specifier: ^0.57.1
+        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@prisma/client':
         specifier: ^5.22.0
         version: 5.22.0(prisma@5.22.0)
@@ -1195,12 +1195,6 @@ importers:
       '@nestjs/websockets':
         specifier: ^10.4.15
         version: 10.4.22(@nestjs/common@10.4.22(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(@nestjs/platform-socket.io@10.4.22)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@opentelemetry/auto-instrumentations-node':
-        specifier: ^0.52.1
-        version: 0.52.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-node':
-        specifier: ^0.57.1
-        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@novadesk/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -1213,6 +1207,12 @@ importers:
       '@novadesk/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@opentelemetry/auto-instrumentations-node':
+        specifier: ^0.52.1
+        version: 0.52.1(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-node':
+        specifier: ^0.57.1
+        version: 0.57.2(@opentelemetry/api@1.9.1)
       '@prisma/client':
         specifier: ^5.22.0
         version: 5.22.0(prisma@5.22.0)
@@ -1302,15 +1302,15 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
-      '@playwright/test':
-        specifier: ^1.49.1
-        version: 1.61.1
       '@novadesk/eslint-config':
         specifier: workspace:*
         version: link:../packages/eslint-config
       '@novadesk/tsconfig':
         specifier: workspace:*
         version: link:../packages/tsconfig
+      '@playwright/test':
+        specifier: ^1.49.1
+        version: 1.61.1
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.9.1
@@ -5283,8 +5283,8 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
-  jose@5.10.0:
-    resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
+  jose@6.2.3:
+    resolution: {integrity: sha512-YYVDInQKFJfR/xa3ojUTl8c2KoTwiL1R5Wg9YCydwH0x0B9grbzlg5HC7mMjCtUJjbQ/YnGEZIhI5tCgfTb4Hw==}
 
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
@@ -11959,7 +11959,7 @@ snapshots:
 
   jiti@2.6.1: {}
 
-  jose@5.10.0: {}
+  jose@6.2.3: {}
 
   joycon@3.1.1: {}
 
