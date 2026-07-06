@@ -9,6 +9,14 @@ export function HeroSection() {
     { href: urls.analytics, label: 'Analytics', description: 'KPIs & reports' },
     { href: urls.admin, label: 'Admin Portal', description: 'Platform control' },
   ];
+  const codeLink = urls.code
+    ? {
+        href: urls.code,
+        label: 'View Code',
+        description: 'Repository and source code',
+      }
+    : null;
+  const visibleLinks = codeLink ? [...ctaLinks, codeLink] : ctaLinks;
 
   return (
     <section className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
@@ -40,7 +48,7 @@ export function HeroSection() {
 
         <Stack gap="md" className="mx-auto mt-10 max-w-2xl">
           <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap">
-            {ctaLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <AppLink
                 key={link.label}
                 href={link.href}
@@ -51,7 +59,7 @@ export function HeroSection() {
             ))}
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-500">
-            {ctaLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <span key={link.label}>
                 <span className="font-medium text-slate-400">{link.label}</span>
                 {' — '}

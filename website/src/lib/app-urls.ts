@@ -3,6 +3,7 @@ export interface AppUrls {
   analytics: string;
   admin: string;
   chat: string;
+  code?: string;
 }
 
 const LOCAL_DEFAULTS: AppUrls = {
@@ -31,6 +32,7 @@ export function getAppUrls(): AppUrls {
       readEnv('NOVADESK_ANALYTICS_URL', 'NEXT_PUBLIC_ANALYTICS_URL') ?? LOCAL_DEFAULTS.analytics,
     admin: readEnv('NOVADESK_ADMIN_URL', 'NEXT_PUBLIC_ADMIN_URL') ?? LOCAL_DEFAULTS.admin,
     chat: readEnv('NOVADESK_CHAT_URL', 'NEXT_PUBLIC_CHAT_URL') ?? LOCAL_DEFAULTS.chat,
+    code: readEnv('NOVADESK_CODE_URL', 'NEXT_PUBLIC_CODE_URL'),
   };
 }
 
