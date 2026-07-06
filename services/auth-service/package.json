@@ -31,7 +31,7 @@
     "@novadesk/config": "workspace:*",
     "@novadesk/logger": "workspace:*",
     "@novadesk/shared": "workspace:*",
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^7.8.0",
     "bcrypt": "^5.1.1",
     "bullmq": "^5.34.3",
     "cookie-parser": "^1.4.7",
