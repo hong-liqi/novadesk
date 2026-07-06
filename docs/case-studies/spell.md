@@ -1,180 +1,240 @@
 # Case Study — Spell
 
-**Versão:** 2.0  
-**Status:** Aprovado  
-**Última atualização:** 2026-07-06  
-**Tipo:** Projeto anterior (documentação narrativa, sem código)
+**Version:** 3.0  
+**Status:** Approved  
+**Last updated:** 2026-07-06  
+**Type:** Prior production system (narrative documentation, source not in this repository)
 
 ---
 
-## 1. Problema
+## Overview
 
-Empresas brasileiras dependem do WhatsApp e do Instagram para atendimento, mas responder manualmente não escala: filas crescem, horários ficam descobertos e respostas inconsistentes prejudicam conversão. Soluções genéricas de chatbot frequentemente inventam informações ou ignoram a base de conhecimento do negócio. O mercado precisava de um atendente automatizado nas APIs oficiais da Meta, com handoff confiável para humanos quando necessário.
+Spell is a multi-tenant SaaS platform that automates customer service on WhatsApp and Instagram using RAG-grounded AI, visual conversation flows, human handoff, scheduling, and integrated billing. It is in production at [spelltalk.com.br](https://spelltalk.com.br).
 
----
-
-## 2. Objetivo
-
-Construir um SaaS multi-tenant que automatize atendimento em WhatsApp e Instagram com IA fundamentada na base de conhecimento do cliente (RAG), handoff para atendentes humanos, fluxos visuais configuráveis, agendamento e billing integrado — tudo gerenciável por um painel web.
+**Role:** Lead engineer — architecture, backend, integrations, and deployment.  
+**Scale:** Multi-tenant production deployment with white-label instances.
 
 ---
 
-## 3. Arquitetura
+## Business Problem
 
-### 3.1 Visão geral
+Brazilian businesses depend on WhatsApp and Instagram for customer service, but manual responses do not scale: queues grow, off-hours go uncovered, and inconsistent answers hurt conversion. Generic chatbots frequently invent information or ignore the business knowledge base. The market needed an automated attendant on Meta's official APIs with reliable human handoff when automation is insufficient.
 
-Spell adotou um **monorepo de três serviços** com banco compartilhado e comunicação interna entre server e panel-api.
+---
 
+## Requirements
+
+| Category   | Requirement                                                            |
+| ---------- | ---------------------------------------------------------------------- |
+| Functional | Multi-tenant SaaS with per-tenant KB, agents, and billing              |
+| Channels   | WhatsApp Cloud API and Instagram Messaging API                         |
+| AI         | RAG responses grounded in uploaded documents — no hallucinated pricing |
+| Handoff    | Human agent takeover with Meta template compliance                     |
+| Automation | Visual flow builder for non-Q&A journeys (scheduling, data collection) |
+| Billing    | Stripe, Mercado Pago, PIX with package entitlements                    |
+| Operations | Admin panel, conversation history, operational metrics                 |
+
+---
+
+## Architecture
+
+Spell adopted a **three-service monorepo** with shared PostgreSQL (pgvector) and internal communication between the bot engine and management API.
+
+| Service        | Responsibility                                                         |
+| -------------- | ---------------------------------------------------------------------- |
+| `spell-server` | Meta webhooks, RAG/visual bot engine, handoff relay, background worker |
+| `panel-api`    | Auth, tenant admin, KB, agents, billing, integrations, public API      |
+| `spell-panel`  | React SPA for tenant and platform administration                       |
+
+---
+
+## System Diagram
+
+```mermaid
+flowchart TB
+    subgraph channels [Meta Channels]
+        WA[WhatsApp Cloud API]
+        IG[Instagram Messaging]
+    end
+
+    subgraph engine [Bot Engine]
+        SRV[spell-server]
+        WORKER[Background Worker]
+    end
+
+    subgraph management [Management Layer]
+        API[panel-api]
+        PANEL[spell-panel React SPA]
+    end
+
+    subgraph data [Data & AI]
+        PG[(PostgreSQL + pgvector)]
+        OAI[OpenAI Embeddings + GPT]
+    end
+
+    WA --> SRV
+    IG --> SRV
+    SRV --> WORKER
+    SRV <--> PG
+    SRV --> OAI
+    API <--> PG
+    PANEL --> API
+    SRV <--> API
 ```
-┌─────────────┐  ┌─────────────┐
-│  WhatsApp   │  │  Instagram  │
-│  (Meta API) │  │  (Meta API) │
-└──────┬──────┘  └──────┬──────┘
-       │                │
-       └────────┬───────┘
-                ▼
-       ┌────────────────┐
-       │  spell-server  │  webhooks, motor do bot, worker
-       └────────┬───────┘
-                │
-       ┌────────▼───────┐     ┌──────────────┐
-       │  PostgreSQL    │◄────│ panel-api    │
-       │  + pgvector    │     │ (gestão)     │
-       └────────────────┘     └──────┬───────┘
-                                     │
-                              ┌──────▼───────┐
-                              │ spell-panel  │
-                              │ (React SPA)  │
-                              └──────────────┘
-```
-
-### 3.2 Serviços
-
-| Serviço   | Responsabilidade                                               |
-| --------- | -------------------------------------------------------------- |
-| server    | Webhooks Meta, motor RAG/visual, handoff, worker de background |
-| panel-api | Auth, admin, KB, agentes, billing, integrações, API pública    |
-| panel     | Interface React para tenants e administradores da plataforma   |
 
 ---
 
-## 4. Fluxo principal
+## Technology Stack
 
-### 4.1 Mensagem inbound no WhatsApp
-
-1. Meta envia webhook para `spell-server`
-2. Servidor resolve tenant pelo `phoneNumberId` do canal
-3. Carrega ou cria sessão de handoff para o cliente
-4. Se **HUMAN_ACTIVE** → repassa mensagens entre cliente e atendente
-5. Se **BOT_ACTIVE** → roteia por modo do tenant:
-   - **KB:** embed da pergunta → busca vetorial (pgvector) → geração OpenAI com verificador
-   - **Visual:** interpreta nós do fluxo (mensagem, opções, coleta, agendamento, timer)
-6. Se cliente pede humano → fan-out de ofertas para agentes disponíveis via templates WhatsApp
-
-### 4.2 Base de conhecimento (RAG)
-
-- Documentos (PDF, DOCX, XLSX, texto) fragmentados e embedados via OpenAI
-- Busca por similaridade de cosseno em `KnowledgeChunk.embedding`
-- Guardrails: respostas só a partir da base; loop de verificação antes de enviar
-- Múltiplos fluxos de KB com system prompts por tenant
-
-### 4.3 Handoff humano
-
-Estados: `BOT_ACTIVE` → `HANDOFF_PENDING` → `HUMAN_ACTIVE` → `CLOSED`
-
-- Ofertas enviadas a múltiplos agentes; primeiro a aceitar assume
-- Templates WhatsApp provisionados automaticamente para janela fora das 24h
-- Worker fecha sessões inativas e reenvia ofertas
+| Layer    | Technology                                    |
+| -------- | --------------------------------------------- |
+| Backend  | Node.js 20, TypeScript, Fastify 4, Prisma 6   |
+| Frontend | React 18, Vite 5, React Router, @xyflow/react |
+| Database | PostgreSQL 16 with pgvector extension         |
+| AI       | OpenAI gpt-4o-mini, text-embedding-3-small    |
+| Channels | WhatsApp Cloud API, Instagram Messaging API   |
+| Payments | Stripe, Mercado Pago, manual PIX              |
+| Calendar | Google Calendar OAuth, Calendly               |
+| Deploy   | Docker, CapRover                              |
 
 ---
 
-## 5. Tecnologias
+## Key Features
 
-| Camada         | Tecnologia                                    |
-| -------------- | --------------------------------------------- |
-| Backend        | Node.js 20, TypeScript, Fastify 4, Prisma 6   |
-| Frontend       | React 18, Vite 5, React Router, @xyflow/react |
-| Banco de dados | PostgreSQL 16 com extensão pgvector           |
-| IA             | OpenAI (gpt-4o-mini, text-embedding-3-small)  |
-| Canais         | WhatsApp Cloud API, Instagram Messaging API   |
-| Pagamentos     | Stripe, Mercado Pago, PIX manual              |
-| Calendário     | Google Calendar OAuth, Calendly               |
-| Deploy         | Docker, CapRover (spelltalk.com.br)           |
+1. **RAG knowledge base** — PDF, DOCX, XLSX chunked and embedded; cosine similarity retrieval with response verifier
+2. **Visual flows** — Node-based builder for messages, options, data collection, timers, scheduling
+3. **Human handoff** — State machine: `BOT_ACTIVE` → `HANDOFF_PENDING` → `HUMAN_ACTIVE` → `CLOSED`
+4. **Multi-channel** — Same tenant logic across WhatsApp and Instagram
+5. **Package entitlements** — Agent limits, conversation quotas, KB entries, flow node caps
+6. **White-label deploy** — Separate CapRover apps per branded instance
 
 ---
 
-## 6. Responsabilidades
+## Engineering Challenges
 
-| Componente   | Responsabilidade                                    |
-| ------------ | --------------------------------------------------- |
-| spell-server | Webhooks, RAG, fluxos visuais, handoff, worker      |
-| panel-api    | CRUD de tenants, KB, agentes, billing, integrações  |
-| spell-panel  | UI de tenant (KB, fluxos, conversas, setup) e admin |
-| pgvector     | Embeddings e retrieval semântico                    |
-| Meta APIs    | Entrega de mensagens WhatsApp/Instagram oficiais    |
+### RAG alignment
 
----
+Generic LLMs invent prices and policies. The product requires retrieval with minimum similarity thresholds and a verification loop before sending any response.
 
-## 7. Desafios
+### WhatsApp 24-hour window
 
-### 7.1 Respostas alinhadas à base de conhecimento
+Human relay outside the messaging window requires Meta-approved templates, provisioned per tenant automatically.
 
-IA genérica inventa preços e políticas; o produto exige RAG com verificador e guardrails rígidos.
+### Meta platform constraints
 
-### 7.2 Handoff fora da janela de 24h do WhatsApp
+Instagram permissions, app review cycles, and comment reply limits directly impact feature availability and roadmap.
 
-Relay humano depende de templates aprovados pela Meta, provisionados por tenant.
+### Multi-tenant billing
 
-### 7.3 Restrições da plataforma Meta
-
-Instagram em modo desenvolvimento, revisão de permissões (`instagram_manage_comments`), limite de respostas públicas por comentário.
-
-### 7.4 Multi-tenant com billing
-
-Pacotes limitam agentes, conversas/mês, entradas na KB e nós de fluxo visual — entitlements precisam refletir no comportamento do bot.
-
-### 7.5 Deploy com três branches
-
-CapRover exige `captain-definition` separados por app (server, panel-api, panel) com branches de deploy distintas.
+Entitlements must enforce limits in real time across server and panel-api via shared `package-entitlements` module.
 
 ---
 
-## 8. Soluções
+## Trade-offs
 
-| Desafio           | Solução                                                                |
-| ----------------- | ---------------------------------------------------------------------- |
-| Alucinação        | RAG com top-k + score mínimo + verificador de resposta antes do envio  |
-| Handoff           | Templates automáticos + worker de retry + relay bidirecional           |
-| Instagram         | Fluxos visuais com trigger por comentário; DM como continuação         |
-| Entitlements      | `package-entitlements.ts` compartilhado entre server e panel-api       |
-| Agendamento na KB | `spell-resource-router` decide quando buscar slots de calendário vs KB |
-
----
-
-## 9. Resultados
-
-O Spell está em produção em `panel.spelltalk.com.br`, `api.spelltalk.com.br` e `server.spelltalk.com.br`, com deploy white-label adicional (ex.: `spellserver.projetovendermais.com.br`).
-
-Métricas operacionais disponíveis no painel (conversas/dia, clientes atendidos), mas **não há KPIs de negócio publicados no repositório**. Logs de produção mostram atendimento real em tenants (ex.: telemedicina com precificação e agendamento via RAG).
+| Decision    | Chosen                   | Alternative              | Rationale                                                       |
+| ----------- | ------------------------ | ------------------------ | --------------------------------------------------------------- |
+| Bot runtime | Dedicated `spell-server` | Single API               | Webhook latency isolation from admin CRUD                       |
+| ORM         | Prisma                   | Raw SQL                  | Type safety and migration velocity for small team               |
+| AI model    | gpt-4o-mini              | Larger models            | Cost control at scale; RAG quality matters more than model size |
+| Monorepo    | 3 services, 1 DB         | Microservices per tenant | Operational simplicity for current scale                        |
+| Handoff     | Fan-out to all agents    | Round-robin queue        | Faster first response in WhatsApp context                       |
 
 ---
 
-## 10. Lições aprendidas
+## Security
 
-1. **RAG com verificador é o diferencial** — Respostas ancoradas na base valem mais que um modelo mais capaz sem guardrails.
-2. **Handoff é feature, não fallback** — Templates, relay e worker são tão críticos quanto o bot.
-3. **Meta manda nas regras** — Permissões, janelas de 24h e revisão de app impactam roadmap diretamente.
-4. **Fluxos visuais complementam KB** — Nem todo atendimento é Q&A; coleta de dados e agendamento precisam de automação estruturada.
-5. **Monorepo de três serviços** — Separação entre motor de bot e painel facilita deploy e escala independente.
+| Control              | Implementation                                                      |
+| -------------------- | ------------------------------------------------------------------- |
+| Tenant isolation     | `phoneNumberId` resolves tenant on every webhook                    |
+| Webhook verification | Meta signature validation on inbound events                         |
+| API auth             | JWT for panel-api; API keys for public integrations                 |
+| KB access            | Documents scoped per tenant; embeddings never cross tenant boundary |
+| Payments             | Stripe/Mercado Pago webhooks with signature verification            |
+| Secrets              | Environment variables per CapRover app; no keys in repository       |
 
 ---
 
-## 11. Relação com NovaDesk
+## Performance
 
-Conceitos do Spell que informam o NovaDesk:
+| Area             | Approach                                                                    |
+| ---------------- | --------------------------------------------------------------------------- |
+| Embedding search | pgvector index on `KnowledgeChunk.embedding`; top-k with score threshold    |
+| Webhook response | Async worker for heavy processing; immediate 200 to Meta                    |
+| Caching          | Session state in PostgreSQL; hot tenant config cached in memory             |
+| Background jobs  | Worker for handoff retries, inactive session cleanup, template provisioning |
 
-- Multi-tenancy com isolamento por tenant (Auth Service, HelpDesk)
-- Filas e workers para tarefas assíncronas (Notification Service, BullMQ)
-- RAG e IA como padrão de extensibilidade (futuro no HelpDesk)
-- Billing e pacotes por entitlements (modelo de SaaS)
-- Integrações via webhooks e API keys (padrão de extensão da plataforma)
+Operational metrics (conversations/day, customers served) available in production admin panel.
+
+---
+
+## Scalability
+
+| Dimension | Strategy                                                                            |
+| --------- | ----------------------------------------------------------------------------------- |
+| Tenants   | Shared infrastructure; tenant ID on all rows                                        |
+| Messages  | Horizontal scale of `spell-server` behind load balancer; stateless webhook handlers |
+| KB size   | Chunked documents; embedding batch jobs off peak                                    |
+| Agents    | Per-package agent limits enforced at connection time                                |
+
+---
+
+## Deployment
+
+| Environment | URL                                  | Notes                           |
+| ----------- | ------------------------------------ | ------------------------------- |
+| Panel       | panel.spelltalk.com.br               | React SPA via CapRover          |
+| API         | api.spelltalk.com.br                 | panel-api                       |
+| Server      | server.spelltalk.com.br              | Webhook + worker                |
+| White-label | spellserver.projetovendermais.com.br | Separate CapRover branch deploy |
+
+Three `captain-definition` files — one per deployable unit with independent Git branches.
+
+---
+
+## Lessons Learned
+
+1. **RAG with verifier is the differentiator** — Grounded answers beat a larger model without guardrails.
+2. **Handoff is a feature, not a fallback** — Templates, relay, and worker logic are as critical as the bot.
+3. **Meta sets the rules** — Permissions, 24h windows, and app review directly shape the roadmap.
+4. **Visual flows complement KB** — Not all support is Q&A; scheduling and data collection need structured automation.
+5. **Three-service split** — Separating bot engine from admin API enables independent deploy and scale.
+
+---
+
+## Screenshots
+
+Production URLs (access requires tenant credentials):
+
+| Screen            | URL                    | Description                                     |
+| ----------------- | ---------------------- | ----------------------------------------------- |
+| Tenant dashboard  | panel.spelltalk.com.br | KB management, flow builder, conversation inbox |
+| Flow builder      | panel → Flows          | Visual node editor (@xyflow/react)              |
+| Conversation view | panel → Conversations  | Handoff state, message history                  |
+| Admin metrics     | panel → Analytics      | Conversations/day, active customers             |
+
+_Screenshots available on request during technical interviews._
+
+---
+
+## Roadmap (at handoff)
+
+| Phase | Item                            | Status     |
+| ----- | ------------------------------- | ---------- |
+| v1.0  | WhatsApp RAG + handoff          | Shipped    |
+| v1.1  | Visual flows + scheduling       | Shipped    |
+| v1.2  | Instagram DM + comment triggers | Shipped    |
+| v2.0  | Advanced analytics dashboard    | Planned    |
+| v2.1  | Voice channel integration       | Evaluating |
+
+---
+
+## Relation to NovaDesk
+
+Concepts from Spell that inform NovaDesk:
+
+- Multi-tenancy with tenant isolation (Auth Service, HelpDesk)
+- Async workers and queues (Notification Service, BullMQ)
+- RAG as extensibility pattern (future HelpDesk AI module)
+- Package entitlements model for SaaS billing
+- Webhook and API key integration patterns

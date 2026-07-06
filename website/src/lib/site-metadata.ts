@@ -3,11 +3,11 @@ import { getSiteUrl } from '@/lib/app-urls';
 
 export const OG_IMAGE_PATH = '/og/banner.png';
 
-const SITE_TITLE = 'NovaDesk — Integrated Engineering Ecosystem';
+const SITE_TITLE = 'Li Hong — Software Engineer | NovaDesk';
 const SITE_DESCRIPTION =
-  'Production-grade portfolio platform with microservices, Next.js apps, shared packages, CI/CD, and live deployment — built by Li Hong.';
+  'Production-grade engineering portfolio by Li Hong: microservices monorepo, live SaaS demo, documented architecture, and case studies from shipped systems.';
 const OG_DESCRIPTION =
-  'Full-stack portfolio platform demonstrating senior-level software architecture: HelpDesk, Analytics, Realtime Chat, Admin Portal, and API Gateway.';
+  'Full-stack portfolio demonstrating senior-level software engineering — HelpDesk, Analytics, Realtime Chat, Admin Portal, API Gateway, ADRs, and production deployment.';
 
 export function getOpenGraphImages(): NonNullable<Metadata['openGraph']>['images'] {
   return [

@@ -1,41 +1,70 @@
-# NovaDesk
+# NovaDesk — Public Website
 
-NovaDesk foundation app — marketing website.
+Engineering portfolio site for **Li Hong**. Built with Next.js 14 App Router, Tailwind CSS, and `@novadesk/ui`.
 
-## Quick start
+**Live:** [novadesk.li.magicsoft.site](https://novadesk.li.magicsoft.site)
+
+---
+
+## Pages
+
+| Route                       | Purpose                                                                            |
+| --------------------------- | ---------------------------------------------------------------------------------- |
+| `/`                         | Landing — metrics, platform modules, engineering highlights, case studies, contact |
+| `/about`                    | About the Engineer — philosophy, trajectory, links                                 |
+| `/engineering`              | Engineering documentation index                                                    |
+| `/engineering/architecture` | System architecture (from `docs/01-Architecture.md`)                               |
+| `/engineering/monorepo`     | Monorepo structure (from `docs/15-Monorepo-Structure.md`)                          |
+| `/engineering/auth-flow`    | JWT authentication flow with Mermaid diagrams                                      |
+| `/engineering/request-flow` | Request lifecycle through gateway                                                  |
+| `/engineering/roadmap`      | Delivery roadmap (from `docs/09-Roadmap.md`)                                       |
+| `/engineering/decisions`    | Architecture Decision Records                                                      |
+| `/case-studies/[slug]`      | Production case studies (Spell, Broom, Teste de Perfil)                            |
+
+---
+
+## Content
+
+| Path                    | Description                                            |
+| ----------------------- | ------------------------------------------------------ |
+| `content/case-studies/` | Case study markdown (source of truth for rendering)    |
+| `content/engineering/`  | Auth flow, request flow docs with Mermaid              |
+| `public/resume/`        | Resume PDF (`Curriculo_Li_Hong_Software_Engineer.pdf`) |
+
+Case studies are synced to `docs/case-studies/` for the engineering documentation index.
+
+---
+
+## Development
 
 ```bash
 pnpm install
 pnpm --filter @novadesk/website dev
 ```
 
-Public site: http://localhost:3013
+Port **3013** (or via Nginx at `/` in Docker stack).
+
+---
 
 ## Scripts
 
-| Script      | Description                          |
-| ----------- | ------------------------------------ |
-| `dev`       | Start development server (port 3013) |
-| `build`     | Production build                     |
-| `start`     | Start production server              |
-| `lint`      | Run ESLint                           |
-| `typecheck` | Run TypeScript                       |
-| `test`      | Run Vitest unit tests                |
-| `clean`     | Remove build artifacts               |
+| Command          | Description        |
+| ---------------- | ------------------ |
+| `pnpm dev`       | Development server |
+| `pnpm build`     | Production build   |
+| `pnpm test`      | Vitest unit tests  |
+| `pnpm lint`      | ESLint             |
+| `pnpm typecheck` | TypeScript check   |
 
-## E2E tests
+---
 
-```bash
-pnpm exec playwright test --config e2e/playwright.config.ts
-```
+## Reviewer path
 
-## Docker
+Designed for technical review in under two minutes:
 
-```bash
-docker build -f Dockerfile -t novadesk-website ../..
-docker run -p 3013:3013 novadesk-website
-```
+1. **About** — who builds this and how they think
+2. **Engineering** — architecture, ADRs, auth/request flows
+3. **Case studies** — prior production systems
+4. **Live demo** — HelpDesk, Analytics, Chat, Admin
 
-## Environment
-
-Copy `.env.example` to `.env.local` and adjust as needed.
+All reachable within three clicks from the home page.

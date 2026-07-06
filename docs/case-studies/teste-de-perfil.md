@@ -1,178 +1,246 @@
 # Case Study — Teste de Perfil
 
-**Versão:** 2.0  
-**Status:** Aprovado  
-**Última atualização:** 2026-07-06  
-**Tipo:** Projeto anterior (documentação narrativa, sem código)
+**Version:** 3.0  
+**Status:** Approved  
+**Last updated:** 2026-07-06  
+**Type:** Prior production system (narrative documentation, source not in this repository)
 
 ---
 
-## 1. Problema
+## Overview
 
-Paulo Odorico e parceiros (Projeto Vender Mais, Conexão Lucrativa) precisavam entregar avaliações de perfil comportamental em escala — para alunos de cursos online, participantes de treinamentos presenciais e eventos corporativos. Processos manuais (planilhas, impressão avulsa, envio de PDF por e-mail) não escalavam e não integravam com plataformas de curso (Kiwify, Hotmart).
+Teste de Perfil is a behavioral profile assessment platform for Paulo Odorico and partners (Projeto Vender Mais, Conexão Lucrativa). It delivers DISC-based assessments for online courses, corporate training events, and investor profiling — with personalized PDF workbooks generated server-side.
 
----
-
-## 2. Objetivo
-
-Desenvolver uma plataforma web que aplique testes de perfil comportamental (modelo DISC com quatro perfis: Executor, Comunicador, Planejador, Analista), gere apostilas personalizadas em PDF e suporte fluxos distintos: curso online com acesso por token, evento corporativo com turmas e impressão em lote, e teste gratuito com perfil de investidor.
+**Role:** Full-stack engineer — architecture, assessment engine, PDF pipeline, admin tooling, deployment.  
+**Production:** testeperfil.pauloodorico.com.br
 
 ---
 
-## 3. Arquitetura
+## Business Problem
 
-### 3.1 Visão geral
+Partners needed to deliver behavioral profile assessments at scale — for online course students, in-person training participants, and corporate events. Manual processes (spreadsheets, ad-hoc printing, email PDF delivery) did not scale and did not integrate with course platforms (Kiwify, Hotmart).
 
-Teste de Perfil adotou **Next.js App Router monolítico** com API Route Handlers e PostgreSQL — sem backend separado.
+---
 
+## Requirements
+
+| Category   | Requirement                                                         |
+| ---------- | ------------------------------------------------------------------- |
+| Assessment | DISC model — Executor, Communicator, Planner, Analyst profiles      |
+| Flow 1     | Online course access via platform token (Kiwify/Hotmart params)     |
+| Flow 2     | Corporate events with classes; result hidden until printed at event |
+| Flow 3     | Free investor profile test with immediate online result             |
+| Output     | Personalized PDF workbook per participant                           |
+| Admin      | Class/event management, CSV export, batch PDF ZIP for print shops   |
+| Analytics  | Funnel tracking: visits, starts, completions, drop-off per question |
+
+---
+
+## Architecture
+
+Teste de Perfil uses a **Next.js App Router monolith** with API Route Handlers and PostgreSQL — no separate backend service.
+
+| Flow                  | Route                    | Audience                            |
+| --------------------- | ------------------------ | ----------------------------------- |
+| Teste de Perfil       | `/teste-perfil`          | Projeto Vender Mais course students |
+| Perfil Comportamental | `/perfil-comportamental` | Corporate training events           |
+| Conexão Lucrativa     | `/cl`                    | Investor profiling (free)           |
+
+Each flow has separate question banks, Prisma tables, and UX rules while sharing PDF infrastructure and deployment.
+
+---
+
+## System Diagram
+
+```mermaid
+flowchart TB
+    subgraph flows [Assessment Flows]
+        TP[/teste-perfil 20 questions/]
+        PC[/perfil-comportamental 24 questions/]
+        CL[/cl investor profile/]
+    end
+
+    subgraph next [Next.js App Router]
+        API[API Route Handlers]
+        ADMIN[Admin Panels PC + CL]
+        METRICS[/metrics Dashboard]
+    end
+
+    subgraph processing [Document Pipeline]
+        SCORE[Scoring Engine]
+        PUP[Puppeteer + Chromium]
+        QUEUE[Email Queue Worker]
+    end
+
+    subgraph data [Data]
+        PG[(PostgreSQL Prisma)]
+    end
+
+    TP --> API
+    PC --> API
+    CL --> API
+    API --> SCORE
+    SCORE --> PG
+    API --> PUP
+    PUP --> QUEUE
+    ADMIN --> API
+    METRICS --> PG
 ```
-┌─────────────────────────────────────────────────────┐
-│              Next.js (App Router)                    │
-│  ┌──────────────┐ ┌──────────────┐ ┌─────────────┐ │
-│  │ /teste-perfil│ │/perfil-comp. │ │    /cl      │ │
-│  │  (curso)     │ │  (corporativo)│ │ (investidor)│ │
-│  └──────┬───────┘ └──────┬───────┘ └──────┬──────┘ │
-│         └────────────────┼────────────────┘         │
-│                          ▼                          │
-│                   API Route Handlers                  │
-│              (salvar, PDF, e-mail, admin)           │
-└──────────────────────────┬──────────────────────────┘
-                           ▼
-                    PostgreSQL (Prisma)
-                           │
-                    Puppeteer + Chromium
-                    (PDF server-side)
-```
-
-### 3.2 Fluxos independentes
-
-| Fluxo                 | Rota                     | Público                                   |
-| --------------------- | ------------------------ | ----------------------------------------- |
-| Teste de Perfil       | `/teste-perfil`          | Alunos Projeto Vender Mais                |
-| Perfil Comportamental | `/perfil-comportamental` | Treinamentos e eventos corporativos       |
-| Conexão Lucrativa     | `/cl`                    | Parceria Matheus Torrente & Paulo Odorico |
-
-Cada fluxo tem banco de questões, tabelas Prisma e UX próprios, compartilhando infraestrutura de PDF e deploy.
 
 ---
 
-## 4. Fluxo principal
+## Technology Stack
 
-### 4.1 Teste de Perfil (curso online)
-
-1. Aluno acessa via link com token (`TESTE_PERFIL_TOKEN`) e parâmetros da plataforma (Kiwify/Hotmart: e-mail, nome, `external_id`)
-2. Cadastro e **20 perguntas** uma por tela com barra de progresso
-3. Tracking de sessão via `/api/track` (visita, início, progresso, conclusão)
-4. Ao finalizar: resultado na tela + download de PDF + e-mail enfileirado (delay configurável, padrão 7 min)
-5. Dashboard `/metrics` com visitas, taxa de conclusão e abandono por questão
-
-### 4.2 Perfil Comportamental (corporativo)
-
-1. Participante acessa link da turma (`/t/{linkToken}`) ou landing geral
-2. Cadastro (nome, setor, cargo, tempo de casa, idade)
-3. **24 perguntas** → resultado calculado no servidor
-4. Redirecionamento para `/obrigado/{id}` — **participante não vê resultado** (apostila impressa no evento)
-5. Admin cria turmas, exporta CSV, gera PDF individual ou ZIP em lote para gráfica
-
-### 4.3 Conexão Lucrativa
-
-1. Cadastro (nome, e-mail, profissão) — gratuito, sem token
-2. **20 perguntas** comportamentais + cenários de investimento
-3. Resultado imediato em `/cl/resultado/{id}` com perfil de investidor (Arrojado, Sofisticado, Conservador, Moderado)
-4. Admin gerencia eventos, exporta CSV e ZIP de PDFs
+| Layer     | Technology                                      |
+| --------- | ----------------------------------------------- |
+| Framework | Next.js 16 (App Router), React 19, TypeScript   |
+| Styling   | Tailwind CSS 4                                  |
+| Database  | PostgreSQL, Prisma 6                            |
+| Charts    | Chart.js + react-chartjs-2                      |
+| PDF       | Puppeteer-core + Chromium, pdf-lib, jsPDF       |
+| Email     | Nodemailer (SMTP), file-based queue (`.queue/`) |
+| Export    | JSZip (batch workbook generation)               |
+| Deploy    | Docker multi-stage, CapRover                    |
 
 ---
 
-## 5. Tecnologias
+## Key Features
 
-| Camada         | Tecnologia                                    |
-| -------------- | --------------------------------------------- |
-| Framework      | Next.js 16 (App Router), React 19, TypeScript |
-| Estilo         | Tailwind CSS 4                                |
-| Banco de dados | PostgreSQL, Prisma 6                          |
-| Gráficos       | Chart.js + react-chartjs-2                    |
-| PDF            | Puppeteer-core + Chromium, pdf-lib, jsPDF     |
-| E-mail         | Nodemailer (SMTP), fila em arquivo `.queue/`  |
-| Exportação     | JSZip (lotes de apostilas)                    |
-| Deploy         | Docker multi-stage, CapRover                  |
-| Produção       | testeperfil.pauloodorico.com.br               |
+1. **Three products, one codebase** — Shared infrastructure; isolated Prisma models per flow
+2. **Scoring engine** — Profile points, percentages, ranking across four DISC profiles
+3. **PDF generation** — Puppeteer renders internal `?print=true` URL to A4 PDF with charts
+4. **Email queue** — Worker polling (15s) with configurable delay (default 7 min post-completion)
+5. **Course integration** — URL params from Kiwify/Hotmart → `tp_auth` cookie
+6. **Corporate batch export** — ZIP of all class PDFs for print shop; browser print route for events
+7. **Funnel analytics** — `/metrics` dashboard: visits, completion rate, per-question drop-off
 
 ---
 
-## 6. Responsabilidades
+## Engineering Challenges
 
-| Componente          | Responsabilidade                                        |
-| ------------------- | ------------------------------------------------------- |
-| Motor de scoring    | Pontuação por perfil, percentuais, ranking              |
-| Geração de apostila | Puppeteer renderiza URL interna `?print=true` em A4     |
-| Fila de e-mail      | Worker polling (15s), jobs com delay configurável       |
-| Admin PC/CL         | Turmas/eventos, links públicos, invalidação, export     |
-| Auth por fluxo      | Token de curso, cookie de métricas, admin compartilhado |
-| Tracking            | Visitas e sessões para analytics do teste original      |
+### Three products in one repository
 
----
+Different UX rules per flow: show vs hide result, token-gated vs free access, immediate vs deferred delivery.
 
-## 7. Desafios
+### Server-side PDF with charts
 
-### 7.1 Três produtos em um repositório
+Puppeteer must wait for Chart.js canvas render; batch ZIP for entire classes can take minutes.
 
-Fluxos com regras de UX diferentes (mostrar vs ocultar resultado, token vs gratuito) no mesmo codebase.
+### Deployment and migrations
 
-### 7.2 PDF server-side com gráficos
+Prisma sqlite → PostgreSQL migration conflict (P3019) during production adoption.
 
-Puppeteer precisa aguardar Chart.js renderizar; ZIP de turmas inteiras pode levar minutos.
+### Simple email queue
 
-### 7.3 Deploy e migrations
+Jobs deleted on process without automatic SMTP failure retry.
 
-Histórico de conflito Prisma sqlite vs PostgreSQL (erro P3019) durante adoção do Postgres em produção.
+### Corporate privacy
 
-### 7.4 Fila de e-mail simples
-
-Jobs removidos ao processar sem retry automático em caso de falha SMTP.
-
-### 7.5 Privacidade no fluxo corporativo
-
-Participante não vê resultado online — pipeline de impressão precisa estar pronto antes do evento.
+Participant does not see result online — print pipeline must be ready before the event.
 
 ---
 
-## 8. Soluções
+## Trade-offs
 
-| Desafio           | Solução                                                                      |
-| ----------------- | ---------------------------------------------------------------------------- |
-| Multi-produto     | Tabelas Prisma separadas (`TestSession`, `PcParticipante`, `ClParticipante`) |
-| PDF com charts    | `INTERNAL_BASE_URL` + wait for canvas + Dockerfile com Chromium              |
-| Lote para gráfica | ZIP via admin + rota `/admin/imprimir?turmaId=` para impressão browser       |
-| Acesso curso      | Token em query param → cookie `tp_auth`                                      |
-| Eventos           | Turmas com `linkToken` UUID, taxa de resposta no admin                       |
-
----
-
-## 9. Resultados
-
-Plataforma em produção em **testeperfil.pauloodorico.com.br**, usada em três contextos reais: curso online (Projeto Vender Mais), treinamentos corporativos com turmas e eventos Conexão Lucrativa.
-
-Dashboard `/metrics` e admin de turmas exibem métricas **ao vivo** (visitas, conclusões, taxa de resposta por turma). **Não há números de negócio fixos no repositório** — estatísticas vêm do banco em runtime.
+| Decision     | Chosen                 | Alternative                     | Rationale                                          |
+| ------------ | ---------------------- | ------------------------------- | -------------------------------------------------- |
+| Architecture | Next.js monolith       | Separate API service            | Solo maintainer; low operational overhead          |
+| PDF engine   | Puppeteer              | react-pdf / PDFKit              | Charts and complex layout need real browser render |
+| Email queue  | File-based polling     | Redis/BullMQ                    | Sufficient volume; simpler deploy                  |
+| DB per flow  | Separate Prisma models | Single generic assessment table | Flow-specific fields without over-abstraction      |
+| Corporate UX | Hide result online     | Show immediately                | Business requirement for event reveal              |
 
 ---
 
-## 10. Lições aprendidas
+## Security
 
-1. **UX por contexto importa mais que um fluxo único** — Curso mostra resultado; corporativo esconde até o evento; CL é imediato e gratuito.
-2. **Puppeteer em Docker é infraestrutura de produto** — Chromium, URL interna e timeouts fazem parte do core, não de um extra.
-3. **Integração com plataformas de curso** — Parâmetros na URL (Kiwify/Hotmart) e token de acesso evitam cadastro duplicado.
-4. **Exportação em lote é operação crítica** — ZIP de apostilas para gráfica precisa de UX que comunique tempo de processamento.
-5. **Modelo DISC simplificado escala** — Quatro perfis com percentuais e ranking atendem vendas, RH e educação financeira com o mesmo motor.
+| Control       | Implementation                                        |
+| ------------- | ----------------------------------------------------- |
+| Course access | `TESTE_PERFIL_TOKEN` + platform URL params            |
+| Session auth  | `tp_auth` cookie after token validation               |
+| Admin         | Shared admin credentials per flow (PC/CL)             |
+| Class links   | UUID `linkToken` per corporate class                  |
+| Data privacy  | Corporate results not shown to participants pre-event |
+| SMTP          | Credentials via environment variables                 |
 
 ---
 
-## 11. Relação com NovaDesk
+## Performance
 
-Conceitos do Teste de Perfil que informam o NovaDesk:
+| Area           | Approach                                                |
+| -------------- | ------------------------------------------------------- |
+| Assessment UX  | One question per screen; progress bar; minimal payload  |
+| PDF generation | Internal `INTERNAL_BASE_URL`; canvas wait timeout       |
+| Batch ZIP      | Admin UI communicates processing time for large classes |
+| Email queue    | 15s poll interval; delayed send reduces SMTP burst      |
+| Metrics        | Aggregated queries; `/metrics` for funnel visualization |
 
-- Geração de relatórios e PDF (Analytics export)
-- Fluxos com estados e tracking de progresso (onboarding, tickets)
-- Admin com turmas/organizações (multi-tenant HelpDesk)
-- Auth por token/convite (Admin Portal invites)
-- Métricas de funil e abandono (Analytics Dashboard)
-- Deploy containerizado em CapRover (mesmo padrão do NovaDesk)
+---
+
+## Scalability
+
+| Dimension        | Strategy                                                    |
+| ---------------- | ----------------------------------------------------------- |
+| Concurrent users | Stateless Next.js handlers; PostgreSQL connection pool      |
+| PDF load         | Sequential generation in batch; queue for email             |
+| Storage          | PostgreSQL for all participant data; no blob store needed   |
+| New flows        | New Prisma models + routes; shared PDF/email infrastructure |
+
+---
+
+## Deployment
+
+| Environment | URL                             | Notes                       |
+| ----------- | ------------------------------- | --------------------------- |
+| Production  | testeperfil.pauloodorico.com.br | CapRover Docker multi-stage |
+| PDF render  | Internal Docker network URL     | Chromium in container       |
+| Migrations  | Prisma migrate deploy           | PostgreSQL in production    |
+
+---
+
+## Lessons Learned
+
+1. **UX context beats single flow** — Course shows result; corporate hides until event; CL is immediate and free.
+2. **Puppeteer in Docker is product infrastructure** — Chromium, internal URL, and timeouts are core, not extras.
+3. **Course platform integration** — URL params (Kiwify/Hotmart) and access tokens avoid duplicate registration.
+4. **Batch export is critical operations** — ZIP for print shops needs UX that communicates processing time.
+5. **Simplified DISC scales** — Four profiles with percentages serve sales, HR, and financial education with one engine.
+
+---
+
+## Screenshots
+
+| Screen          | Route                     | Description                                    |
+| --------------- | ------------------------- | ---------------------------------------------- |
+| Assessment      | `/teste-perfil`           | One-question-per-screen with progress          |
+| Result + PDF    | `/teste-perfil/resultado` | Profile breakdown and download                 |
+| Metrics         | `/metrics`                | Funnel analytics dashboard                     |
+| Admin classes   | `/admin/pc`               | Class management, CSV, batch ZIP               |
+| Investor result | `/cl/resultado/{id}`      | Investor profile (Arrojado, Conservador, etc.) |
+
+_Screenshots available on request during technical interviews._
+
+---
+
+## Roadmap (at handoff)
+
+| Phase | Item                            | Status     |
+| ----- | ------------------------------- | ---------- |
+| v1.0  | Teste de Perfil course flow     | Shipped    |
+| v1.5  | Perfil Comportamental corporate | Shipped    |
+| v2.0  | Conexão Lucrativa investor flow | Shipped    |
+| v2.5  | Email queue retry logic         | Planned    |
+| v3.0  | Hotmart webhook integration     | Evaluating |
+
+---
+
+## Relation to NovaDesk
+
+Concepts from Teste de Perfil that inform NovaDesk:
+
+- Report and PDF generation (Analytics export)
+- State-based flows with progress tracking (onboarding, tickets)
+- Admin with classes/organizations (multi-tenant HelpDesk)
+- Token/invite-based auth (Admin Portal invites)
+- Funnel and drop-off metrics (Analytics Dashboard)
+- CapRover containerized deploy (same pattern as NovaDesk)

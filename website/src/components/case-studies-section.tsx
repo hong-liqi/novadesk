@@ -11,8 +11,9 @@ export function CaseStudiesSection() {
             Case studies
           </Text>
           <Text as="p" tone="muted" className="max-w-2xl !text-slate-400">
-            Prior projects that shaped architectural decisions in NovaDesk — documented as narrative
-            case studies with lessons learned.
+            Production systems delivered before NovaDesk — each documented with architecture,
+            trade-offs, security, and lessons learned. Source code for these projects is not in this
+            repository; documentation is based on direct engineering involvement.
           </Text>
         </Stack>
 

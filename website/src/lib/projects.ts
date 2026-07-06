@@ -73,5 +73,20 @@ export function getNovaDeskModules(): NovaDeskModule[] {
       tags: ['NestJS', 'BullMQ', 'SMTP', 'PostgreSQL'],
       type: 'service',
     },
+    {
+      id: 'analytics-api',
+      name: 'Analytics API',
+      description:
+        'Metrics aggregation, KPI queries, and export endpoints for the analytics dashboard.',
+      tags: ['NestJS', 'PostgreSQL', 'Prisma'],
+      type: 'service',
+    },
+    {
+      id: 'realtime',
+      name: 'Realtime Chat Service',
+      description: 'WebSocket messaging with Redis pub/sub for agent and customer conversations.',
+      tags: ['Socket.IO', 'Redis', 'NestJS'],
+      type: 'service',
+    },
   ];
 }

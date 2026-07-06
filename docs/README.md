@@ -43,6 +43,7 @@ Technical documentation for **NovaDesk**, a full-stack portfolio platform that d
 
 | Document                                                 | Purpose                                    |
 | -------------------------------------------------------- | ------------------------------------------ |
+| [adr/](./adr/)                                           | Architecture Decision Records (7 accepted) |
 | [20-Glossary.md](./20-Glossary.md)                       | Terminology                                |
 | [21-Runbooks.md](./21-Runbooks.md)                       | Operational procedures                     |
 | [templates/rfc-template.md](./templates/rfc-template.md) | RFC template                               |

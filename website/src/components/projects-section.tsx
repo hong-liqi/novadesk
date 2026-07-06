@@ -13,8 +13,9 @@ export function ProjectsSection() {
             NovaDesk modules
           </Text>
           <Text as="p" tone="muted" className="max-w-2xl !text-slate-400">
-            Eight integrated applications and services sharing auth, observability, and a unified
-            design system — deployed behind a single API gateway.
+            Five applications and six backend services sharing authentication, observability, and a
+            unified design system — routed through Nginx and an API gateway. Open any module to
+            inspect a live, deployable component.
           </Text>
         </Stack>
 

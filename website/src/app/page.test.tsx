@@ -6,22 +6,29 @@ vi.mock('@/components/providers', () => ({
   Providers: ({ children }: { children: React.ReactNode }) => children,
 }));
 
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/',
+}));
+
 describe('HomePage', () => {
-  it('shows NovaDesk branding and main sections', () => {
+  it('shows branding and main sections', () => {
     render(<HomePage />);
-    expect(screen.getAllByText('NovaDesk').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Li Hong/i).length).toBeGreaterThan(0);
     expect(
-      screen.getByRole('heading', { name: 'Integrated engineering ecosystem' }),
+      screen.getByRole('heading', {
+        name: /Production software, documented architecture, live deployment/i,
+      }),
     ).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'NovaDesk modules' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Repository metrics' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Engineering highlights' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Case studies' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Get in touch' })).toBeInTheDocument();
   });
 
-  it('links to platform apps', () => {
+  it('links to platform apps and about page', () => {
     render(<HomePage />);
-    expect(screen.getAllByRole('link', { name: /HelpDesk SaaS/i }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole('link', { name: /Analytics/i }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole('link', { name: /Admin Portal/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /About the Engineer/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /Open live demo/i }).length).toBeGreaterThan(0);
   });
 });

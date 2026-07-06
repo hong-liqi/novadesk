@@ -1,181 +1,254 @@
 # Case Study — Broom
 
-**Versão:** 2.0  
-**Status:** Aprovado  
-**Última atualização:** 2026-07-06  
-**Tipo:** Projeto anterior (documentação narrativa, sem código)
+**Version:** 3.0  
+**Status:** Approved  
+**Last updated:** 2026-07-06  
+**Type:** Prior production system (narrative documentation, source not in this repository)
 
 ---
 
-## 1. Problema
+## Overview
 
-Marcas regionais de mobilidade urbana (táxi, mototáxi, transporte por app) precisam oferecer corrida sob demanda, mas construir uma plataforma completa — apps de passageiro e motorista, painel operacional, pagamentos, notificações — é caro e demorado. Cada cidade ou franquia quer sua própria marca, canais de atendimento e regras de preço, sem manter um codebase separado por operação.
+Broom is a white-label ride-hailing platform (Brasil Machine instance) powering regional mobility brands across Brazil. A single codebase serves 20+ franchise operators with passenger and driver mobile apps, an operations panel, WhatsApp booking, and multi-gateway payments.
 
----
-
-## 2. Objetivo
-
-Criar uma plataforma white-label de ride-hailing que permita a operadoras lançarem serviços estilo Uber com marca própria, múltiplos canais (app, WhatsApp, central telefônica) e gestão centralizada de franquias, motoristas e corridas.
+**Role:** Lead engineer — GraphQL API, mobile app architecture, WhatsApp integration, multi-tenant data model.  
+**Production:** api.broom.magicsoft.com.br, painel.broom.magicsoft.site
 
 ---
 
-## 3. Arquitetura
+## Business Problem
 
-### 3.1 Visão geral
+Regional urban mobility brands (taxi, mototaxi, app-based transport) need on-demand ride services, but building a complete platform — passenger and driver apps, operations panel, payments, notifications — is expensive and slow. Each city or franchise wants its own brand, support channels, and pricing rules without maintaining a separate codebase per operation.
 
-Broom (instância da plataforma **Brasil Machine**) adota um **monorepo multi-app** com API GraphQL central e clientes React Native + painel web.
+---
 
+## Requirements
+
+| Category    | Requirement                                                   |
+| ----------- | ------------------------------------------------------------- |
+| White-label | Per-franchise branding, credentials, and pricing              |
+| Mobile      | Passenger and driver React Native apps (iOS/Android)          |
+| Operations  | Admin panel: franchises, drivers, call center, live metrics   |
+| Booking     | App, WhatsApp, and call-center channels                       |
+| Payments    | Stripe, Mercado Pago, PayPal, PIX per franchise               |
+| Matching    | Driver-passenger matching with push and WhatsApp notification |
+| Real-time   | Live dashboard: revenue, rides, online drivers                |
+
+---
+
+## Architecture
+
+Broom uses a **multi-app monorepo** with a central GraphQL API and React Native + web clients.
+
+| Component           | Responsibility                                        |
+| ------------------- | ----------------------------------------------------- |
+| `api_machine`       | GraphQL API, webhooks, cron matching and cancellation |
+| `passenger_machine` | Passenger app: map, request, history, wallet          |
+| `driver_machine`    | Driver app: rides, meter, financials, vehicle         |
+| `painel_machine`    | Admin: franchises, drivers, call center, metrics      |
+
+---
+
+## System Diagram
+
+```mermaid
+flowchart TB
+    subgraph clients [Client Applications]
+        PA[Passenger App RN]
+        DA[Driver App RN]
+        ADM[Painel Admin React]
+        WA[WhatsApp Channel]
+    end
+
+    subgraph api [API Layer]
+        GQL[api_machine GraphQL Apollo]
+        CRON[node-cron Jobs]
+    end
+
+    subgraph external [External Services]
+        FB[Firebase Auth + FCM]
+        MAPS[Google Maps / Mapbox]
+        PAY[Stripe / MP / PayPal]
+        OAI[OpenAI Intent Classifier]
+    end
+
+    subgraph data [Data]
+        PG[(PostgreSQL Prisma)]
+        S3[Contabo S3 Storage]
+    end
+
+    PA --> GQL
+    DA --> GQL
+    ADM --> GQL
+    WA --> GQL
+    GQL --> CRON
+    GQL --> PG
+    GQL --> FB
+    GQL --> MAPS
+    GQL --> PAY
+    GQL --> OAI
+    GQL --> S3
 ```
-┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
-│ Passenger App    │  │ Driver App       │  │ Painel Admin     │
-│ (React Native)   │  │ (React Native)   │  │ (React + Prime)  │
-└────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘
-         │                     │                     │
-         └─────────────────────┼─────────────────────┘
-                               │ GraphQL (Apollo)
-                    ┌──────────▼──────────┐
-                    │    api_machine      │
-                    │  Express + Apollo   │
-                    │  + cron tasks       │
-                    └──────────┬──────────┘
-                               │
-              ┌────────────────┼────────────────┐
-              ▼                ▼                ▼
-         PostgreSQL        Firebase          WhatsApp
-         (Prisma)          (Auth/Push)       (Business API)
-```
-
-### 3.2 Componentes
-
-| Componente        | Responsabilidade                                            |
-| ----------------- | ----------------------------------------------------------- |
-| api_machine       | API GraphQL, webhooks, cron de matching e cancelamento      |
-| passenger_machine | App do passageiro: mapa, solicitação, histórico, carteira   |
-| driver_machine    | App do motorista: corridas, taxímetro, financeiro, veículo  |
-| painel_machine    | Admin: franquias, motoristas, central de chamadas, métricas |
 
 ---
 
-## 4. Fluxo principal
+## Technology Stack
 
-### 4.1 Solicitação de corrida (app)
-
-1. Passageiro autentica (Firebase Auth, Google, Apple)
-2. Seleciona origem e destino no mapa (Google Maps / Mapbox)
-3. Escolhe tipo de serviço → preço estimado (taxa base + km + minuto + horário de pico)
-4. Booking criado em estado `AWAIT`
-5. Cron `searchDriver` (a cada 20s) busca motoristas próximos e envia push/WhatsApp
-6. Motorista aceita → estados: `ACCEPTED_DRIVER` → `ON_ROUTE` → `EMBARKATION` → `COMPLETED`
-7. Avaliação e transação financeira ao finalizar
-
-### 4.2 Corrida via WhatsApp
-
-- Passageiro solicita corrida, compartilha localização e escolhe pagamento pelo chat
-- Motorista pode operar só via WhatsApp (`use_whatsapp: true`) com atualização de localização periódica
-- Camada de IA (OpenAI) interpreta intenções em texto livre (`request_ride`, `become_driver`, etc.) além do fluxo numerado legado
-
-### 4.3 Central de chamadas (painel)
-
-- Operador com flag `is_callcenter` busca passageiro, define endereços no mapa e cria booking via mutation GraphQL
-- Monitoramento de corridas ativas em tempo real
-
-### 4.4 Multi-franquia
-
-Cada registro `Franchise` armazena branding, chaves de API (Google, Mapbox), credenciais de pagamento (Stripe, Mercado Pago, PayPal), Firebase, WhatsApp e tema visual — permitindo dezenas de marcas a partir de um único codebase.
+| Layer       | Technology                                                          |
+| ----------- | ------------------------------------------------------------------- |
+| Backend     | Node.js, TypeScript, Express, Apollo Server, type-graphql, Prisma 4 |
+| Mobile      | React Native 0.69, Apollo Client, React Navigation                  |
+| Admin       | React 18, PrimeReact, Mapbox GL, Chart.js                           |
+| Database    | PostgreSQL                                                          |
+| Auth / Push | Firebase Auth, Firebase Messaging, Notifee                          |
+| Maps        | Google Maps, Mapbox, Azure Geocoding, Nominatim fallback            |
+| Payments    | Stripe, Mercado Pago, PayPal, PIX                                   |
+| Messaging   | WhatsApp Business API, Evolution API, OpenAI gpt-4o-mini            |
+| Storage     | Contabo Spaces (S3-compatible)                                      |
+| Jobs        | node-cron (matching, cancellation, driver heartbeat)                |
 
 ---
 
-## 5. Tecnologias
+## Key Features
 
-| Camada         | Tecnologia                                                          |
-| -------------- | ------------------------------------------------------------------- |
-| Backend        | Node.js, TypeScript, Express, Apollo Server, type-graphql, Prisma 4 |
-| Apps mobile    | React Native 0.69, Apollo Client, React Navigation                  |
-| Painel         | React 18, PrimeReact, Mapbox GL, Chart.js                           |
-| Banco de dados | PostgreSQL                                                          |
-| Auth / Push    | Firebase Auth, Firebase Messaging, Notifee                          |
-| Mapas          | Google Maps, Mapbox, Azure Geocoding, Nominatim                     |
-| Pagamentos     | Stripe, Mercado Pago, PayPal, PIX                                   |
-| Mensageria     | WhatsApp Business API, Evolution API, OpenAI (gpt-4o-mini)          |
-| Storage        | Contabo Spaces (S3-compatible via AWS SDK)                          |
-| Jobs           | node-cron (matching, cancelamento, heartbeat motorista)             |
+1. **Franchise multi-tenancy** — Branding, API keys, payment credentials, Firebase, WhatsApp per franchise
+2. **Ride lifecycle** — `AWAIT` → `ACCEPTED_DRIVER` → `ON_ROUTE` → `EMBARKATION` → `COMPLETED`
+3. **WhatsApp booking** — Legacy numbered flow + AI intent layer (`request_ride`, `become_driver`)
+4. **WhatsApp-only drivers** — `use_whatsapp: true` with periodic location updates
+5. **Call center** — Operators create bookings via GraphQL with map address selection
+6. **Live dashboard** — Revenue, rides, cancellations, online drivers in real time
+7. **Dynamic pricing** — Base fare + km + minute + peak hour multipliers per franchise/region
 
 ---
 
-## 6. Responsabilidades
+## Engineering Challenges
 
-| Componente        | Responsabilidade                                         |
-| ----------------- | -------------------------------------------------------- |
-| Franchise model   | Multi-tenancy: branding, credenciais, regiões            |
-| Booking lifecycle | Estados da corrida, matching motorista-passageiro        |
-| Service/Pricing   | Tarifas por franquia/região, taxímetro, horário de pico  |
-| Driver workflow   | Cadastro, aprovação, planos de assinatura, financeiro    |
-| WhatsApp layer    | Terminal legado + camada IA para booking e cadastro      |
-| Admin reports     | Receita, corridas, motoristas online (dashboard ao vivo) |
+### Operational multi-tenancy
 
----
+Each franchise requires Firebase project, payment gateways, WhatsApp instance, and map API keys — dozens of credential fields per tenant.
 
-## 7. Desafios
+### Driver matching
 
-### 7.1 Multi-tenancy operacional
+20-second cron polling instead of event-driven architecture; radius logic (`max_meters_request_drivers`) with multi-channel notification.
 
-Cada franquia exige Firebase, gateways de pagamento, instância WhatsApp e chaves de mapa próprias — dezenas de campos de credencial por tenant.
+### Dual WhatsApp systems
 
-### 7.2 Matching de motoristas
+Legacy numbered flow and new AI layer running in parallel during incremental migration.
 
-Cron polling a cada 20s em vez de event-driven; lógica de raio (`max_meters_request_drivers`) e notificação multi-canal.
+### Drivers without app
 
-### 7.3 Dois sistemas WhatsApp coexistindo
+WhatsApp-only channel requires periodic location requests instead of continuous GPS.
 
-Fluxo numerado legado e camada IA nova rodando em paralelo, com migração incremental.
+### Geocoding fragmentation
 
-### 7.4 Motoristas sem app
-
-Canal WhatsApp-only exige solicitação periódica de localização em vez de GPS contínuo.
-
-### 7.5 Fragmentação de geocoding
-
-Fallback entre Google, Mapbox, Azure e OpenStreetMap por custo e disponibilidade regional.
+Fallback chain across Google, Mapbox, Azure, and OpenStreetMap for cost and regional availability.
 
 ---
 
-## 8. Soluções
+## Trade-offs
 
-| Desafio                   | Solução                                                              |
-| ------------------------- | -------------------------------------------------------------------- |
-| White-label               | Modelo `Franchise` centralizado com assets em `envs/` e `Resources/` |
-| Matching                  | Cron `searchDriver` + push Firebase + notificação WhatsApp           |
-| WhatsApp IA               | OpenAI com classificação de intenção estruturada + estado por sessão |
-| Cancelamento automático   | Cron `cancelBooking` para corridas em embarque além do tempo limite  |
-| Disponibilidade motorista | Cron `checkDriver` marca offline motoristas sem heartbeat            |
-
----
-
-## 9. Resultados
-
-Broom opera em produção (`api.broom.magicsoft.com.br`, `painel.broom.magicsoft.site`) com **mais de 20 marcas** configuradas no repositório (Seu Motorista, ATA MOBI, Bora Lá, MotoboyLeva, Vai de Mob, entre outras).
-
-O painel inclui dashboard de métricas ao vivo (receita, corridas, cancelamentos, motoristas online), mas **não há KPIs históricos documentados no código** — os números vêm do banco em runtime.
+| Decision      | Chosen                     | Alternative              | Rationale                                               |
+| ------------- | -------------------------- | ------------------------ | ------------------------------------------------------- |
+| API style     | GraphQL                    | REST                     | Flexible queries for mobile apps with varied data needs |
+| Matching      | Cron polling (20s)         | Event-driven (Redis/SQS) | Simpler ops for current volume; known scale limit       |
+| Mobile        | React Native               | Native Swift/Kotlin      | Single codebase for 20+ brands                          |
+| WhatsApp      | Dual flow during migration | Big-bang rewrite         | Zero downtime for active franchises                     |
+| Money storage | Integer cents              | Decimal                  | Avoid floating-point display bugs                       |
+| Tenant config | Single `Franchise` model   | Config service           | Faster white-label onboarding                           |
 
 ---
 
-## 10. Lições aprendidas
+## Security
 
-1. **White-label exige modelo de dados generoso** — Credenciais e branding por franquia desde o início evitam forks por cliente.
-2. **WhatsApp é canal de produto** — Booking, cadastro e operação de motorista pelo chat ampliam alcance além do app.
-3. **Cron simples funciona até certo ponto** — Matching por polling é operacional, mas escala melhor com eventos em volume alto.
-4. **Migração incremental gera dívida visível** — Dois fluxos WhatsApp e resíduos de código (ex.: referências a app antigo) coexistem na base.
-5. **Valores monetários em centavos** — Consistência no schema evita bugs de exibição, mas exige disciplina em toda a stack.
+| Control            | Implementation                                  |
+| ------------------ | ----------------------------------------------- |
+| Authentication     | Firebase Auth (Google, Apple, email)            |
+| API authorization  | GraphQL context with franchise + role           |
+| Tenant isolation   | Franchise ID on all operational queries         |
+| Payment webhooks   | Signature verification per gateway              |
+| Credential storage | Per-franchise env fields; not in client bundles |
+| Admin access       | Role flags (`is_callcenter`, franchise admin)   |
 
 ---
 
-## 11. Relação com NovaDesk
+## Performance
 
-Conceitos do Broom que informam o NovaDesk:
+| Area               | Approach                                                 |
+| ------------------ | -------------------------------------------------------- |
+| GraphQL            | Field-level resolvers; DataLoader patterns where applied |
+| Matching cron      | 20s interval; configurable driver search radius          |
+| Push notifications | Firebase FCM for instant driver alerts                   |
+| Dashboard          | Aggregated queries against PostgreSQL; live refresh      |
+| File storage       | S3-compatible object storage for franchise assets        |
 
-- Multi-tenancy por franquia/organização (Auth tenants, HelpDesk workspaces)
-- Estados de lifecycle bem definidos (tickets, SLA)
-- Cron/workers para tarefas periódicas (Notification Service)
-- Painel operacional com métricas ao vivo (Analytics Dashboard)
-- Integração multi-canal (chat, e-mail, notificações)
-- GraphQL como camada de API (padrão considerado no ecossistema)
+---
+
+## Scalability
+
+| Dimension    | Strategy                                                            |
+| ------------ | ------------------------------------------------------------------- |
+| Franchises   | Shared API; franchise-scoped data and credentials                   |
+| Rides        | Horizontal API scaling; stateless GraphQL handlers                  |
+| Matching     | Cron bottleneck at high volume — documented migration path to queue |
+| Mobile users | Firebase handles auth scale; CDN for static assets                  |
+| Storage      | S3-compatible bucket per environment                                |
+
+---
+
+## Deployment
+
+| Component   | URL                         | Platform                              |
+| ----------- | --------------------------- | ------------------------------------- |
+| API         | api.broom.magicsoft.com.br  | CapRover / Docker                     |
+| Admin panel | painel.broom.magicsoft.site | CapRover / Docker                     |
+| Mobile apps | App Store / Play Store      | Per-franchise branded builds          |
+| Franchises  | 20+ brands                  | Shared codebase, per-franchise config |
+
+Brands include Seu Motorista, ATA MOBI, Bora Lá, MotoboyLeva, Vai de Mob, among others.
+
+---
+
+## Lessons Learned
+
+1. **White-label needs a generous data model** — Per-franchise credentials and branding from day one prevent per-client forks.
+2. **WhatsApp is a product channel** — Booking, registration, and driver operation via chat extend reach beyond the app.
+3. **Simple cron works to a point** — Polling-based matching is operational but event-driven scales better at volume.
+4. **Incremental migration creates visible debt** — Two WhatsApp flows coexist; plan deprecation explicitly.
+5. **Cents everywhere** — Integer money in schema requires discipline across the entire stack.
+
+---
+
+## Screenshots
+
+| Screen            | Location            | Description                    |
+| ----------------- | ------------------- | ------------------------------ |
+| Live dashboard    | painel → Dashboard  | Revenue, rides, online drivers |
+| Franchise config  | painel → Franchises | Branding, credentials, regions |
+| Active rides map  | painel → Monitor    | Real-time ride tracking        |
+| Driver management | painel → Drivers    | Approval, plans, financials    |
+
+_Screenshots available on request during technical interviews._
+
+---
+
+## Roadmap (at handoff)
+
+| Phase | Item                           | Status      |
+| ----- | ------------------------------ | ----------- |
+| v1.0  | App + panel + matching         | Shipped     |
+| v1.5  | WhatsApp booking               | Shipped     |
+| v2.0  | AI intent layer on WhatsApp    | Shipped     |
+| v2.5  | Deprecate legacy WhatsApp flow | In progress |
+| v3.0  | Event-driven matching          | Planned     |
+
+---
+
+## Relation to NovaDesk
+
+Concepts from Broom that inform NovaDesk:
+
+- Multi-tenancy by franchise/organization (Auth tenants, HelpDesk workspaces)
+- Well-defined lifecycle states (tickets, SLA)
+- Cron/workers for periodic tasks (Notification Service)
+- Operations panel with live metrics (Analytics Dashboard)
+- Multi-channel integration (chat, email, notifications)
