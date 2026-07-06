@@ -179,6 +179,12 @@ exports.Prisma.PasswordResetTokenScalarFieldEnum = {
   createdAt: 'createdAt',
 };
 
+exports.Prisma.PlatformSettingScalarFieldEnum = {
+  key: 'key',
+  value: 'value',
+  updatedAt: 'updatedAt',
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc',
@@ -219,6 +225,7 @@ exports.Prisma.ModelName = {
   RefreshToken: 'RefreshToken',
   AuditLog: 'AuditLog',
   PasswordResetToken: 'PasswordResetToken',
+  PlatformSetting: 'PlatformSetting',
 };
 
 /**

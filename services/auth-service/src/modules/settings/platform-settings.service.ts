@@ -21,7 +21,7 @@ export class PlatformSettingsService {
     }
 
     const fallback = this.configService.get<string>('DEFAULT_CONTACT_EMAIL')?.trim();
-    return fallback || null;
+    return fallback?.length ? fallback : null;
   }
 
   async setContactEmail(contactEmail: string): Promise<string> {
