@@ -4,6 +4,7 @@ export const routes = {
   tenants: '/tenants',
   users: '/users',
   audit: '/audit',
+  settings: '/settings',
   login: '/login',
   register: '/register',
 } as const;

@@ -25,8 +25,13 @@ describe('isPublicRoute', () => {
     expect(isPublicRoute('/api/v1/notifications/send')).toBe(true);
   });
 
+  it('marks public contact settings as public', () => {
+    expect(isPublicRoute('/api/v1/settings/contact-email')).toBe(true);
+  });
+
   it('requires auth for protected proxy paths', () => {
     expect(isPublicRoute('/api/v1/auth/me')).toBe(false);
+    expect(isPublicRoute('/api/v1/settings/contact-email/extra')).toBe(false);
     expect(isPublicRoute('/api/v1/notifications')).toBe(false);
     expect(isPublicRoute('/api/v1/notifications/inbox')).toBe(false);
     expect(isPublicRoute('/api/v1/helpdesk/tickets')).toBe(false);

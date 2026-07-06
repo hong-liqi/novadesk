@@ -21,6 +21,12 @@ describe('proxy routes', () => {
     expect(route?.target).toBe('http://localhost:3001');
   });
 
+  it('routes platform settings to auth service', () => {
+    const route = matchProxyRoute(routes, '/api/v1/settings/contact-email');
+    expect(route?.name).toBe('settings');
+    expect(route?.target).toBe('http://localhost:3001');
+  });
+
   it('routes notifications paths to notification service', () => {
     const route = matchProxyRoute(routes, '/api/v1/notifications/inbox');
     expect(route?.name).toBe('notifications');

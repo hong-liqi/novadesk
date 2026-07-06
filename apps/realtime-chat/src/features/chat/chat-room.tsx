@@ -1,21 +1,31 @@
 'use client';
 
 import { useAuth } from '@novadesk/auth/client';
+import type { HelpdeskTicket } from '@novadesk/sdk';
 import { Button } from '@novadesk/ui';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
-import { fetchChatHistory, getGatewayOrigin, type ChatMessage } from '@/shared/services/api-client';
+import {
+  fetchChatHistory,
+  getGatewayOrigin,
+  isTicketUuid,
+  loadOpenTickets,
+  type ChatMessage,
+} from '@/shared/services/api-client';
 import { routes } from '@/shared/lib/routes';
 
 export function ChatRoom() {
   const { accessToken, user, isAuthenticated, isLoading } = useAuth();
   const [ticketId, setTicketId] = useState('');
   const [activeTicketId, setActiveTicketId] = useState<string | null>(null);
+  const [openTickets, setOpenTickets] = useState<HelpdeskTicket[]>([]);
+  const [ticketsLoading, setTicketsLoading] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState('');
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const [status, setStatus] = useState<'idle' | 'connecting' | 'connected' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -27,23 +37,48 @@ export function ChatRoom() {
     setStatus('idle');
   }, []);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    setTicketsLoading(true);
+    void loadOpenTickets()
+      .then(setOpenTickets)
+      .catch(() => {
+        setOpenTickets([]);
+      })
+      .finally(() => {
+        setTicketsLoading(false);
+      });
+  }, [isAuthenticated]);
+
   const joinRoom = useCallback(
     async (roomTicketId: string) => {
       if (!accessToken) {
         return;
       }
 
+      const trimmed = roomTicketId.trim();
+      if (!isTicketUuid(trimmed)) {
+        setErrorMessage('Use the ticket UUID from HelpDesk (not the subject or customer name).');
+        setStatus('error');
+        return;
+      }
+
       disconnectSocket();
       setStatus('connecting');
+      setErrorMessage(null);
       setMessages([]);
       setTypingUsers(new Set());
-      setActiveTicketId(roomTicketId);
+      setActiveTicketId(trimmed);
 
       try {
-        const history = await fetchChatHistory(roomTicketId);
+        const history = await fetchChatHistory(trimmed);
         setMessages(history);
       } catch {
         setStatus('error');
+        setErrorMessage('Could not load this ticket room. Confirm the ticket exists in HelpDesk.');
         return;
       }
 
@@ -57,11 +92,15 @@ export function ChatRoom() {
 
       socket.on('connect', () => {
         setStatus('connected');
-        socket.emit('join', { ticketId: roomTicketId });
+        setErrorMessage(null);
+        socket.emit('join', { ticketId: trimmed });
       });
 
       socket.on('connect_error', () => {
         setStatus('error');
+        setErrorMessage(
+          'WebSocket connection failed. Check gateway WebSocket support and CORS for the chat app.',
+        );
       });
 
       socket.on('message', (message: ChatMessage) => {
@@ -78,10 +117,6 @@ export function ChatRoom() {
           }
           return next;
         });
-      });
-
-      socket.on('presence', (_payload: { userId: string; online: boolean }) => {
-        // Presence updates are broadcast; UI can be extended later.
       });
     },
     [accessToken, disconnectSocket],
@@ -162,19 +197,55 @@ export function ChatRoom() {
         <p className="text-sm text-slate-600">
           Signed in as {user?.email ?? user?.id}. Status: {status}
         </p>
+        {errorMessage ? <p className="mt-2 text-sm text-red-600">{errorMessage}</p> : null}
       </header>
 
-      <form onSubmit={handleJoin} className="flex gap-2">
-        <input
-          type="text"
-          value={ticketId}
-          onChange={(event) => {
-            setTicketId(event.target.value);
-          }}
-          placeholder="Ticket room ID (UUID)"
-          className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
-        />
-        <Button type="submit">Join room</Button>
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="text-sm font-medium text-slate-700">Open tickets from HelpDesk</h2>
+        {ticketsLoading ? <p className="mt-2 text-sm text-slate-500">Loading tickets…</p> : null}
+        {!ticketsLoading && openTickets.length === 0 ? (
+          <p className="mt-2 text-sm text-slate-500">
+            No open tickets found. Create one in HelpDesk first.
+          </p>
+        ) : null}
+        {openTickets.length > 0 ? (
+          <ul className="mt-3 flex flex-col gap-2">
+            {openTickets.map((ticket) => (
+              <li key={ticket.id}>
+                <button
+                  type="button"
+                  className="w-full rounded-md border border-slate-200 px-3 py-2 text-left text-sm hover:bg-slate-50"
+                  onClick={() => {
+                    setTicketId(ticket.id);
+                    void joinRoom(ticket.id);
+                  }}
+                >
+                  <span className="font-medium">{ticket.subject}</span>
+                  <span className="ml-2 text-xs text-slate-500">{ticket.id}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </section>
+
+      <form onSubmit={handleJoin} className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-slate-700" htmlFor="ticket-id">
+          Or paste a ticket UUID
+        </label>
+        <div className="flex gap-2">
+          <input
+            id="ticket-id"
+            type="text"
+            value={ticketId}
+            onChange={(event) => {
+              setTicketId(event.target.value);
+            }}
+            placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000"
+            className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+          />
+          <Button type="submit">Join room</Button>
+        </div>
       </form>
 
       {activeTicketId ? (

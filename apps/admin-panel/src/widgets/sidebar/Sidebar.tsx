@@ -8,6 +8,7 @@ const navItems = [
   { href: routes.dashboard, label: 'Dashboard' },
   { href: routes.tenants, label: 'Tenants' },
   { href: routes.users, label: 'Users' },
+  { href: routes.settings, label: 'Settings' },
   { href: routes.audit, label: 'Audit' },
 ] as const;
 

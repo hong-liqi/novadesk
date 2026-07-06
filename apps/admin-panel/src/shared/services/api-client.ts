@@ -112,6 +112,20 @@ export async function fetchPlatformHealth(): Promise<HealthCheckResult> {
   return extractData(response);
 }
 
+export const settingsClient = {
+  getContactEmail(): Promise<string | null> {
+    return getNovadeskClient()
+      .get<{ contactEmail: string | null }>('/settings/contact-email')
+      .then((response) => response.data.contactEmail);
+  },
+
+  updateContactEmail(contactEmail: string): Promise<string> {
+    return getNovadeskClient()
+      .patch<{ contactEmail: string }>('/settings/contact-email', { contactEmail })
+      .then((response) => response.data.contactEmail);
+  },
+};
+
 export function getConfiguredApiBaseUrl(): string {
   return getApiBaseUrl();
 }

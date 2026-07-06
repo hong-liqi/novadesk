@@ -32,6 +32,11 @@ export function buildProxyRoutes(config: GatewayProxyConfig): ProxyRoute[] {
       target: config.authServiceUrl,
     },
     {
+      name: 'settings',
+      match: (path) => path.startsWith('/api/v1/settings'),
+      target: config.authServiceUrl,
+    },
+    {
       name: 'notifications',
       match: (path) => path.startsWith('/api/v1/notifications'),
       target: config.notificationServiceUrl,

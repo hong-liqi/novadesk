@@ -7,6 +7,9 @@ const PUBLIC_AUTH_PATHS = new Set([
 /** Public notification endpoint for NovaDesk contact form (rate-limited at gateway). */
 const PUBLIC_NOTIFICATION_PATHS = new Set(['/api/v1/notifications/send']);
 
+/** Public platform settings readable by the marketing site contact form. */
+const PUBLIC_SETTINGS_PATHS = new Set(['/api/v1/settings/contact-email']);
+
 export function isPublicRoute(path: string): boolean {
   if (path === '/.well-known/jwks.json') {
     return true;
@@ -25,6 +28,10 @@ export function isPublicRoute(path: string): boolean {
   }
 
   if (PUBLIC_NOTIFICATION_PATHS.has(path)) {
+    return true;
+  }
+
+  if (PUBLIC_SETTINGS_PATHS.has(path)) {
     return true;
   }
 

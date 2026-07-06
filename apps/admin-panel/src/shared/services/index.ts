@@ -2,6 +2,7 @@ export {
   authClient,
   fetchPlatformHealth,
   getConfiguredApiBaseUrl,
+  settingsClient,
   tenantsClient,
   tokenManager,
 } from './api-client';

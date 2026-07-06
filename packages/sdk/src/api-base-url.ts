@@ -59,3 +59,13 @@ export function resolveRequestOrigin(): string {
 
   return 'http://localhost';
 }
+
+/** Socket.IO and browser clients should connect to the gateway origin, not the app subdomain. */
+export function getGatewayOrigin(): string {
+  const apiBaseUrl = getApiBaseUrl();
+  if (apiBaseUrl.startsWith('http://') || apiBaseUrl.startsWith('https://')) {
+    return new URL(apiBaseUrl).origin;
+  }
+
+  return resolveRequestOrigin();
+}

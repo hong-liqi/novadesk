@@ -1,17 +1,44 @@
 import {
   createAuthClient,
+  createHelpdeskClient,
   createLazyClient,
   createSdkClient,
   getApiBaseUrl,
+  getGatewayOrigin,
   type AuthClient,
+  type HelpdeskTicket,
+  type HelpdeskClient,
   type NovaDeskClient,
   type RequestInterceptor,
 } from '@novadesk/sdk';
+import { TENANT_ID_HEADER } from '@novadesk/shared';
 import { createTokenManager, type TokenManager } from '@novadesk/auth/client';
 
 export const tokenManager: TokenManager = createTokenManager({
   storageKey: 'chat.auth.tokens',
 });
+
+let tenantId: string | null = null;
+
+export function setApiTenantId(id: string | null): void {
+  tenantId = id;
+}
+
+function tenantIdInterceptor(): RequestInterceptor {
+  return (context) => {
+    if (!tenantId) {
+      return context;
+    }
+
+    return {
+      ...context,
+      headers: {
+        ...context.headers,
+        [TENANT_ID_HEADER]: tenantId,
+      },
+    };
+  };
+}
 
 function authTokenInterceptor(): RequestInterceptor {
   return async (context) => {
@@ -32,11 +59,12 @@ function authTokenInterceptor(): RequestInterceptor {
 
 let novadeskClient: NovaDeskClient | undefined;
 let authClientInstance: AuthClient | undefined;
+let helpdeskClientInstance: HelpdeskClient | undefined;
 
 function getNovadeskClient(): NovaDeskClient {
   novadeskClient ??= createSdkClient({
     baseUrl: getApiBaseUrl(),
-    requestInterceptors: [authTokenInterceptor()],
+    requestInterceptors: [authTokenInterceptor(), tenantIdInterceptor()],
   });
   return novadeskClient;
 }
@@ -46,15 +74,15 @@ function getAuthClient(): AuthClient {
   return authClientInstance;
 }
 
-export const authClient: AuthClient = createLazyClient(getAuthClient);
-
-export function getGatewayOrigin(): string {
-  if (typeof window !== 'undefined') {
-    return window.location.origin;
-  }
-
-  return process.env.NEXT_PUBLIC_GATEWAY_URL ?? 'http://localhost';
+function getHelpdeskClient(): HelpdeskClient {
+  helpdeskClientInstance ??= createHelpdeskClient(getNovadeskClient());
+  return helpdeskClientInstance;
 }
+
+export const authClient: AuthClient = createLazyClient(getAuthClient);
+export const helpdeskClient: HelpdeskClient = createLazyClient(getHelpdeskClient);
+
+export { getGatewayOrigin };
 
 export interface ChatMessage {
   id: string;
@@ -62,6 +90,12 @@ export interface ChatMessage {
   userId: string;
   body: string;
   createdAt: string;
+}
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export function isTicketUuid(value: string): boolean {
+  return UUID_PATTERN.test(value.trim());
 }
 
 export async function fetchChatHistory(ticketId: string): Promise<ChatMessage[]> {
@@ -75,6 +109,18 @@ export async function fetchChatHistory(ticketId: string): Promise<ChatMessage[]>
   }
 
   return response.json() as Promise<ChatMessage[]>;
+}
+
+export async function loadOpenTickets(): Promise<HelpdeskTicket[]> {
+  const profile = await authClient.getMe();
+  const primaryTenant = profile.tenants[0];
+  if (!primaryTenant) {
+    return [];
+  }
+
+  setApiTenantId(primaryTenant.id);
+  const result = await helpdeskClient.listTickets({ limit: 20, statuses: ['OPEN', 'PENDING'] });
+  return result.items;
 }
 
 export function getConfiguredApiBaseUrl(): string {

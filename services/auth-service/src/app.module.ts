@@ -19,6 +19,7 @@ import { RedisModule } from '@infrastructure/redis/redis.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { JwksModule } from '@modules/jwks/jwks.module';
 import { TenantsModule } from '@modules/tenants/tenants.module';
+import { SettingsModule } from '@modules/settings/settings.module';
 import { HealthModule } from '@presentation/health/health.module';
 import { MetricsModule } from '@presentation/metrics/metrics.module';
 
@@ -56,6 +57,7 @@ const configSchema = baseEnvSchema
     MetricsModule,
     AuthModule,
     TenantsModule,
+    SettingsModule,
     JwksModule,
   ],
   providers: [
