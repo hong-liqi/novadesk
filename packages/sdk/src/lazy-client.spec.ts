@@ -16,7 +16,13 @@ describe('createLazyClient', () => {
   });
 
   it('returns undefined for symbol properties and missing keys', () => {
-    const client = createLazyClient(() => ({
+    interface Client {
+      ping: () => string;
+      [key: string]: unknown;
+      [key: symbol]: unknown;
+    }
+
+    const client = createLazyClient<Client>(() => ({
       ping: () => 'pong',
     }));
 
