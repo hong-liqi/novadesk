@@ -3,7 +3,7 @@
 **Versão:** 1.1  
 **Status:** Em execução  
 **Última atualização:** 2026-07-03  
-**Relacionado:** [00-Vision.md](./00-Vision.md), [10-Backlog.md](./10-Backlog.md), [11-Definition-of-Done.md](./11-Definition-of-Done.md)
+**Relacionado:** [00-Vision.md](./00-Vision.md), [11-Definition-of-Done.md](./11-Definition-of-Done.md)
 
 ---
 
@@ -398,7 +398,6 @@ Ver [11-Definition-of-Done.md](./11-Definition-of-Done.md).
 
 | Tópico             | Documento                                              |
 | ------------------ | ------------------------------------------------------ |
-| Backlog detalhado  | [10-Backlog.md](./10-Backlog.md)                       |
 | Visão              | [00-Vision.md](./00-Vision.md)                         |
 | Definition of Done | [11-Definition-of-Done.md](./11-Definition-of-Done.md) |
 | Arquitetura        | [01-Architecture.md](./01-Architecture.md)             |

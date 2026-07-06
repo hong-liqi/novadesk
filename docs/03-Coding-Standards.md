@@ -9,7 +9,7 @@
 
 ## 1. Objetivo
 
-Este documento define padrões de código obrigatórios para todo o monorepo NovaDesk. O objetivo é garantir consistência, legibilidade, testabilidade e manutenibilidade independentemente do autor ou agente de IA que produza o código.
+Este documento define padrões de código obrigatórios para todo o monorepo NovaDesk. O objetivo é garantir consistência, legibilidade, testabilidade e manutenibilidade em todo o código do projeto.
 
 Violações bloqueiam merge via CI (lint, typecheck, review).
 

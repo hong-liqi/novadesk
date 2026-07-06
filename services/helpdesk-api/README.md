@@ -186,7 +186,7 @@ See [docs/ROADMAP.md](./docs/ROADMAP.md) for phased delivery (M1–M6).
 
 ## Related Documentation
 
-- [NovaDesk Master Spec](../../NOVADESK_MASTER_SPEC.md)
+- [Architecture Vision](../../docs/00-Vision.md)
 - [Service Catalog](../../docs/16-Service-Catalog.md)
 - [Coding Standards](../../docs/03-Coding-Standards.md)
 - [Data Architecture](../../docs/17-Data-Architecture.md)

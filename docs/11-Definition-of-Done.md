@@ -9,15 +9,15 @@
 
 ## 1. Objetivo
 
-Definir critérios objetivos e verificáveis para considerar qualquer item de trabalho (backlog item, PR, milestone, release) como concluído no NovaDesk.
+Definir critérios objetivos e verificáveis para considerar qualquer item de trabalho (issue, PR, milestone, release) como concluído no NovaDesk.
 
 Nenhum item é marcado como Done sem atender todos os critérios aplicáveis ao seu tipo.
 
 ---
 
-## 2. DoD — Item de backlog (tarefa)
+## 2. DoD — Item de trabalho (tarefa)
 
-Todo item BL-XXX do [10-Backlog.md](./10-Backlog.md) só pode ser marcado como **Done** quando:
+Todo item de trabalho só pode ser marcado como **Done** quando:
 
 ### 2.1 Código
 
@@ -49,7 +49,7 @@ Todo item BL-XXX do [10-Backlog.md](./10-Backlog.md) só pode ser marcado como *
 - [ ] OpenAPI/Swagger atualizado se API mudou
 - [ ] ADR criado se decisão arquitetural foi tomada
 - [ ] Comentários JSDoc em APIs públicas de pacotes compartilhados
-- [ ] Backlog item referenciado no PR (`Refs: BL-XXX`)
+- [ ] Issue referenciada no PR (`Refs: #XXX` ou `Closes: #XXX`)
 
 ### 2.5 Build e infraestrutura
 
@@ -242,5 +242,4 @@ Exceções comuns aceitáveis temporariamente:
 | Segurança       | [07-Security.md](./07-Security.md)                               |
 | Observabilidade | [08-Observability.md](./08-Observability.md)                     |
 | Documentação    | [19-Documentation-Standards.md](./19-Documentation-Standards.md) |
-| Backlog         | [10-Backlog.md](./10-Backlog.md)                                 |
 | Roadmap         | [09-Roadmap.md](./09-Roadmap.md)                                 |

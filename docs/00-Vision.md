@@ -3,7 +3,7 @@
 **Versão:** 1.0  
 **Status:** Aprovado  
 **Última atualização:** 2026-07-03  
-**Relacionado:** [NOVADESK_MASTER_SPEC.md](../NOVADESK_MASTER_SPEC.md), [01-Architecture.md](./01-Architecture.md), [09-Roadmap.md](./09-Roadmap.md)
+**Relacionado:** [01-Architecture.md](./01-Architecture.md), [09-Roadmap.md](./09-Roadmap.md)
 
 ---
 
@@ -160,14 +160,13 @@ O próprio autor do portfólio — responsável por arquitetura, implementação
 
 ### 6.2 Personas de avaliação
 
-| Persona                     | Interesse                | Artefatos relevantes                |
-| --------------------------- | ------------------------ | ----------------------------------- |
-| Recrutador técnico          | Maturidade e organização | Vision, Roadmap, Case Studies       |
-| Tech Lead                   | Arquitetura e decisões   | Architecture, ADRs, Service Catalog |
-| Engenheiro backend          | APIs e serviços          | API Standards, Data Architecture    |
-| Engenheiro frontend         | UX e integração          | Tech Stack, SDK, UI package         |
-| DevOps/SRE                  | Infra e operação         | DevOps, Observability, Runbooks     |
-| Agente de IA (Cursor, etc.) | Instruções executáveis   | Toda documentação + Master Spec     |
+| Persona             | Interesse                | Artefatos relevantes                |
+| ------------------- | ------------------------ | ----------------------------------- |
+| Recrutador técnico  | Maturidade e organização | Vision, Roadmap, Case Studies       |
+| Tech Lead           | Arquitetura e decisões   | Architecture, ADRs, Service Catalog |
+| Engenheiro backend  | APIs e serviços          | API Standards, Data Architecture    |
+| Engenheiro frontend | UX e integração          | Tech Stack, SDK, UI package         |
+| DevOps/SRE          | Infra e operação         | DevOps, Observability, Runbooks     |
 
 ---
 
@@ -237,7 +236,6 @@ Roadmap detalhado em [09-Roadmap.md](./09-Roadmap.md).
 | [01-Architecture.md](./01-Architecture.md)             | Como a visão se materializa tecnicamente |
 | [02-Tech-Stack.md](./02-Tech-Stack.md)                 | Tecnologias que habilitam a visão        |
 | [09-Roadmap.md](./09-Roadmap.md)                       | Sequência de entrega                     |
-| [10-Backlog.md](./10-Backlog.md)                       | Trabalho granular                        |
 | [11-Definition-of-Done.md](./11-Definition-of-Done.md) | Critérios de conclusão                   |
 | [case-studies/](./case-studies/)                       | Narrativa de experiência prévia          |
 

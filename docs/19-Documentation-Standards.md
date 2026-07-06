@@ -15,17 +15,17 @@ Definir padrões para toda documentação do NovaDesk: engenharia, serviços, AP
 
 ## 2. Tipos de documentação
 
-| Tipo               | Localização           | Audiência                   | Atualização                   |
-| ------------------ | --------------------- | --------------------------- | ----------------------------- |
-| Engenharia         | `docs/`               | Desenvolvedores, agentes IA | A cada mudança arquitetural   |
-| ADR                | `docs/adr/`           | Arquitetos, tech leads      | A cada decisão arquitetural   |
-| RFC                | `docs/rfc/`           | Time técnico                | Durante discussão de proposta |
-| README de serviço  | `{service}/README.md` | Desenvolvedores             | A cada mudança de setup/API   |
-| OpenAPI            | `{service}/swagger`   | Desenvolvedores, SDK        | A cada mudança de API         |
-| Case studies       | `docs/case-studies/`  | Recrutadores, público       | Estável após publicação       |
-| Runbooks           | `docs/21-Runbooks.md` | Operações                   | A cada mudança operacional    |
-| CHANGELOG          | `CHANGELOG.md`        | Todos                       | A cada release                |
-| Comentários inline | Código fonte          | Desenvolvedores             | A cada mudança de código      |
+| Tipo               | Localização           | Audiência                           | Atualização                   |
+| ------------------ | --------------------- | ----------------------------------- | ----------------------------- |
+| Engenharia         | `docs/`               | Desenvolvedores, revisores técnicos | A cada mudança arquitetural   |
+| ADR                | `docs/adr/`           | Arquitetos, tech leads              | A cada decisão arquitetural   |
+| RFC                | `docs/rfc/`           | Time técnico                        | Durante discussão de proposta |
+| README de serviço  | `{service}/README.md` | Desenvolvedores                     | A cada mudança de setup/API   |
+| OpenAPI            | `{service}/swagger`   | Desenvolvedores, SDK                | A cada mudança de API         |
+| Case studies       | `docs/case-studies/`  | Recrutadores, público               | Estável após publicação       |
+| Runbooks           | `docs/21-Runbooks.md` | Operações                           | A cada mudança operacional    |
+| CHANGELOG          | `CHANGELOG.md`        | Todos                               | A cada release                |
+| Comentários inline | Código fonte          | Desenvolvedores                     | A cada mudança de código      |
 
 ---
 
@@ -204,13 +204,13 @@ RFC aceita gera: backlog items + ADR (se decisão arquitetural).
 
 ## 8. Comentários inline
 
-| Situação                   | Comentário necessário                  |
-| -------------------------- | -------------------------------------- |
-| Regra de negócio não óbvia | Sim — explicar o porquê                |
-| Workaround temporário      | Sim — com referência BL-XXX e data     |
-| Código autoexplicativo     | Não                                    |
-| TODO                       | Proibido em `main` — usar backlog item |
-| JSDoc em pacotes shared    | Obrigatório em exports públicos        |
+| Situação                   | Comentário necessário               |
+| -------------------------- | ----------------------------------- |
+| Regra de negócio não óbvia | Sim — explicar o porquê             |
+| Workaround temporário      | Sim — com referência à issue e data |
+| Código autoexplicativo     | Não                                 |
+| TODO                       | Proibido em `main` — usar issue     |
+| JSDoc em pacotes shared    | Obrigatório em exports públicos     |
 
 ---
 
@@ -234,31 +234,16 @@ RFC aceita gera: backlog items + ADR (se decisão arquitetural).
 
 ---
 
-## 10. Documentação para agentes de IA
+## 10. Revisão de documentação
 
-A documentação deve ser escrita de forma que agentes de IA (Cursor, Codex, Claude) possam:
-
-1. Ler `NOVADESK_MASTER_SPEC.md` como ponto de entrada
-2. Seguir links para documentos específicos
-3. Encontrar backlog items com escopo claro
-4. Verificar DoD antes de marcar tarefa como completa
-5. Saber quais arquivos criar e onde (via Monorepo Structure)
-6. Seguir coding standards sem ambiguidade
-
-Por isso, documentos devem ser **prescritivos** (não sugestivos) e **completos** (não resumidos).
-
----
-
-## 11. Revisão de documentação
-
-### 11.1 Quando revisar
+### 10.1 Quando revisar
 
 - A cada mudança arquitetural
 - A cada release
 - Quando inconsistência é detectada
 - Quando onboarding de dev revela gaps
 
-### 11.2 Checklist de revisão
+### 10.2 Checklist de revisão
 
 - [ ] Consistência entre documentos (nomes, portas, paths)
 - [ ] Referências cruzadas válidas
@@ -268,7 +253,7 @@ Por isso, documentos devem ser **prescritivos** (não sugestivos) e **completos*
 
 ---
 
-## 12. Referências cruzadas
+## 11. Referências cruzadas
 
 | Tópico             | Documento                                                |
 | ------------------ | -------------------------------------------------------- |

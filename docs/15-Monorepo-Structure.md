@@ -35,7 +35,6 @@ novadesk/
 ├── .gitignore
 ├── .prettierrc
 ├── commitlint.config.js
-└── NOVADESK_MASTER_SPEC.md
 ```
 
 ---

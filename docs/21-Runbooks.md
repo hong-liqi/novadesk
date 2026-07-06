@@ -217,13 +217,12 @@ Verificar datas de validade do certificado SSL via OpenSSL client contra `novade
 9. Dev: `pnpm turbo dev`
 10. Acessar: `http://localhost`
 
-### 10.2 Leitura obrigatória
+### 10.2 Leitura recomendada
 
-1. [NOVADESK_MASTER_SPEC.md](../NOVADESK_MASTER_SPEC.md)
-2. [docs/README.md](./README.md) — ordem de leitura
-3. [11-Definition-of-Done.md](./11-Definition-of-Done.md)
-4. [03-Coding-Standards.md](./03-Coding-Standards.md)
-5. [10-Backlog.md](./10-Backlog.md) — pegar próximo item Todo
+1. [docs/README.md](./README.md) — ordem de leitura
+2. [11-Definition-of-Done.md](./11-Definition-of-Done.md)
+3. [03-Coding-Standards.md](./03-Coding-Standards.md)
+4. [01-Architecture.md](./01-Architecture.md)
 
 ---
 

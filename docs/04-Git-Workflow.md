@@ -46,16 +46,14 @@ Adotamos **Trunk-Based Development** com feature branches de curta duração, co
 
 ### 3.2 Nomenclatura de branches
 
-Formato: `{prefixo}/{ticket-id}-{descricao-curta}`
+Formato: `{prefixo}/{descricao-curta}`
 
 Exemplos:
 
-- `feat/BL-042-auth-service-login-endpoint`
-- `fix/BL-189-helpdesk-ticket-pagination`
-- `hotfix/BL-201-jwt-expiration-bug`
-- `docs/BL-015-architecture-update`
-
-O `ticket-id` referencia item em [10-Backlog.md](./10-Backlog.md).
+- `feat/auth-service-login-endpoint`
+- `fix/helpdesk-ticket-pagination`
+- `hotfix/jwt-expiration-bug`
+- `docs/architecture-update`
 
 ### 3.3 Regras de branch
 
@@ -109,7 +107,7 @@ Scopes correspondem a pacotes e serviços:
 - Máximo 72 caracteres na primeira linha
 - Body opcional para contexto adicional
 - Footer `BREAKING CHANGE:` para breaking changes
-- Footer `Refs: BL-XXX` para referenciar backlog item
+- Footer `Refs: #XXX` para referenciar issue GitHub
 - Footer `Closes: #XXX` para issues GitHub
 
 ### 4.5 Exemplos válidos
@@ -146,7 +144,7 @@ Todo PR utiliza template em `.github/pull_request_template.md`:
 
 - Descrição da mudança
 - Tipo (feat/fix/docs/chore)
-- Backlog reference (BL-XXX)
+- Issue reference (`Refs: #XXX`)
 - Checklist DoD
 - Screenshots (se UI)
 - Notas para reviewer
@@ -292,4 +290,3 @@ Templates: [templates/rfc-template.md](./templates/rfc-template.md), [templates/
 | CI/CD              | [06-DevOps.md](./06-DevOps.md)                         |
 | Definition of Done | [11-Definition-of-Done.md](./11-Definition-of-Done.md) |
 | Roadmap            | [09-Roadmap.md](./09-Roadmap.md)                       |
-| Backlog            | [10-Backlog.md](./10-Backlog.md)                       |

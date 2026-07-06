@@ -1,6 +1,6 @@
 ## Summary
 
-<!-- Describe the change and link backlog item BL-XXX -->
+<!-- Describe the change and link the GitHub issue -->
 
 ## Type
 
@@ -9,9 +9,9 @@
 - [ ] docs
 - [ ] chore
 
-## Backlog
+## Issue
 
-Refs: BL-
+Refs: #
 
 ## Definition of Done
 

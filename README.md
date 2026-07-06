@@ -1,6 +1,8 @@
 # NovaDesk
 
-Integrated engineering ecosystem demonstrating senior-level software architecture.
+**Portfolio platform** demonstrating senior-level full-stack engineering — microservices, shared packages, CI/CD, and production deployment on CapRover.
+
+**Live:** [novadesk.li.magicsoft.site](https://novadesk.li.magicsoft.site)
 
 ## Structure
 
@@ -13,21 +15,21 @@ infrastructure/    Docker, Nginx, CapRover, scripts
 docs/              Engineering documentation
 ```
 
-## Current Status (v0.9.0-dev)
+## What's included
 
-| Component                 | Status                              |
-| ------------------------- | ----------------------------------- |
-| Monorepo foundation (M0)  | ✅ Complete                         |
-| Shared packages (M1)      | ✅ Complete                         |
-| Auth Service (M2)         | ✅ Complete                         |
-| API Gateway (M3)          | ✅ Complete                         |
-| Notification Service (M4) | ✅ Complete                         |
-| HelpDesk SaaS (M5)        | ✅ Core ticketing + UI              |
-| Analytics (M6)            | ✅ API + dashboard                  |
-| Realtime Chat (M7)        | ✅ WebSocket service + app          |
-| Admin Portal (M8)         | ✅ Tenants + health dashboard       |
-| NovaDesk Website (M9)     | ✅ Landing + case studies + contact |
-| CapRover deploy           | ✅ captain-definition per app       |
+| Component                   | Description                                   |
+| --------------------------- | --------------------------------------------- |
+| Monorepo (pnpm + Turborepo) | Shared tooling, CI, and package boundaries    |
+| Shared packages             | UI kit, SDK, auth guards, config, logger      |
+| Auth Service                | JWT, RBAC, multi-tenant, platform settings    |
+| API Gateway                 | Routing, rate limiting, CORS, WebSocket proxy |
+| Notification Service        | Email delivery via SMTP                       |
+| HelpDesk SaaS               | Ticketing API + agent UI                      |
+| Analytics                   | Metrics API + dashboard                       |
+| Realtime Chat               | WebSocket service + chat app                  |
+| Admin Portal                | Tenant management, health, settings           |
+| Public website              | Landing, case studies, contact form           |
+| CapRover deploy             | `captain-definition` per service              |
 
 ## Prerequisites
 

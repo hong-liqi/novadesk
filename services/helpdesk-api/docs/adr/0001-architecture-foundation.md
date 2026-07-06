@@ -119,7 +119,7 @@ Controllers throw `Not implemented`; repositories return `null`; use cases deleg
 
 ## Compliance
 
-- Follows `NOVADESK_MASTER_SPEC.md`
+- Follows [NovaDesk architecture standards](../../docs/01-Architecture.md)
 - Uses existing shared packages
 - Documented in README and ARCHITECTURE.md
 - Prisma schema follows naming conventions (snake_case, UUID ids)

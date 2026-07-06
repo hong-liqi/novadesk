@@ -13,7 +13,6 @@
 | **API Gateway**           | Ponto de entrada único (APP-02) para todas as APIs do ecossistema                  |
 | **Auth Service**          | Serviço central de identidade (APP-01)                                             |
 | **BFF**                   | Backend for Frontend — padrão de API adaptada ao frontend                          |
-| **BL-XXX**                | Identificador de item no backlog ([10-Backlog.md](./10-Backlog.md))                |
 | **Bounded Context**       | Limite de domínio dentro do qual um modelo é consistente                           |
 | **BullMQ**                | Biblioteca de filas de jobs assíncronos baseada em Redis                           |
 | **Circuit Breaker**       | Padrão que interrompe chamadas a serviço falho para evitar cascata                 |
@@ -60,4 +59,3 @@
 | ----------- | ------------------------------------------------ |
 | Arquitetura | [01-Architecture.md](./01-Architecture.md)       |
 | Serviços    | [16-Service-Catalog.md](./16-Service-Catalog.md) |
-| Backlog     | [10-Backlog.md](./10-Backlog.md)                 |

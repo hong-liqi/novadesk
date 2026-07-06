@@ -1,73 +1,58 @@
-# NovaDesk — Documentação de Engenharia
+# NovaDesk — Engineering Documentation
 
-Este diretório contém a documentação técnica completa do **NovaDesk**, ecossistema de engenharia de software projetado para demonstrar maturidade técnica equivalente à de uma startup madura.
+Technical documentation for **NovaDesk**, a full-stack portfolio platform that demonstrates senior-level software engineering: microservices, shared packages, CI/CD, observability, and production deployment.
 
-A fonte da verdade absoluta do projeto é o arquivo [`NOVADESK_MASTER_SPEC.md`](../NOVADESK_MASTER_SPEC.md) na raiz do repositório. Toda documentação aqui deriva e expande esse documento.
-
----
-
-## Como usar esta documentação
-
-Desenvolvedores, revisores e agentes de IA devem seguir esta ordem de leitura antes de qualquer implementação:
-
-| Ordem | Documento                                                        | Propósito                                      |
-| ----- | ---------------------------------------------------------------- | ---------------------------------------------- |
-| 1     | [00-Vision.md](./00-Vision.md)                                   | Missão, objetivos e princípios                 |
-| 2     | [01-Architecture.md](./01-Architecture.md)                       | Arquitetura do sistema, serviços e comunicação |
-| 3     | [02-Tech-Stack.md](./02-Tech-Stack.md)                           | Tecnologias, versões e justificativas          |
-| 4     | [15-Monorepo-Structure.md](./15-Monorepo-Structure.md)           | Estrutura de pastas e boundaries               |
-| 5     | [16-Service-Catalog.md](./16-Service-Catalog.md)                 | Catálogo de serviços e responsabilidades       |
-| 6     | [17-Data-Architecture.md](./17-Data-Architecture.md)             | Banco de dados, cache e filas                  |
-| 7     | [18-API-Design-Standards.md](./18-API-Design-Standards.md)       | Padrões de API e contratos                     |
-| 8     | [03-Coding-Standards.md](./03-Coding-Standards.md)               | Padrões de código                              |
-| 9     | [19-Documentation-Standards.md](./19-Documentation-Standards.md) | Padrões de documentação                        |
-| 10    | [04-Git-Workflow.md](./04-Git-Workflow.md)                       | Branches, commits e releases                   |
-| 11    | [05-Testing-Strategy.md](./05-Testing-Strategy.md)               | Estratégia de testes                           |
-| 12    | [06-DevOps.md](./06-DevOps.md)                                   | CI/CD, Docker e deploy                         |
-| 13    | [07-Security.md](./07-Security.md)                               | Segurança e autenticação                       |
-| 14    | [08-Observability.md](./08-Observability.md)                     | Logging, métricas e tracing                    |
-| 15    | [11-Definition-of-Done.md](./11-Definition-of-Done.md)           | Critérios de conclusão                         |
-| 16    | [09-Roadmap.md](./09-Roadmap.md)                                 | Fases e milestones                             |
-| 17    | [10-Backlog.md](./10-Backlog.md)                                 | Backlog detalhado                              |
+**Live demo:** [novadesk.li.magicsoft.site](https://novadesk.li.magicsoft.site)
 
 ---
 
-## Documentos complementares
+## Where to start
 
-| Documento                                                | Propósito                                       |
-| -------------------------------------------------------- | ----------------------------------------------- |
-| [20-Glossary.md](./20-Glossary.md)                       | Glossário de termos                             |
-| [21-Runbooks.md](./21-Runbooks.md)                       | Procedimentos operacionais                      |
-| [templates/rfc-template.md](./templates/rfc-template.md) | Template para RFCs                              |
-| [templates/adr-template.md](./templates/adr-template.md) | Template para ADRs                              |
-| [case-studies/](./case-studies/)                         | Estudos de caso (Spell, Broom, Teste de Perfil) |
-
----
-
-## Fluxo de trabalho do agente
-
-Conforme definido na especificação mestra, nenhuma implementação deve ocorrer sem passar pelas fases documentadas:
-
-1. **Arquitetura** — validar contra [01-Architecture.md](./01-Architecture.md)
-2. **RFC** — usar [templates/rfc-template.md](./templates/rfc-template.md) para mudanças significativas
-3. **Backlog** — referenciar [10-Backlog.md](./10-Backlog.md)
-4. **Implementação** — seguir [03-Coding-Standards.md](./03-Coding-Standards.md)
-5. **Testes** — seguir [05-Testing-Strategy.md](./05-Testing-Strategy.md)
-6. **Documentação** — seguir [19-Documentation-Standards.md](./19-Documentation-Standards.md)
-7. **Refatoração** — manter cobertura e ADRs atualizados
-8. **Deploy** — seguir [06-DevOps.md](./06-DevOps.md)
+| Audience               | Start here                                                                                                                                                 |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Recruiters / reviewers | [00-Vision.md](./00-Vision.md) → [09-Roadmap.md](./09-Roadmap.md) → [case-studies/](./case-studies/)                                                       |
+| Backend engineers      | [01-Architecture.md](./01-Architecture.md) → [16-Service-Catalog.md](./16-Service-Catalog.md) → [18-API-Design-Standards.md](./18-API-Design-Standards.md) |
+| Frontend engineers     | [02-Tech-Stack.md](./02-Tech-Stack.md) → `packages/ui`, `packages/sdk`                                                                                     |
+| DevOps / SRE           | [06-DevOps.md](./06-DevOps.md) → [21-Runbooks.md](./21-Runbooks.md) → [../DEPLOY-CAPROVER.md](../DEPLOY-CAPROVER.md)                                       |
 
 ---
 
-## Convenções desta documentação
+## Core documents
 
-- Referências cruzadas usam caminhos relativos entre documentos.
-- Identificadores de serviços, milestones e tarefas são estáveis e reutilizados em todo o ecossistema.
-- ADRs ficam em `docs/adr/` após aprovação; RFCs em `docs/rfc/` durante discussão.
-- Versão atual da documentação: **1.0** — alinhada à especificação mestra v1.0.
+| Document                                                   | Purpose                                      |
+| ---------------------------------------------------------- | -------------------------------------------- |
+| [00-Vision.md](./00-Vision.md)                             | Mission, goals, and design principles        |
+| [01-Architecture.md](./01-Architecture.md)                 | System architecture and service boundaries   |
+| [02-Tech-Stack.md](./02-Tech-Stack.md)                     | Technologies, versions, and rationale        |
+| [15-Monorepo-Structure.md](./15-Monorepo-Structure.md)     | Repository layout and package boundaries     |
+| [16-Service-Catalog.md](./16-Service-Catalog.md)           | Service responsibilities and APIs            |
+| [17-Data-Architecture.md](./17-Data-Architecture.md)       | Databases, cache, and messaging              |
+| [18-API-Design-Standards.md](./18-API-Design-Standards.md) | API conventions and contracts                |
+| [03-Coding-Standards.md](./03-Coding-Standards.md)         | Code style and patterns                      |
+| [04-Git-Workflow.md](./04-Git-Workflow.md)                 | Branches, commits, and releases              |
+| [05-Testing-Strategy.md](./05-Testing-Strategy.md)         | Unit, integration, and E2E testing           |
+| [06-DevOps.md](./06-DevOps.md)                             | CI/CD, Docker, and deployment                |
+| [07-Security.md](./07-Security.md)                         | Authentication, authorization, and hardening |
+| [08-Observability.md](./08-Observability.md)               | Logging, metrics, and tracing                |
+| [09-Roadmap.md](./09-Roadmap.md)                           | Milestones and delivery phases               |
+| [11-Definition-of-Done.md](./11-Definition-of-Done.md)     | Completion criteria                          |
 
 ---
 
-## Contato e governança
+## Supplementary
 
-Decisões arquiteturais significativas exigem ADR. Mudanças de escopo exigem atualização do roadmap e backlog. A governança do repositório está descrita em [04-Git-Workflow.md](./04-Git-Workflow.md) e [11-Definition-of-Done.md](./11-Definition-of-Done.md).
+| Document                                                 | Purpose                                    |
+| -------------------------------------------------------- | ------------------------------------------ |
+| [20-Glossary.md](./20-Glossary.md)                       | Terminology                                |
+| [21-Runbooks.md](./21-Runbooks.md)                       | Operational procedures                     |
+| [templates/rfc-template.md](./templates/rfc-template.md) | RFC template                               |
+| [templates/adr-template.md](./templates/adr-template.md) | ADR template                               |
+| [case-studies/](./case-studies/)                         | Deep dives (Spell, Broom, Teste de Perfil) |
+
+---
+
+## Conventions
+
+- Cross-references use relative paths between documents.
+- ADRs live in `docs/adr/` after approval; RFCs in `docs/rfc/` during discussion.
+- Service and milestone identifiers are stable across the monorepo.
