@@ -13,8 +13,8 @@ export function getOpenGraphImages(): NonNullable<Metadata['openGraph']>['images
   return [
     {
       url: OG_IMAGE_PATH,
-      width: 1584,
-      height: 396,
+      width: 1983,
+      height: 793,
       alt: 'Li Hong — Full Stack Developer | NovaDesk portfolio platform',
       type: 'image/png',
     },
