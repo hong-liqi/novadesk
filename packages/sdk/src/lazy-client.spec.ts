@@ -14,4 +14,13 @@ describe('createLazyClient', () => {
     expect(client.value).toBe(42);
     expect(factory).toHaveBeenCalledTimes(1);
   });
+
+  it('returns undefined for symbol properties and missing keys', () => {
+    const client = createLazyClient(() => ({
+      ping: () => 'pong',
+    }));
+
+    expect(client[Symbol.toStringTag]).toBeUndefined();
+    expect(client.missing).toBeUndefined();
+  });
 });
