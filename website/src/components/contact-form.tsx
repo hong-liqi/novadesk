@@ -2,22 +2,40 @@
 
 import { Button, Input, Stack, Surface, Text } from '@novadesk/ui';
 import { FormEvent, useState } from 'react';
+import { AppLink } from '@/components/app-link';
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
+type ContactErrorCode =
+  | 'CONTACT_EMAIL_NOT_CONFIGURED'
+  | 'EMAIL_DELIVERY_FAILED'
+  | 'NOTIFICATION_UNAVAILABLE'
+  | 'INVALID_REQUEST';
+
+interface ContactErrorPayload {
+  code?: ContactErrorCode;
+  message?: string;
+}
+
 const CONTACT_ENDPOINT = '/api/v1/notifications/send';
 
-export function ContactForm() {
+interface ContactFormProps {
+  adminSettingsUrl: string;
+}
+
+export function ContactForm({ adminSettingsUrl }: ContactFormProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [errorCode, setErrorCode] = useState<ContactErrorCode | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus('submitting');
     setErrorMessage('');
+    setErrorCode(null);
 
     try {
       const response = await fetch(CONTACT_ENDPOINT, {
@@ -31,7 +49,8 @@ export function ContactForm() {
       });
 
       if (!response.ok) {
-        const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+        const payload = (await response.json().catch(() => null)) as ContactErrorPayload | null;
+        setErrorCode(payload?.code ?? null);
         throw new Error(payload?.message ?? `Request failed (${String(response.status)})`);
       }
 
@@ -46,6 +65,8 @@ export function ContactForm() {
       );
     }
   }
+
+  const showAdminAction = errorCode === 'CONTACT_EMAIL_NOT_CONFIGURED';
 
   return (
     <section id="contact" className="border-t border-slate-800/80 px-4 py-16 sm:px-6 lg:px-8">
@@ -114,9 +135,19 @@ export function ContactForm() {
               ) : null}
 
               {status === 'error' ? (
-                <Text as="p" size="sm" tone="danger" role="alert">
-                  {errorMessage}
-                </Text>
+                <Stack gap="sm" className="rounded-lg border border-rose-900/60 bg-rose-950/30 p-4">
+                  <Text as="p" size="sm" tone="danger" role="alert">
+                    {errorMessage}
+                  </Text>
+                  {showAdminAction ? (
+                    <AppLink
+                      href={adminSettingsUrl}
+                      className="inline-flex w-fit items-center rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+                    >
+                      Open Admin → Settings
+                    </AppLink>
+                  ) : null}
+                </Stack>
               ) : null}
 
               <Button
