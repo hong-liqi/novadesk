@@ -29,7 +29,7 @@
     "@novadesk/config": "workspace:*",
     "@novadesk/logger": "workspace:*",
     "@novadesk/shared": "workspace:*",
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^7.8.0",
     "helmet": "^8.0.0",
     "ioredis": "^5.4.2",
     "prom-client": "^15.1.3",
