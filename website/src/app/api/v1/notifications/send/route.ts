@@ -49,7 +49,8 @@ function resolveNotificationSendUrl(): string {
 function readUpstreamMessage(body: string): string | undefined {
   try {
     const payload = JSON.parse(body) as { message?: string };
-    return payload.message?.trim() || undefined;
+    const message = payload.message?.trim();
+    return message?.length ? message : undefined;
   } catch {
     return undefined;
   }
