@@ -24,7 +24,7 @@
     "@nestjs/platform-socket.io": "^10.4.15",
     "@nestjs/swagger": "^8.1.0",
     "@nestjs/terminus": "^10.2.3",
-    "@nestjs/websockets": "^10.4.15",
+    "@nestjs/websockets": "^11.1.27",
     "@opentelemetry/auto-instrumentations-node": "^0.52.1",
     "@opentelemetry/sdk-node": "^0.57.1",
     "@novadesk/auth": "workspace:*",
