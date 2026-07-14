@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@novadesk/auth/client';
-import { formatAuthError, SdkError } from '@novadesk/sdk';
+import { formatAuthError, getPasswordPolicyMessage, validatePasswordStrength } from '@novadesk/sdk';
 import { Button, Input, Stack } from '@novadesk/ui';
 import { AuthLayout } from '@novadesk/ui/client';
 import Link from 'next/link';
@@ -9,9 +9,6 @@ import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 import { routes } from '@/shared/lib/routes';
 import { authClient } from '@/shared/services';
-
-const PASSWORD_HINT =
-  'Use at least 8 characters with one uppercase letter, one lowercase letter, and one number.';
 
 export function RegisterForm() {
   const { login } = useAuth();
@@ -28,7 +25,13 @@ export function RegisterForm() {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Passwords do not match.');
+      return;
+    }
+
+    const passwordIssue = validatePasswordStrength(password);
+    if (passwordIssue) {
+      setError(passwordIssue);
       return;
     }
 
@@ -43,10 +46,6 @@ export function RegisterForm() {
       await login(tokens);
       router.replace(routes.dashboard);
     } catch (err) {
-      if (err instanceof SdkError && err.status === 409) {
-        setError('This email is already registered. Sign in instead.');
-        return;
-      }
       setError(formatAuthError(err, 'Account creation failed'));
     } finally {
       setLoading(false);
@@ -100,8 +99,12 @@ export function RegisterForm() {
             }}
             required
           />
-          <p className="text-sm text-neutral-500">{PASSWORD_HINT}</p>
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
+          <p className="text-sm text-neutral-500">{getPasswordPolicyMessage()}</p>
+          {error ? (
+            <p className="text-sm text-red-600" role="alert">
+              {error}
+            </p>
+          ) : null}
           <Button type="submit" loading={loading} className="w-full">
             Create account
           </Button>

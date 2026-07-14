@@ -22,17 +22,17 @@ export class LoginUseCase {
     const user = await this.users.findByEmail(dto.email.toLowerCase());
 
     if (!user?.isActive) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Incorrect email or password');
     }
 
     const valid = await this.passwordService.verify(dto.password, user.passwordHash);
     if (!valid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Incorrect email or password');
     }
 
     const profile = await this.users.findById(user.id);
     if (!profile) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Incorrect email or password');
     }
 
     const membership = dto.tenantId

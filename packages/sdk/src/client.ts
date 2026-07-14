@@ -97,20 +97,14 @@ export class NovaDeskClient {
           const text = await response.text();
 
           if (!response.ok) {
+            let parsed: unknown = text;
             try {
-              const parsed = JSON.parse(text) as unknown;
-              if (isApiError(parsed)) {
-                throw SdkError.fromApiError(parsed);
-              }
-            } catch (error) {
-              if (error instanceof SdkError) {
-                throw error;
-              }
+              parsed = JSON.parse(text) as unknown;
+            } catch {
+              parsed = { message: text };
             }
-
-            throw new SdkError(
-              `Request failed with status ${String(response.status)}`,
-              'HTTP_ERROR',
+            throw toHttpSdkError(
+              parsed,
               response.status,
               response.headers.get('x-request-id') ?? undefined,
             );
@@ -192,18 +186,7 @@ export class NovaDeskClient {
             (isApiResponse(responseBody) ? responseBody.meta.requestId : undefined);
 
           if (!response.ok) {
-            if (isApiError(responseBody)) {
-              throw SdkError.fromApiError(responseBody);
-            }
-            if (isNestHttpException(responseBody)) {
-              throw nestHttpExceptionToSdkError(responseBody, requestId);
-            }
-            throw new SdkError(
-              `Request failed with status ${String(response.status)}`,
-              'HTTP_ERROR',
-              response.status,
-              requestId,
-            );
+            throw toHttpSdkError(responseBody, response.status, requestId);
           }
 
           const normalized = normalizeApiResponse<T>(responseBody, requestId);
@@ -344,24 +327,36 @@ function normalizeApiResponse<T>(body: unknown, requestId?: string): ApiResponse
 }
 
 interface NestHttpExceptionBody {
-  statusCode: number;
+  statusCode?: number;
   message: string | string[];
   error?: string;
 }
 
 function isNestHttpException(body: unknown): body is NestHttpExceptionBody {
-  return (
-    typeof body === 'object' &&
-    body !== null &&
-    'statusCode' in body &&
-    'message' in body &&
-    typeof (body as NestHttpExceptionBody).statusCode === 'number'
-  );
+  if (typeof body !== 'object' || body === null || !('message' in body)) {
+    return false;
+  }
+
+  const message = (body as NestHttpExceptionBody).message;
+  const hasMessage =
+    typeof message === 'string' ||
+    (Array.isArray(message) && message.every((item) => typeof item === 'string'));
+
+  if (!hasMessage) {
+    return false;
+  }
+
+  const statusCode = (body as NestHttpExceptionBody).statusCode;
+  return statusCode === undefined || typeof statusCode === 'number';
 }
 
-function nestHttpExceptionToSdkError(body: NestHttpExceptionBody, requestId?: string): SdkError {
+function nestHttpExceptionToSdkError(
+  body: NestHttpExceptionBody,
+  status: number,
+  requestId?: string,
+): SdkError {
   const message = Array.isArray(body.message) ? body.message.join(', ') : body.message;
-  return new SdkError(message, body.error ?? 'HTTP_ERROR', body.statusCode, requestId);
+  return new SdkError(message, body.error ?? 'HTTP_ERROR', body.statusCode ?? status, requestId);
 }
 
 function isApiError(value: unknown): value is ApiError {
@@ -369,6 +364,32 @@ function isApiError(value: unknown): value is ApiError {
     typeof value === 'object' &&
     value !== null &&
     'error' in value &&
-    typeof (value as ApiError).error === 'object'
+    typeof (value as ApiError).error === 'object' &&
+    (value as ApiError).error !== null &&
+    typeof (value as ApiError).error.message === 'string'
+  );
+}
+
+function toHttpSdkError(body: unknown, status: number, requestId?: string): SdkError {
+  if (isApiError(body)) {
+    return SdkError.fromApiError(body);
+  }
+
+  if (isNestHttpException(body)) {
+    return nestHttpExceptionToSdkError(body, status, requestId);
+  }
+
+  if (typeof body === 'object' && body !== null && 'error' in body) {
+    const nested = (body as { error: unknown }).error;
+    if (typeof nested === 'string' && nested.trim()) {
+      return new SdkError(nested, 'HTTP_ERROR', status, requestId);
+    }
+  }
+
+  return new SdkError(
+    `Request failed with status ${String(status)}`,
+    'HTTP_ERROR',
+    status,
+    requestId,
   );
 }

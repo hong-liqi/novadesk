@@ -72,6 +72,76 @@ describe('NovaDeskClient', () => {
     });
   });
 
+  it('maps NestJS password validation errors from register', async () => {
+    const fetchFn = jest.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          statusCode: 400,
+          message:
+            'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number',
+          error: 'Bad Request',
+        }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
+      ),
+    );
+
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
+
+    await expect(client.post('/auth/register', {})).rejects.toMatchObject({
+      message: 'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number',
+      status: 400,
+    });
+  });
+
+  it('joins NestJS validation message arrays', async () => {
+    const fetchFn = jest.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          statusCode: 400,
+          message: ['email must be an email', 'password too short'],
+        }),
+        {
+          status: 400,
+        },
+      ),
+    );
+
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
+
+    await expect(client.post('/auth/register', {})).rejects.toMatchObject({
+      message: 'email must be an email, password too short',
+      status: 400,
+    });
+  });
+
+  it('uses nested string error when Nest shape is incomplete', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify({ error: 'Gateway Timeout' }), { status: 504 }),
+      );
+
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
+
+    await expect(client.get('/slow')).rejects.toMatchObject({
+      message: 'Gateway Timeout',
+      status: 504,
+    });
+  });
+
+  it('falls back to status text when body has no useful message', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockResolvedValue(new Response(JSON.stringify({ foo: 'bar' }), { status: 500 }));
+
+    const client = new NovaDeskClient({ baseUrl, fetchFn, retries: 0 });
+
+    await expect(client.get('/broken')).rejects.toMatchObject({
+      message: 'Request failed with status 500',
+      status: 500,
+    });
+  });
+
   it('maps API errors to SdkError', async () => {
     const fetchFn = jest.fn().mockResolvedValue(
       new Response(
