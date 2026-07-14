@@ -9,6 +9,8 @@ const FRIENDLY_BY_EXACT_MESSAGE: Record<string, string> = {
   'Invalid refresh token': 'Your session expired. Please sign in again.',
   'Missing access token': 'You need to sign in to continue.',
   'Invalid access token': 'Your session expired. Please sign in again.',
+  'Authentication succeeded but the response did not include an access token.':
+    'Sign in failed due to an unexpected server response. Please try again.',
 };
 
 const PASSWORD_POLICY_MESSAGE =

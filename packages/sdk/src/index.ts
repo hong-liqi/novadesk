@@ -6,7 +6,7 @@ export {
   resolveRequestOrigin,
   serializeRuntimeApiUrlScript,
 } from './api-base-url';
-export { AuthClient, createAuthClient } from './auth/auth.client';
+export { AuthClient, createAuthClient, unwrapAuthTokens } from './auth/auth.client';
 export {
   formatAuthError,
   getPasswordPolicyMessage,

@@ -360,13 +360,16 @@ function nestHttpExceptionToSdkError(
 }
 
 function isApiError(value: unknown): value is ApiError {
+  if (typeof value !== 'object' || value === null || !('error' in value)) {
+    return false;
+  }
+
+  const error = value.error;
   return (
-    typeof value === 'object' &&
-    value !== null &&
-    'error' in value &&
-    typeof (value as ApiError).error === 'object' &&
-    (value as ApiError).error !== null &&
-    typeof (value as ApiError).error.message === 'string'
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof error.message === 'string'
   );
 }
 
@@ -380,8 +383,8 @@ function toHttpSdkError(body: unknown, status: number, requestId?: string): SdkE
   }
 
   if (typeof body === 'object' && body !== null && 'error' in body) {
-    const nested = (body as { error: unknown }).error;
-    if (typeof nested === 'string' && nested.trim()) {
+    const nested = body.error;
+    if (typeof nested === 'string' && nested.trim().length > 0) {
       return new SdkError(nested, 'HTTP_ERROR', status, requestId);
     }
   }
